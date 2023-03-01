@@ -1,6 +1,7 @@
 source("/lustre1/g/aos_shihuang/Strain2b/src/2/composition.R")
 
-Select_Species_by_Species <- function(species) {
+Select_Species_by_Species <- function(Species) {
+  species <- unlist(species[, 1])
 	return (species)
 }
 
@@ -119,11 +120,11 @@ Strain_Level_Profiling <- function(tags_count_matrix, cnm_matrix) {
 	return (result)
 }
 
-One_Sample_Pipeline <- function(sample_info, species_abd, output_path) {
+One_Sample_Pipeline <- function(sample_info, species_list, output_path) {
 	sample_name <- sample_info[1]
 	sample_fa <- sample_info[2]
 	#print("1")
-	species <- Select_Species_by_Abd_Table(species_abd, sample_name, 0.001)
+	species <- Select_Species_by_Species(species_list)
         #print("2")
 	cnm <- Merge_Copynumber_Matrix(species)
         #print("3")
@@ -152,7 +153,7 @@ Sample_List_Pipeline <- function(sample_list_file, species_abd_file, output_path
 	if(!file.exists(output_path)) {
 		dir.create(output_path)
 	}
-	apply(sample_list, 1, function(x) One_Sample_Pipeline(x, species_abd, output_path))
+	apply(sample_list, 1, function(x) One_Sample_Pipeline(x, species_list, output_path))
 }
 
 
