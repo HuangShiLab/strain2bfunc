@@ -23,8 +23,9 @@ opts <- parse_args(OptionParser(option_list=option_list), args=args)
 
 # Error checking
 if(is.null(opts$sample_list_file)) stop('Please input a sample list file')
-if(is.null(opts$species_abd_file)) stop('Please input an identified species list')
+if(is.null(opts$species_list_file)) stop('Please input an identified species list')
 
-source("/lustre1/g/aos_shihuang/Strain2b/src/2/utility.R")
+source("utility.R")
+#source("/lustre1/g/aos_shihuang/Strain2b/src/2/utility.R")
 
 Sample_List_Pipeline(opts$sample_list_file, opts$species_list_file, opts$output_path)

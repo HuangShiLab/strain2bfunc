@@ -1,8 +1,7 @@
 source("/lustre1/g/aos_shihuang/Strain2b/src/2/composition.R")
 
 Select_Species_by_Species <- function(Species) {
-  species <- unlist(species[, 1])
-	return (species)
+	return (Species)
 }
 
 Select_Species_by_Genus <- function(Genus) {
@@ -33,6 +32,7 @@ Read_Copynumber_Matrix <- function(species) {
 	cnm_matrix_dir = "/lustre1/g/aos_shihuang/Strain2b/databases/CNM_0.001/"
 	#cnm_matrix_dir = "/lustre1/g/aos_shihuang/Strain2b/databases/CNM_unique/"
 	cnms_file <- list.files(path = cnm_matrix_dir, pattern = paste(species, ".CNM.xls", sep = ""))
+	print(cnms_file)
 	if(length(cnms_file) == 0) {
 		result = NULL
 	}
@@ -47,12 +47,12 @@ Merge_Copynumber_Matrix <- function(all_species) { # merge the copynumber matrix
 		result <- NULL
 	}
 	else if(length(all_species) == 1) {
-		result <- Read_Copynumber_Matrix(all_species[1])
+		result <- Read_Copynumber_Matrix(all_species[1, 1])
 	}
 	else {
-		result <- Read_Copynumber_Matrix(all_species[1])
+		result <- Read_Copynumber_Matrix(all_species[1, 1])
 		for (i in 2:length(all_species)) {
-			cnm <-  Read_Copynumber_Matrix(all_species[i])
+			cnm <-  Read_Copynumber_Matrix(all_species[i, 1])
 			result <- Merge_Two_Copynumber_Matrix(result, cnm)
 		}
 	}
@@ -127,33 +127,38 @@ One_Sample_Pipeline <- function(sample_info, species_list, output_path) {
 	species <- Select_Species_by_Species(species_list)
         #print("2")
 	cnm <- Merge_Copynumber_Matrix(species)
+	write.table(cnm, paste0(output_path, "/", sample_name, ".copy_number_matrix.txt"), sep = "\t", row.names = T, col.names = NA, quote = F)
         #print("3")
-	output_tag_path <- paste(output_path, "/", sample_name, ".BcgI.tag", sep = "")
-	new_sample_fa <- paste(output_path, "/new_", sample_name, ".fa", sep = "")
+	output_tag_path <- paste0(output_path, "/", sample_name, ".BcgI.tag")
+	new_sample_fa <- paste0(output_path, "/new_", sample_name, ".fa")
 	Rename_Fasta(sample_name, sample_fa, new_sample_fa)
         #print("4")
 	similarity <- 0.96
-	tags_count_file <- paste(output_path, "/", sample_name, "_", similarity, "_tags_count.txt", sep = "")
+	tags_count_file <- paste0(output_path, "/", sample_name, "_", similarity, "_tags_count.txt")
 	Vsearch(cnm, new_sample_fa, similarity, output_tag_path, tags_count_file)
         #print("5")
 	matrix <- Filter_CNM(cnm, tags_count_file, sample_name)
         #print("6")
 	tags_count <- matrix$tags_count
 	cnm <- matrix$cnm
-	write.table(cnm, paste(output_path, "/", sample_name, "_cnm.xls", sep = ""), sep = "\t", row.names = T, col.names = NA, quote = F)
+	write.table(cnm, paste0(output_path, "/", sample_name, "_cnm.xls"), sep = "\t", row.names = T, col.names = NA, quote = F)
 	predicted_abundance_matrix <- Strain_Level_Profiling(tags_count, cnm)
         #print("7")
-	out_file <- paste(output_path, "/", sample_name, "_strain_level_profiling.txt", sep = "")
+	out_file <- paste0(output_path, "/", sample_name, "_strain_level_profiling.txt")
 	write.table(predicted_abundance_matrix, out_file, sep = "\t", row.names = T, col.names = NA, quote = F)
 }
 
-Sample_List_Pipeline <- function(sample_list_file, species_abd_file, output_path) {
+Sample_List_Pipeline <- function(sample_list_file, species_list_file, output_path) {
 	sample_list <- read.table(sample_list_file, sep = "\t", header = F)
-	species_abd <- read.table(species_abd_file, sep = "\t", header = T, comment.char="")
+	species_list <- read.table(species_list_file, sep = "\t", header = F, comment.char="")
+	print(mode(species_list))
+	print(class(species_list))
+	print(species_list)
 	if(!file.exists(output_path)) {
 		dir.create(output_path)
 	}
 	apply(sample_list, 1, function(x) One_Sample_Pipeline(x, species_list, output_path))
 }
+
 
 
