@@ -1,0 +1,7 @@
+Kingdom	Phylum	Class	Order	Family	Genus	Species	Theoretical_Tag_Num	Sequenced_Tag_Num	Percent	Sequenced_Reads_Num	Sequenced_Reads_Num/Theoretical_Tag_Num	Sequenced_Reads_Num/Sequenced_Tag_Num	Sequenced_Tag_Num(depth>1)	G_Score
+Bacteria	Firmicutes	Bacilli	Erysipelotrichales	Erysipelotrichaceae	UBA9076	UBA9076_sp003537975	68.5	1	1.45985401%	1	0.01459854	1.00000000	0	1.00000000
+Bacteria	Proteobacteria	Gammaproteobacteria	Enterobacterales	Enterobacteriaceae	Escherichia	Escherichia_flexneri	52.3352110764219	1	1.91075947%	1	0.01910759	1.00000000	0	1.00000000
+Bacteria	Firmicutes	Bacilli	Staphylococcales	Staphylococcaceae	Staphylococcus	Staphylococcus_argenteus	348.746575342466	2	0.57348233%	2	0.00573482	1.00000000	0	2.00000000
+Bacteria	Firmicutes	Bacilli	Staphylococcales	Staphylococcaceae	Staphylococcus	Staphylococcus_aureus	84.4372816503078	236	279.49739190%	380	4.50038173	1.61016949	81	299.46619175
+Bacteria	Firmicutes	Bacilli	Staphylococcales	Staphylococcaceae	Staphylococcus	Staphylococcus_epidermidis	142.606651376147	157	110.09304158%	217	1.52166815	1.38216561	43	184.57789683
+Bacteria	Firmicutes	Bacilli	Staphylococcales	Staphylococcaceae	Staphylococcus	Staphylococcus_microti	852	1	0.11737089%	1	0.00117371	1.00000000	0	1.00000000

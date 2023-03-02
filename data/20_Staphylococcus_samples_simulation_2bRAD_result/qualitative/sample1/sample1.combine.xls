@@ -1,0 +1,7 @@
+#BcgI combine
+#Kingdom	Phylum	Class	Order	Family	Genus	Species	Theoretical_Tag_Num	Sequenced_Tag_Num	Percent	Sequenced_Reads_Num	Sequenced_Reads_Num/Theoretical_Tag_Num	Sequenced_Reads_Num/Sequenced_Tag_Num	Sequenced_Tag_Num(depth>1)	G_Score
+Bacteria	Spirochaetota	Leptospirae	Leptospirales	Leptospiraceae	Leptospira	Leptospira_noguchii	777.388888888889	1	0.12863575%	1	0.00128636	1.00000000	0	1.00000000
+Bacteria	Firmicutes	Bacilli	Staphylococcales	Staphylococcaceae	Staphylococcus	Staphylococcus_epidermidis	142.606651376147	202	141.64837197%	326	2.28600838	1.61386139	79	256.61644530
+Bacteria	Firmicutes	Bacilli	Bacillales_H	Bacillaceae_D	Bacillus_H	Bacillus_H_sp000576325	1749	1	0.05717553%	1	0.00057176	1.00000000	0	1.00000000
+Bacteria	Firmicutes	Bacilli	Staphylococcales	Staphylococcaceae	Staphylococcus	Staphylococcus_schweitzeri	307.625	2	0.65014222%	2	0.00650142	1.00000000	0	2.00000000
+Bacteria	Firmicutes	Bacilli	Staphylococcales	Staphylococcaceae	Staphylococcus	Staphylococcus_aureus	84.4372816503078	262	310.28947744%	442	5.23465454	1.68702290	101	340.29986776
