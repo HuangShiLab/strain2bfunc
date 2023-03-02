@@ -29,7 +29,7 @@ Merge_Two_Copynumber_Matrix <- function(cnm1, cnm2) { # merge two copynumber mat
 }
 
 Read_Copynumber_Matrix <- function(species) {
-	cnm_matrix_dir = "/lustre1/g/aos_shihuang/Strain2b/databases/CNM_0.001/"
+	cnm_matrix_dir = "/lustre1/g/aos_shihuang/Strain2b/databases/CNM_0.01/"
 	#cnm_matrix_dir = "/lustre1/g/aos_shihuang/Strain2b/databases/CNM_unique/"
 	cnms_file <- list.files(path = cnm_matrix_dir, pattern = paste(species, ".CNM.xls", sep = ""))
 	print(cnms_file)
@@ -146,18 +146,49 @@ One_Sample_Pipeline <- function(sample_info, species_list, output_path) {
         #print("7")
 	out_file <- paste0(output_path, "/", sample_name, "_strain_level_profiling.txt")
 	write.table(predicted_abundance_matrix, out_file, sep = "\t", row.names = T, col.names = NA, quote = F)
+	return (out_file)
+}
+
+Merge_Two_Profiling_Matrix <- function(abd1, abd2) {
+        result <- merge(abd1, abd2, by = 1, all = TRUE)
+        result[is.na(result)] <- 0
+        return (result)
+}
+
+Read_Profiling_Matrix <- function(sample_path) {
+        result = read.table(sample_path, sep = "\t", header = T)
+        return (result)
+}
+
+Merge_Profiling_Matrix <- function(all_samples_info) { # merge the copynumber matrix of all samples
+        if(length(all_samples_info) == 0) {
+                result <- NULL
+        }
+        else if(length(all_samples_info) == 1) {
+                result <- Read_Profiling_Matrix(all_samples_info[1])
+        }
+        else {
+                result <- Read_Profiling_Matrix(all_samples_info[1])
+                for (i in 2:length(all_samples_info)) {
+                        abd <-  Read_Profiling_Matrix(all_samples_info[i])
+                        result <- Merge_Two_Profiling_Matrix(result, abd)
+                }
+        }
+        rownames(result) <- result[, 1]
+        result <- result[, -1]
+        return (result)
 }
 
 Sample_List_Pipeline <- function(sample_list_file, species_list_file, output_path) {
 	sample_list <- read.table(sample_list_file, sep = "\t", header = F)
 	species_list <- read.table(species_list_file, sep = "\t", header = F, comment.char="")
-	print(mode(species_list))
-	print(class(species_list))
-	print(species_list)
+	#print(species_list)
 	if(!file.exists(output_path)) {
 		dir.create(output_path)
 	}
-	apply(sample_list, 1, function(x) One_Sample_Pipeline(x, species_list, output_path))
+	profile_list <- apply(sample_list, 1, function(x) One_Sample_Pipeline(x, species_list, output_path))
+	abd_matrix <- Merge_Profiling_Matrix(profile_list)
+	write.table(abd_matrix, paste0(output_path, "/", "strain_level_abd.txt"), sep = "\t", quote = F, row.names = T, col.names = NA)
 }
 
 
