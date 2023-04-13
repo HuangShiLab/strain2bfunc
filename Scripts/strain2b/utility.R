@@ -1,4 +1,4 @@
-source("/lustre1/g/aos_shihuang/Strain2b/src/2/composition.R")
+source("composition.R")
 
 Select_Species_by_Species <- function(Species) {
 	return (Species)
