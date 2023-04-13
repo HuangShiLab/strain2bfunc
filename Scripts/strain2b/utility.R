@@ -1,15 +1,7 @@
 source("composition.R")
 
 Select_Species_by_Species <- function(Species) {
-	return (list(Species))
-}
-
-Select_Species_by_Genus <- function(Genus) {
-	db_file <- "/lustre1/g/aos_shihuang/Strain2b/databases/BcgI_rep_genome/26w.every_species_genome_num.txt" 
-	table <- read.table(db_file, sep = "\t", header = T)
-	idx <- which(table$genus == Genus)
-	result <- list(table[idx, "specie"])
-	return (result)
+	return (Species[, 1])
 }
 
 Select_Species_by_Abd_Table <- function(species_abd, sample_name, threshold) {
