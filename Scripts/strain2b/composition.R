@@ -7,39 +7,34 @@ usePackage <- function(p){
 }
 invisible(lapply(p, usePackage))
 
-rmscols <- function(Readcount.mat, Cpn.mat, trim = 0, reltol = 1e-6, verbose = TRUE){
-  J <- ncol(Readcount.mat)
-  C <- nrow(Cpn.mat)
-  G <- ncol(Cpn.mat)
-  beta.matrix <- matrix(0, nrow = G, ncol = J)
-  rownames(beta.matrix) <- colnames(Cpn.mat)
-  colnames(beta.matrix) <- colnames(Readcount.mat)
-  if(trim > 0) residuals <- matrix(0, nrow = C, ncol = J)
-  for(j in 1:J){
-    tot.reads <- sum(Readcount.mat[,j])
-    nc <- sum(Readcount.mat[,j] > 0)
-    if(verbose) cat("De-convolving sample", colnames(Readcount.mat)[j],
-                    "having", tot.reads, "reads mapped to", nc, "clusters...\n")
-    if(tot.reads > 0){
-      w <- rep(1,C)
-      s.hat <- constrLS(Readcount.mat[,j], Cpn.mat, w, reltol, verbose)
-      if(trim > 0){
-        if(verbose) cat("Trimming residuals...\n")
-        residuals[,j] <- as.numeric(Readcount.mat[,j] - Cpn.mat %*% s.hat)
-        rsd <- sd(residuals[,j])
-        for(g in 1:G){
-          idx <- which(Cpn.mat[,g] > 0)
-          qq <- quantile(residuals[idx,j], c(trim/2, 1-trim/2))
-          idd <- which(residuals[idx,j] < qq[1] | residuals[idx,j] > qq[2])
-          w[idx[idd]] <- 0
-        }
-        s.hat <- constrLS(Readcount.mat[,j], Cpn.mat, w, reltol, verbose)
+rmscols <- function(read_count, copy_number_matrix, trim = 0, reltol = 1e-6, verbose = TRUE){
+  C <- nrow(copy_number_matrix)
+  G <- ncol(copy_number_matrix)
+  result <- matrix(0, nrow = G, ncol = 1)
+  rownames(result) <- colnames(copy_number_matrix)
+  colnames(result) <- colnames(read_count)
+  total_reads_count <- sum(read_count[,1])
+  nc <- sum(read_count[,1] > 0)
+  cat("Sample ", colnames(read_count)[1], " having ", total_reads_count, " reads mapped to ", nc, " clusters\n")
+  if(total_reads_count > 0){
+    w <- rep(1,C)
+    strain_count <- constrLS(read_count[,1], copy_number_matrix, w, reltol, verbose)
+    if(trim > 0){
+      if(verbose) cat("Trimming residuals...\n")
+      residuals[,1] <- as.numeric(read_count[,1] - copy_number_matrix %*% strain_count)
+      rsd <- sd(residuals[,1])
+      for(g in 1:G){
+        idx <- which(copy_number_matrix[,g] > 0)
+        qq <- quantile(residuals[idx,j], c(trim/2, 1-trim/2))
+        idd <- which(residuals[idx,1] < qq[1] | residuals[idx,1] > qq[2])
+        w[idx[idd]] <- 0
       }
-      beta.hat <- s.hat/sum(s.hat)
-      beta.matrix[,j] <- as.numeric(beta.hat)
+      strain_count <- constrLS(read_count[,1], copy_number_matrix, w, reltol, verbose)
     }
+    strain_abundance <- strain_count/sum(strain_count)
+    result[,1] <- as.numeric(strain_abundance)
   }
-  return(beta.matrix)
+  return(result)
 }
 
 # X --- copy number matrix
@@ -61,24 +56,20 @@ constrLS <- function(y, X, w, reltol = 1e-6, verbose = FALSE){
   # Constrained estimate
   ctl <- list(factr = reltol/.Machine$double.eps)
   if(verbose){
-    cat("   constrained optimization...\n")
+    cat("Constrained optimization...\n")
     ctl <- list(trace = 1, REPORT = 1, factr = reltol/.Machine$double.eps, maxit = 10000)
   }
-  lst <- optim(theta0, fn = objectFun, gr = grr, y, X, w,
-               method = "L-BFGS-B", lower = rep(0, p),
-               control = ctl)
+  lst <- optim(theta0, fn = objectFun, gr = grr, y, X, w, method = "L-BFGS-B", lower = rep(0, p), control = ctl)
   return(lst$par)
 }
 
 grr <- function(b, y, X, w) { ## Gradient of objectFun
   r <- t(-2 * w^2 * X) %*% (y - X %*% b) + 0.00002*b
-  
   return (r)
 }
 
 objectFun <- function(b, y, X, w){
   r <- w * (y - (X %*% b))
-  
   return(sum(r^2) + 0.00001*sum(b^2))
 }
 
