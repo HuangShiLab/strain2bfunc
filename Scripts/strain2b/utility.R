@@ -198,11 +198,14 @@ Sample_List_Pipeline <- function(sample_list_file, species_file, output_path, mo
   }
 	else { #mode == 0
 	  species_abd <- read.table(species_file, sep = "\t", header = T, comment.char="")
+	  rownames(species_abd) <- species_abd$Species
+	  species_abd <- species_abd[, 8:ncol(species_abd)] #the first 7 columns of the result of 2bRAD-M is classification information
+	  rownames(species_abd) <- 
 	  sample_list <- sample_list[order(sample_list[, 1]), ]
 	  species_abd <- species_abd[, order(colnames(species_abd))]
 	  sample_names1 <- sample_list[, 1]
 	  print(sample_names1)
-	  sample_names2 <- colnames(species_abd[8:ncol(species_abd)])
+	  sample_names2 <- colnames(species_abd)
 	  print(sample_names2)
 	  if(!identical(sample_names1, sample_names2)) {
 	    stop("Please confirm that the sample names in the first column of the sample list file match 
