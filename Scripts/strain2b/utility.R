@@ -120,7 +120,7 @@ Strain_Level_Profiling <- function(tags_count_matrix, cnm_matrix) {
 	return (result)
 }
 
-One_Sample_Pipeline <- function(sample_info, species_info, output_path, mode, cnm = NULL) {
+One_Sample_Pipeline <- function(sample_info, species_info, output_path, mode, cnm = NULL, threshold = 0.001) {
 #for mode == 0, species_info is species abundance table, for mode == 1, species_info is species list
 	sample_name <- sample_info[1]
 	sample_fa <- sample_info[2]
@@ -212,7 +212,7 @@ Sample_List_Pipeline <- function(sample_list_file, species_file, output_path, mo
 	    stop("Please confirm that the sample names in the first column of the sample list file match 
 	         those in the first row of the species abundance table file.")
 	  }
-	  profile_list <- apply(sample_list, 1, function(x) One_Sample_Pipeline(x, species_abd, output_path, mode))
+	  profile_list <- apply(sample_list, 1, function(x) One_Sample_Pipeline(x, species_abd, output_path, mode, threshold))
 	}
 
 	abd_matrix <- Merge_Profiling_Matrix(profile_list)
