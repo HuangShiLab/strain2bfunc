@@ -1,14 +1,14 @@
 source("composition.R")
 
 Select_Species_by_Species <- function(Species) {
-	return (Species)
+	return (list(Species))
 }
 
 Select_Species_by_Genus <- function(Genus) {
 	db_file <- "/lustre1/g/aos_shihuang/Strain2b/databases/BcgI_rep_genome/26w.every_species_genome_num.txt" 
 	table <- read.table(db_file, sep = "\t", header = T)
 	idx <- which(table$genus == Genus)
-	result <- table[idx, "specie"]
+	result <- list(table[idx, "specie"])
 	return (result)
 }
 
@@ -30,7 +30,6 @@ Read_Copynumber_Matrix <- function(species) {
 	cnm_matrix_dir = "/lustre1/g/aos_shihuang/Strain2b/databases/CNM_0.01/"
 	#cnm_matrix_dir = "/lustre1/g/aos_shihuang/Strain2b/databases/CNM_unique/"
 	cnms_file <- list.files(path = cnm_matrix_dir, pattern = paste(species, ".CNM.xls", sep = ""))
-	print(cnms_file)
 	if(length(cnms_file) == 0) {
 		result = NULL
 	}
@@ -92,10 +91,10 @@ Filter_CNM <- function(cnm, tags_count_file, sample_name) { #filter the copynumb
 
 Sort_tags <- function(Matrix) {
 	idx <- order(rownames(Matrix))
-        new_matrix <- as.data.frame(Matrix[idx, ])
-        rownames(new_matrix) <- rownames(Matrix)[idx]
-        colnames(new_matrix) <- colnames(Matrix)
-        new_matrix <- as.matrix(new_matrix)
+  new_matrix <- as.data.frame(Matrix[idx, ])
+  rownames(new_matrix) <- rownames(Matrix)[idx]
+  colnames(new_matrix) <- colnames(Matrix)
+  new_matrix <- as.matrix(new_matrix)
 	return (new_matrix)
 }
 
@@ -132,22 +131,22 @@ One_Sample_Pipeline <- function(sample_info, species_info, output_path, mode, cn
 	}
   #print("2")
 	write.table(cnm, paste0(output_path, "/", sample_name, ".copy_number_matrix.txt"), sep = "\t", row.names = T, col.names = NA, quote = F)
-        #print("3")
+  #print("3")
 	output_tag_path <- paste0(output_path, "/", sample_name, ".BcgI.tag")
 	new_sample_fa <- paste0(output_path, "/new_", sample_name, ".fa")
 	Rename_Fasta(sample_name, sample_fa, new_sample_fa)
-        #print("4")
+  #print("4")
 	similarity <- 0.96
 	tags_count_file <- paste0(output_path, "/", sample_name, "_", similarity, "_tags_count.txt")
 	Vsearch(cnm, new_sample_fa, similarity, output_tag_path, tags_count_file)
-        #print("5")
+  #print("5")
 	matrix <- Filter_CNM(cnm, tags_count_file, sample_name)
-        #print("6")
+  #print("6")
 	tags_count <- matrix$tags_count
 	cnm <- matrix$cnm
 	write.table(cnm, paste0(output_path, "/", sample_name, "_cnm.xls"), sep = "\t", row.names = T, col.names = NA, quote = F)
 	predicted_abundance_matrix <- Strain_Level_Profiling(tags_count, cnm)
-        #print("7")
+  #print("7")
 	out_file <- paste0(output_path, "/", sample_name, "_strain_level_profiling.txt")
 	write.table(predicted_abundance_matrix, out_file, sep = "\t", row.names = T, col.names = NA, quote = F)
 	return (out_file)
@@ -204,9 +203,7 @@ Sample_List_Pipeline <- function(sample_list_file, species_file, output_path, mo
 	  sample_list <- sample_list[order(sample_list[, 1]), ]
 	  species_abd <- species_abd[, order(colnames(species_abd))]
 	  sample_names0 <- sample_list[, 1]
-	  print(sample_names0)
 	  sample_names <- colnames(species_abd)
-	  print(sample_names)
 	  if(!identical(sample_names0, sample_names)) {
 	    stop("Please confirm that the sample names in the first column of the sample list file match 
 	         those in the first row of the species abundance table file.")
