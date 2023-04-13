@@ -190,7 +190,7 @@ Sample_List_Pipeline <- function(sample_list_file, species_file, output_path, mo
     species_list <- read.table(species_file, sep = "\t", header = F, comment.char="")
   }
 	else { #mode == 0
-	  species_abd <- read.table(species_abd_file, sep = "\t", header = T, comment.char="")
+	  species_abd <- read.table(species_file, sep = "\t", header = T, comment.char="")
 	  sample_list <- sample_list[order(sample_list[, 1]), ]
 	  species_abd <- species_abd[, order(colnames(species_abd))]
 	  sample_names1 <- sample_list[, 1]
