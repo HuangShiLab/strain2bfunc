@@ -45,12 +45,12 @@ Merge_Copynumber_Matrix <- function(all_species) { # merge the copynumber matrix
 		result <- NULL
 	}
 	else if(length(all_species) == 1) {
-		result <- Read_Copynumber_Matrix(all_species[1, 1])
+		result <- Read_Copynumber_Matrix(all_species[1])
 	}
 	else {
-		result <- Read_Copynumber_Matrix(all_species[1, 1])
+		result <- Read_Copynumber_Matrix(all_species[1])
 		for (i in 2:length(all_species)) {
-			cnm <-  Read_Copynumber_Matrix(all_species[i, 1])
+			cnm <-  Read_Copynumber_Matrix(all_species[i])
 			result <- Merge_Two_Copynumber_Matrix(result, cnm)
 		}
 	}
