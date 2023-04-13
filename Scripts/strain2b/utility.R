@@ -207,7 +207,7 @@ Sample_List_Pipeline <- function(sample_list_file, species_file, output_path, mo
 	         those in the first row of the species abundance table file.")
 	  }
 	  species_list <- Select_Species_by_Abd_Table(species_abd, sample_name, threshold)
-	  profile_list <- apply(sample_list, mode, cnm, 1, function(x) One_Sample_Pipeline(x, species_list, output_path, mode))
+	  profile_list <- apply(sample_list, mode, 1, function(x) One_Sample_Pipeline(x, species_list, output_path, mode))
 	}
 
 	abd_matrix <- Merge_Profiling_Matrix(profile_list)
