@@ -13,11 +13,9 @@ Select_Species_by_Genus <- function(Genus) {
 }
 
 Select_Species_by_Abd_Table <- function(species_abd, sample_name, threshold) {
-	sample_name <- gsub("-", ".", sample_name)
 	idx <- which(species_abd[, sample_name] >= threshold)
-	result <- species_abd[idx, "Species"]
+	result <- rownames(species_abd)[idx]
 	#result <- substr(result, 4, nchar(result))
-	head(result)
 	result <- gsub(" ", "_", result)
 	return (result)
 }
@@ -191,6 +189,7 @@ Sample_List_Pipeline <- function(sample_list_file, species_file, output_path, mo
   }
   
   sample_list <- read.table(sample_list_file, sep = "\t", header = F)
+  sample_list[, 1] <- gsub("-", ".", sample_list[, 1])
   
   if(mode == 1) {
     species_list <- read.table(species_file, sep = "\t", header = F, comment.char="")
@@ -201,7 +200,7 @@ Sample_List_Pipeline <- function(sample_list_file, species_file, output_path, mo
 	  species_abd <- read.table(species_file, sep = "\t", header = T, comment.char="")
 	  rownames(species_abd) <- species_abd$Species
 	  species_abd <- species_abd[, 8:ncol(species_abd)] #the first 7 columns of the result of 2bRAD-M is classification information
-	  rownames(species_abd) <- 
+    colnames(species_abd) <- gsub("-", ".", colnames(species_abd))
 	  sample_list <- sample_list[order(sample_list[, 1]), ]
 	  species_abd <- species_abd[, order(colnames(species_abd))]
 	  sample_names0 <- sample_list[, 1]
