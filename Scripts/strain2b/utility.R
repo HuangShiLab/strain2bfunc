@@ -1,7 +1,7 @@
 source("composition.R")
 
 Select_Species_by_Species <- function(Species) {
-	return (unlist(Species[, 1]))
+	return (Species[, 1])
 }
 
 Select_Species_by_Abd_Table <- function(species_abd, sample_name, threshold) {
@@ -114,12 +114,12 @@ One_Sample_Pipeline <- function(sample_info, species_info, output_path, mode, cn
 	sample_name <- sample_info[1]
 	sample_fa <- sample_info[2]
 	#print("1")
-	if(mode == 1) {
-	  species <- Select_Species_by_Species(species_info)
-	  #cnm <- cnm
-	}	else {
+	if(mode == 0) {
 	  species <- Select_Species_by_Abd_Table(species_info, sample_name, threshold)
 	  cnm <- Merge_Copynumber_Matrix(species)
+	} else { # mode == 1
+	  #species <- species_info
+	  #cnm <- cnm
 	}
   #print("2")
 	write.table(cnm, paste0(output_path, "/", sample_name, ".copy_number_matrix.txt"), sep = "\t", row.names = T, col.names = NA, quote = F)
@@ -182,13 +182,7 @@ Sample_List_Pipeline <- function(sample_list_file, species_file, output_path, mo
   sample_list <- read.table(sample_list_file, sep = "\t", header = F)
   sample_list[, 1] <- gsub("-", ".", sample_list[, 1])
   
-  if(mode == 1) {
-    species_list <- read.table(species_file, sep = "\t", header = F, comment.char="")
-    species_list <- Select_Species_by_Species(species_list)
-    cnm <- Merge_Copynumber_Matrix(species_list)
-    profile_list <- apply(sample_list, 1, function(x) One_Sample_Pipeline(x, species_list, output_path, mode, cnm))
-  }
-	else { #mode == 0
+	if(mode == 0) { #mode == 0
 	  species_abd <- read.table(species_file, sep = "\t", header = T, comment.char="")
 	  rownames(species_abd) <- species_abd$Species
 	  species_abd <- species_abd[, 8:ncol(species_abd)] #the first 7 columns of the result of 2bRAD-M is classification information
@@ -202,6 +196,11 @@ Sample_List_Pipeline <- function(sample_list_file, species_file, output_path, mo
 	         those in the first row of the species abundance table file.")
 	  }
 	  profile_list <- apply(sample_list, 1, function(x) One_Sample_Pipeline(x, species_abd, output_path, mode, threshold))
+	} else { #mode == 1
+	  species_list <- read.table(species_file, sep = "\t", header = F, comment.char="")
+	  species <- Select_Species_by_Species(species_list)
+	  cnm <- Merge_Copynumber_Matrix(species)
+	  profile_list <- apply(sample_list, 1, function(x) One_Sample_Pipeline(x, species, output_path, mode, cnm))
 	}
 
 	abd_matrix <- Merge_Profiling_Matrix(profile_list)
