@@ -33,14 +33,14 @@ opts <- parse_args(OptionParser(option_list=option_list), args=args)
 source("utility.R")
 
 if(is.null(opts$sample_list_file)) stop('Please input a sample list file')
-if (opt$mode == 0) {
-  if (is.null(opt$species_abundance_file)) {
+if (opts$mode == 0) {
+  if (is.null(opts$species_abundance_file)) {
     stop("Please specify a species abundance table file!")
   } else {
     Sample_List_Pipeline(opts$sample_list_file, opts$species_abundance_file, opts$output_path, mode = 0, threshold = threshold)
   }
-} else if (opt$mode == 1) {
-  if (is.null(opt$species_list_file)) {
+} else if (opts$mode == 1) {
+  if (is.null(opts$species_list_file)) {
     stop("Please specify a species list file!")
   } else {
     Sample_List_Pipeline(opts$sample_list_file, opts$species_list_file, opts$output_path, mode = 1)
