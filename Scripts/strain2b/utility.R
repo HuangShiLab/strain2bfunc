@@ -203,11 +203,11 @@ Sample_List_Pipeline <- function(sample_list_file, species_file, output_path, mo
 	  rownames(species_abd) <- 
 	  sample_list <- sample_list[order(sample_list[, 1]), ]
 	  species_abd <- species_abd[, order(colnames(species_abd))]
-	  sample_names1 <- sample_list[, 1]
-	  print(sample_names1)
-	  sample_names2 <- colnames(species_abd)
-	  print(sample_names2)
-	  if(!identical(sample_names1, sample_names2)) {
+	  sample_names0 <- sample_list[, 1]
+	  print(sample_names0)
+	  sample_names <- colnames(species_abd)
+	  print(sample_names)
+	  if(!identical(sample_names0, sample_names)) {
 	    stop("Please confirm that the sample names in the first column of the sample list file match 
 	         those in the first row of the species abundance table file.")
 	  }
