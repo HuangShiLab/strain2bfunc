@@ -22,8 +22,8 @@ option_list <- list(
                     help="The threshold of species abundance for strain-level identification, [Required when mode is equal to 0, default %default]"),
         make_option(c("-s", "--species_list_file"), type="character", 
                     help="Input the identified species list [Required when mode is equal to 1]"),
-        make_option(c("-m", "--mode"), type="integer", choices=c(0, 1), default = 0, 
-                    help="0 for global strain level profiling, 1 for strain level profiling for identified species [default %default]"),
+        make_option(c("-m", "--mode"), type="integer", default = 0, 
+                    help="choices=c(0, 1), 0 for global strain level profiling, 1 for strain level profiling for identified species [default %default]"),
         make_option(c("-o", "--output_path"), type="character", default='.', 
                     help="Output file [default %default]")
 )
