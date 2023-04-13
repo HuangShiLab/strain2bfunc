@@ -120,13 +120,18 @@ Strain_Level_Profiling <- function(tags_count_matrix, cnm_matrix) {
 	return (result)
 }
 
-One_Sample_Pipeline <- function(sample_info, species_list, output_path) {
+One_Sample_Pipeline <- function(sample_info, species_info, output_path, mode, cnm = NULL) {
 	sample_name <- sample_info[1]
 	sample_fa <- sample_info[2]
 	#print("1")
-	species <- Select_Species_by_Species(species_list)
-        #print("2")
-	cnm <- Merge_Copynumber_Matrix(species)
+	if(mode == 1) {
+	  species <- Select_Species_by_Species(species_info)
+	  #cnm <- cnm
+	}	else {
+	  species <- Select_Species_by_Abd_Table(species_info, sample_name, threshold)
+	  cnm <- Merge_Copynumber_Matrix(species)
+	}
+  #print("2")
 	write.table(cnm, paste0(output_path, "/", sample_name, ".copy_number_matrix.txt"), sep = "\t", row.names = T, col.names = NA, quote = F)
         #print("3")
 	output_tag_path <- paste0(output_path, "/", sample_name, ".BcgI.tag")
@@ -188,21 +193,23 @@ Sample_List_Pipeline <- function(sample_list_file, species_file, output_path, mo
   
   if(mode == 1) {
     species_list <- read.table(species_file, sep = "\t", header = F, comment.char="")
+    cnm <- Merge_Copynumber_Matrix(species_list)
+    profile_list <- apply(sample_list, mode, cnm, 1, function(x) One_Sample_Pipeline(x, species_list, output_path, mode, cnm))
   }
 	else { #mode == 0
 	  species_abd <- read.table(species_file, sep = "\t", header = T, comment.char="")
 	  sample_list <- sample_list[order(sample_list[, 1]), ]
 	  species_abd <- species_abd[, order(colnames(species_abd))]
 	  sample_names1 <- sample_list[, 1]
-	  sample_names2 <- colnames(species_abd)
+	  sample_names2 <- colnames(species_abd[8:ncol(species_abd)])
 	  if(!identical(sample_names1, sample_names2)) {
 	    stop("Please confirm that the sample names in the first column of the sample list file match 
 	         those in the first row of the species abundance table file.")
 	  }
-	  species_list <- read.table(species_abd, sample_name, threshold)
+	  species_list <- Select_Species_by_Abd_Table(species_abd, sample_name, threshold)
+	  profile_list <- apply(sample_list, mode, cnm, 1, function(x) One_Sample_Pipeline(x, species_list, output_path, mode))
 	}
 
-	profile_list <- apply(sample_list, 1, function(x) One_Sample_Pipeline(x, species_list, output_path))
 	abd_matrix <- Merge_Profiling_Matrix(profile_list)
 	write.table(abd_matrix, paste0(output_path, "/", "strain_level_abd.txt"), sep = "\t", quote = F, row.names = T, col.names = NA)
 }
