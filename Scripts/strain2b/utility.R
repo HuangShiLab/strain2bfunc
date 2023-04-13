@@ -1,7 +1,7 @@
 source("composition.R")
 
 Select_Species_by_Species <- function(Species) {
-	return (Species[, 1])
+	return (unlist(Species[, 1]))
 }
 
 Select_Species_by_Abd_Table <- function(species_abd, sample_name, threshold) {
@@ -184,6 +184,7 @@ Sample_List_Pipeline <- function(sample_list_file, species_file, output_path, mo
   
   if(mode == 1) {
     species_list <- read.table(species_file, sep = "\t", header = F, comment.char="")
+    species_list <- Select_Species_by_Species(species_list)
     cnm <- Merge_Copynumber_Matrix(species_list)
     profile_list <- apply(sample_list, 1, function(x) One_Sample_Pipeline(x, species_list, output_path, mode, cnm))
   }
