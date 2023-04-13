@@ -12,9 +12,9 @@ Select_Species_by_Genus <- function(Genus) {
 	return (result)
 }
 
-Select_Species_by_Abd_Table <- function(species_abd, sample_name, thershold) {
+Select_Species_by_Abd_Table <- function(species_abd, sample_name, threshold) {
 	sample_name <- gsub("-", ".", sample_name)
-	idx <- which(species_abd[, sample_name] >= thershold)
+	idx <- which(species_abd[, sample_name] >= threshold)
 	result <- species_abd[idx, "Species"]
 	#result <- substr(result, 4, nchar(result))
 	head(result)
@@ -179,13 +179,29 @@ Merge_Profiling_Matrix <- function(all_samples_info) { # merge the copynumber ma
         return (result)
 }
 
-Sample_List_Pipeline <- function(sample_list_file, species_list_file, output_path) {
-	sample_list <- read.table(sample_list_file, sep = "\t", header = F)
-	species_list <- read.table(species_list_file, sep = "\t", header = F, comment.char="")
-	#print(species_list)
-	if(!file.exists(output_path)) {
-		dir.create(output_path)
+Sample_List_Pipeline <- function(sample_list_file, species_file, output_path, mode = 0, threshold = 0.001) {
+  if(!file.exists(output_path)) {
+    dir.create(output_path)
+  }
+  
+  sample_list <- read.table(sample_list_file, sep = "\t", header = F)
+  
+  if(mode == 1) {
+    species_list <- read.table(species_file, sep = "\t", header = F, comment.char="")
+  }
+	else { #mode == 0
+	  species_abd <- read.table(species_abd_file, sep = "\t", header = T, comment.char="")
+	  sample_list <- sample_list[order(sample_list[, 1]), ]
+	  species_abd <- species_abd[, order(colnames(species_abd))]
+	  sample_names1 <- sample_list[, 1]
+	  sample_names2 <- colnames(species_abd)
+	  if(!identical(sample_names1, sample_names2)) {
+	    stop("Please confirm that the sample names in the first column of the sample list file match 
+	         those in the first row of the species abundance table file.")
+	  }
+	  species_list <- read.table(species_abd, sample_name, threshold)
 	}
+
 	profile_list <- apply(sample_list, 1, function(x) One_Sample_Pipeline(x, species_list, output_path))
 	abd_matrix <- Merge_Profiling_Matrix(profile_list)
 	write.table(abd_matrix, paste0(output_path, "/", "strain_level_abd.txt"), sep = "\t", quote = F, row.names = T, col.names = NA)
