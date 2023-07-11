@@ -128,7 +128,7 @@ One_Sample_Pipeline <- function(sample_info, species_info, output_path, mode, cn
 	new_sample_fa <- paste0(output_path, "/new_", sample_name, ".fa")
 	Rename_Fasta(sample_name, sample_fa, new_sample_fa)
   #print("4")
-	similarity <- 0.96
+	similarity <- 1
 	tags_count_file <- paste0(output_path, "/", sample_name, "_", similarity, "_tags_count.txt")
 	Vsearch(cnm, new_sample_fa, similarity, output_tag_path, tags_count_file)
   #print("5")
