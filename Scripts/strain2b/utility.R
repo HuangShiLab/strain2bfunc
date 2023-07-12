@@ -83,10 +83,10 @@ Filter_CNM <- function(cnm, tags_count_file, sample_name) { #filter the copynumb
 
 Sort_tags <- function(Matrix) {
 	idx <- order(rownames(Matrix))
-  new_matrix <- as.data.frame(Matrix[idx, ])
-  rownames(new_matrix) <- rownames(Matrix)[idx]
-  colnames(new_matrix) <- colnames(Matrix)
-  new_matrix <- as.matrix(new_matrix)
+  	new_matrix <- as.data.frame(Matrix[idx, ])
+  	rownames(new_matrix) <- rownames(Matrix)[idx]
+  	colnames(new_matrix) <- colnames(Matrix)
+  	new_matrix <- as.matrix(new_matrix)
 	return (new_matrix)
 }
 
@@ -99,48 +99,58 @@ Strain_Level_Profiling <- function(tags_count_matrix, cnm_matrix) {
 	predicted_abundance_matrix <- rmscols(tags_count_matrix, cnm_matrix)
 
 	idx <- which(predicted_abundance_matrix > 0)
-  rowname <- rownames(predicted_abundance_matrix)
-  colname <- colnames(predicted_abundance_matrix)
-  result <- predicted_abundance_matrix[idx, ]
-  result <- result / sum(result)
-  result <- as.data.frame(result)
-  rownames(result) <- rowname[idx]
-  colnames(result) <- colname
+  	rowname <- rownames(predicted_abundance_matrix)
+  	colname <- colnames(predicted_abundance_matrix)
+	result <- predicted_abundance_matrix[idx, ]
+  	result <- result / sum(result)
+  	result <- as.data.frame(result)
+  	rownames(result) <- rowname[idx]
+  	colnames(result) <- colname
 	return (result)
 }
 
 One_Sample_Pipeline <- function(sample_info, species_info, output_path, mode, cnm = NULL, threshold = 0.001) {
 #for mode == 0, species_info is species abundance table, for mode == 1, species_info is species list
+
 	sample_name <- sample_info[1]
 	sample_fa <- sample_info[2]
+	
 	#print("1")
 	if(mode == 0) {
-	  species <- Select_Species_by_Abd_Table(species_info, sample_name, threshold)
-	  cnm <- Merge_Copynumber_Matrix(species)
+	  	species <- Select_Species_by_Abd_Table(species_info, sample_name, threshold)
+	  	cnm <- Merge_Copynumber_Matrix(species)
 	} else { # mode == 1
-	  #species <- species_info
-	  #cnm <- cnm
+	  	#species <- species_info
+	  	#cnm <- cnm
 	}
-  #print("2")
-	write.table(cnm, paste0(output_path, "/", sample_name, ".copy_number_matrix.txt"), sep = "\t", row.names = T, col.names = NA, quote = F)
-  #print("3")
+
+  	#print("2")
+	#write.table(cnm, paste0(output_path, "/", sample_name, ".copy_number_matrix.txt"), sep = "\t", row.names = T, col.names = NA, quote = F)
+ 
+ 	#print("3")
 	output_tag_path <- paste0(output_path, "/", sample_name, ".BcgI.tag")
 	new_sample_fa <- paste0(output_path, "/new_", sample_name, ".fa")
 	Rename_Fasta(sample_name, sample_fa, new_sample_fa)
-  #print("4")
+
+  	#print("4")
 	similarity <- 1
 	tags_count_file <- paste0(output_path, "/", sample_name, "_", similarity, "_tags_count.txt")
 	Vsearch(cnm, new_sample_fa, similarity, output_tag_path, tags_count_file)
-  #print("5")
+
+  	#print("5")
 	matrix <- Filter_CNM(cnm, tags_count_file, sample_name)
-  #print("6")
+
+  	#print("6")
 	tags_count <- matrix$tags_count
 	cnm <- matrix$cnm
 	write.table(cnm, paste0(output_path, "/", sample_name, "_cnm.xls"), sep = "\t", row.names = T, col.names = NA, quote = F)
+
 	predicted_abundance_matrix <- Strain_Level_Profiling(tags_count, cnm)
-  #print("7")
+
+  	#print("7")
 	out_file <- paste0(output_path, "/", sample_name, "_strain_level_profiling.txt")
 	write.table(predicted_abundance_matrix, out_file, sep = "\t", row.names = T, col.names = NA, quote = F)
+
 	return (out_file)
 }
 
