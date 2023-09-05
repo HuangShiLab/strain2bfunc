@@ -70,23 +70,28 @@ Vsearch <- function(cnm, new_sample_fa, similarity, output_tag_path, tags_count_
 
 Filter_CNM <- function(cnm, tags_count_file, sample_name) { #filter the copynumber matrix according to the vsearch result (delete the tags which are not included in the sample)
 	tags_count <- read.table(tags_count_file, sep = "\t", header = T, row.names = 1, comment="")
-       	tags_count <- as.matrix(tags_count)
+	idx <- which(rownames(tags_count) %in% rownames(cnm))
+        new_tags_count <- as.data.frame(tags_count[idx, ])
+        rownames(new_tags_count) <- rownames(tags_count)[idx]
+        colnames(new_tags_count) <- colnames(tags_count)
+        tags_count <- as.matrix(new_tags_count)
         idx <- which(rownames(cnm) %in% rownames(tags_count))
 	new_cnm <- as.data.frame(cnm[idx, ])
         rownames(new_cnm) <- rownames(cnm)[idx]
         colnames(new_cnm) <- colnames(cnm)
 	cnm <- as.matrix(new_cnm)
         cnm <- unique(cnm, MARGIN=2)
-        result <- list(tags_count = tags_count, cnm = cnm)
+	print(identical(rownames(tags_count), rownames(cnm)))
+	result <- list(tags_count = tags_count, cnm = cnm)
         return (result)
 }
 
 Sort_tags <- function(Matrix) {
 	idx <- order(rownames(Matrix))
-  	new_matrix <- as.data.frame(Matrix[idx, ])
-  	rownames(new_matrix) <- rownames(Matrix)[idx]
-  	colnames(new_matrix) <- colnames(Matrix)
-  	new_matrix <- as.matrix(new_matrix)
+  new_matrix <- as.data.frame(Matrix[idx, ])
+  rownames(new_matrix) <- rownames(Matrix)[idx]
+  colnames(new_matrix) <- colnames(Matrix)
+  new_matrix <- as.matrix(new_matrix)
 	return (new_matrix)
 }
 
@@ -101,8 +106,8 @@ Strain_Level_Profiling <- function(tags_count_matrix, cnm_matrix) {
 	idx <- which(predicted_abundance_matrix > 0)
   	rowname <- rownames(predicted_abundance_matrix)
   	colname <- colnames(predicted_abundance_matrix)
-	result <- predicted_abundance_matrix[idx, ]
-  	result <- result / sum(result)
+  	result <- predicted_abundance_matrix[idx, ]
+ 	result <- result / sum(result)
   	result <- as.data.frame(result)
   	rownames(result) <- rowname[idx]
   	colnames(result) <- colname
@@ -111,108 +116,112 @@ Strain_Level_Profiling <- function(tags_count_matrix, cnm_matrix) {
 
 One_Sample_Pipeline <- function(sample_info, species_info, output_path, mode, cnm = NULL, threshold = 0.001) {
 #for mode == 0, species_info is species abundance table, for mode == 1, species_info is species list
-
 	sample_name <- sample_info[1]
 	sample_fa <- sample_info[2]
-	
 	#print("1")
 	if(mode == 0) {
-	  	species <- Select_Species_by_Abd_Table(species_info, sample_name, threshold)
-	  	cnm <- Merge_Copynumber_Matrix(species)
+	  species <- Select_Species_by_Abd_Table(species_info, sample_name, threshold)
+	  species <- sub("^s__", "", species)
+	  cnm <- Merge_Copynumber_Matrix(species)
 	} else { # mode == 1
-	  	#species <- species_info
-	  	#cnm <- cnm
+	  #species <- species_info
+	  #cnm <- cnm
 	}
-
-  	#print("2")
+ 	#print("2")
 	#write.table(cnm, paste0(output_path, "/", sample_name, ".copy_number_matrix.txt"), sep = "\t", row.names = T, col.names = NA, quote = F)
- 
- 	#print("3")
+  	#print("3")
 	output_tag_path <- paste0(output_path, "/", sample_name, ".BcgI.tag")
 	new_sample_fa <- paste0(output_path, "/new_", sample_name, ".fa")
 	Rename_Fasta(sample_name, sample_fa, new_sample_fa)
-
   	#print("4")
 	similarity <- 1
 	tags_count_file <- paste0(output_path, "/", sample_name, "_", similarity, "_tags_count.txt")
 	Vsearch(cnm, new_sample_fa, similarity, output_tag_path, tags_count_file)
-
   	#print("5")
 	matrix <- Filter_CNM(cnm, tags_count_file, sample_name)
-
   	#print("6")
 	tags_count <- matrix$tags_count
 	cnm <- matrix$cnm
 	write.table(cnm, paste0(output_path, "/", sample_name, "_cnm.xls"), sep = "\t", row.names = T, col.names = NA, quote = F)
-
 	predicted_abundance_matrix <- Strain_Level_Profiling(tags_count, cnm)
-
-  	#print("7")
+ 	#print("7")
 	out_file <- paste0(output_path, "/", sample_name, "_strain_level_profiling.txt")
 	write.table(predicted_abundance_matrix, out_file, sep = "\t", row.names = T, col.names = NA, quote = F)
-
 	return (out_file)
 }
 
 Merge_Two_Profiling_Matrix <- function(abd1, abd2) {
-        result <- merge(abd1, abd2, by = 1, all = TRUE)
-        result[is.na(result)] <- 0
-        return (result)
+  result <- merge(abd1, abd2, by = 1, all = TRUE)
+  result[is.na(result)] <- 0
+  return (result)
 }
 
 Read_Profiling_Matrix <- function(sample_path) {
-        result = read.table(sample_path, sep = "\t", header = T)
-        return (result)
+  result = read.table(sample_path, sep = "\t", header = T)
+  return (result)
 }
 
 Merge_Profiling_Matrix <- function(all_samples_info) { # merge the copynumber matrix of all samples
-        if(length(all_samples_info) == 0) {
-                result <- NULL
-        }
-        else if(length(all_samples_info) == 1) {
-                result <- Read_Profiling_Matrix(all_samples_info[1])
-        }
-        else {
-                result <- Read_Profiling_Matrix(all_samples_info[1])
-                for (i in 2:length(all_samples_info)) {
-                        abd <-  Read_Profiling_Matrix(all_samples_info[i])
-                        result <- Merge_Two_Profiling_Matrix(result, abd)
-                }
-        }
-        rownames(result) <- result[, 1]
-        result <- result[, -1]
-        return (result)
+  all_samples_info <- all_samples_info[which(!is.na(all_samples_info))]
+  if(length(all_samples_info) == 0) {
+    result <- NULL
+  }
+  else if(length(all_samples_info) == 1) {
+    result <- Read_Profiling_Matrix(all_samples_info[1])
+  }
+  else {
+    result <- Read_Profiling_Matrix(all_samples_info[1])
+    for (i in 2:length(all_samples_info)) {
+      abd <-  Read_Profiling_Matrix(all_samples_info[i])
+      result <- Merge_Two_Profiling_Matrix(result, abd)
+    }
+  }
+  rownames(result) <- result[, 1]
+  result <- result[, -1]
+  return (result)
 }
 
 Sample_List_Pipeline <- function(sample_list_file, species_file, output_path, mode = 0, threshold = 0.001) {
-  if(!file.exists(output_path)) {
-    dir.create(output_path)
-  }
-  
-  sample_list <- read.table(sample_list_file, sep = "\t", header = F)
-  sample_list[, 1] <- gsub("-", ".", sample_list[, 1])
+  	if(!file.exists(output_path)) {
+ 	   	dir.create(output_path)
+ 	 }
+ 	sample_list <- read.table(sample_list_file, sep = "\t", header = F)
+  	sample_list[, 1] <- gsub("-", ".", sample_list[, 1])
   
 	if(mode == 0) { #mode == 0
 	  species_abd <- read.table(species_file, sep = "\t", header = T, comment.char="")
-	  rownames(species_abd) <- species_abd$Species
-	  species_abd <- species_abd[, 8:ncol(species_abd)] #the first 7 columns of the result of 2bRAD-M is classification information
-    colnames(species_abd) <- gsub("-", ".", colnames(species_abd))
-	  sample_list <- sample_list[order(sample_list[, 1]), ]
-	  species_abd <- species_abd[, order(colnames(species_abd))]
+	  if(ncol(species_abd) < 8) {
+	  	stop("Please confirm that there is at least on sample in the species abundance table file.")
+	  }
+	  else if(ncol(species_abd) == 8) {
+	  	rowname <- species_abd$Species
+	  	colname <- gsub("-", ".", colnames(species_abd))[8:ncol(species_abd)]
+	  	species_abd <- as.data.frame(species_abd[, 8:ncol(species_abd)]) #the first 7 columns of the result of 2bRAD-M is classification information
+	  	rownames(species_abd) <- rowname
+	  	colnames(species_abd) <- colname
+	  }
+	  else {
+		rownames(species_abd) <- species_abd$Species
+	  	species_abd <- species_abd[, 8:ncol(species_abd)] #the first 7 columns of the result of 2bRAD-M is classification information
+		colnames(species_abd) <- gsub("-", ".", colnames(species_abd))
+		sample_list <- sample_list[order(sample_list[, 1]), ]
+		species_abd <- species_abd[, order(colnames(species_abd))]
+	  }
 	  sample_names0 <- sample_list[, 1]
-	  sample_names <- colnames(species_abd)
+          sample_names <- colnames(species_abd)
 	  if(!identical(sample_names0, sample_names)) {
 	    stop("Please confirm that the sample names in the first column of the sample list file match 
 	         those in the first row of the species abundance table file.")
 	  }
-	  profile_list <- apply(sample_list, 1, function(x) One_Sample_Pipeline(x, species_abd, output_path, mode, threshold))
+	  profile_list <- apply(sample_list, 1, function(x) tryCatch({One_Sample_Pipeline(x, species_abd, output_path, mode, threshold)}, error=function(err) { NA }))
+	  #profile_list <- apply(sample_list, 1, function(x) One_Sample_Pipeline(x, species_abd, output_path, mode, threshold))
 	} else { #mode == 1
 	  species_list <- read.table(species_file, sep = "\t", header = F, comment.char="")
 	  species <- Select_Species_by_Species(species_list)
 	  cnm <- Merge_Copynumber_Matrix(species)
-	  profile_list <- apply(sample_list, 1, function(x) One_Sample_Pipeline(x, species, output_path, mode, cnm))
+	  profile_list <- apply(sample_list, 1, function(x) tryCatch({One_Sample_Pipeline(x, species, output_path, mode, cnm)}, error=function(err) { NA }))
+	  #profile_list <- apply(sample_list, 1, function(x) One_Sample_Pipeline(x, species, output_path, mode, cnm))
 	}
-
 	abd_matrix <- Merge_Profiling_Matrix(profile_list)
 	write.table(abd_matrix, paste0(output_path, "/", "strain_level_abd.txt"), sep = "\t", quote = F, row.names = T, col.names = NA)
 }
