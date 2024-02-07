@@ -79,8 +79,8 @@ DESCRIPTION
 
 We developed a C++ tool to compute the KO abundance table based on the strain composition abundance table. 
 
-USAGE
 ```
+USAGE
 calculate-ko-abd [Option] Value
 Options:
 [Input options, required]
