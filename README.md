@@ -74,7 +74,7 @@ PARAMETERS
 -h Show this help message and exit.
 ```
 
-#### Functional prediction based on strain-level abundance prediction. 
+#### Functional prediction based on strain-level abundance profiles. 
 
 
 ## FAQ
