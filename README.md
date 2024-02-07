@@ -76,7 +76,9 @@ PARAMETERS
 
 #### Functional prediction based on strain-level abundance profiles. 
 DESCRIPTION
-We developed a C++ to compute the KO abundance table based on the strain composition abundance table. 
+
+We developed a C++ tool to compute the KO abundance table based on the strain composition abundance table. 
+
 USAGE
 ```
 calculate-ko-abd [Option] Value
