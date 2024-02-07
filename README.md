@@ -80,7 +80,7 @@ We developed a C++ tool to compute the KO abundance table based on the strain co
 
 ```
 USAGE
-calculate-ko-abd [Option] Value
+Scripts/func/calculate-ko-abd [Option] Value
 Options:
 [Input options, required]
  -i Input species abundance file
