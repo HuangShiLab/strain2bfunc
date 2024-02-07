@@ -77,6 +77,13 @@ PARAMETERS
 #### Functional prediction based on strain-level abundance prediction. 
 
 
+## FAQ
+
+## Citation
+
+* Sun, Z., Huang, S., Zhu, P. et al. Species-resolved sequencing of low-biomass or degraded microbiomes using 2bRAD-M. Genome Biol 23, 36 (2022). https://doi.org/10.1186/s13059-021-02576-9
+* Huang S, Zhang Y, Liu J, et alIDDF2023-ABS-0267 Strain-resolved taxonomic profiling and functional prediction of human microbiota using Strain2bFuncGut 2023;72:A120-A123.
+
 ## Acknowledgements
  This work is supported by XXX.
 
