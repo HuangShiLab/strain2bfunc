@@ -60,7 +60,8 @@ The main script for implementing those analyses is `Rscript Scripts/strain2b/str
 
 We here provided a streamlined `strain2bfunc` pipeline for analyzing strain microbial compositions from the 2bRAD/shotgun metagenomics data based on the 2bRAD copy-number matrix.
 ```
-Usage: Scripts/strain2b/strain_pipeline.R [options]
+Usage:
+Scripts/strain2b/strain_pipeline.R [options]
 
 Options:
 	-l SAMPLE_LIST_FILE, --sample_list_file=SAMPLE_LIST_FILE
@@ -89,11 +90,18 @@ Options:
 
 ##### DESCRIPTION
 
-We developed a C++ tool to compute the KO abundance table based on the strain composition abundance table. 
+We developed a C++ tool to compute the KO abundance table based on the strain composition abundance table. It should be compiled before execute.
 
 ```
-USAGE
-Scripts/func/calculate-ko-abd [Option] Value
+Compile:
+1) On CentOS:
+gcc cripts/func/calculate-ko-abd.cpp -o cripts/func/calculate-ko-abd
+
+2) On MacOS:
+g++ cripts/func/calculate-ko-abd.cpp -o cripts/func/calculate-ko-abd
+
+Usage:
+./Scripts/func/calculate-ko-abd [Option] Value
 
 Options:
 [Input options, required]
