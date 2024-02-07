@@ -57,6 +57,7 @@ Please refer to more details in our past Github repo: `https://github.com/shihua
 The main script for implementing those analyses is `Rscript Scripts/strain2b/strain_pipeline.R` in this repo. You can check out the usage by printing the help information via `Rscript Scripts/strain2b/strain_pipeline.R -h`.
 
 DESCRIPTION
+
 We here provided a streamlined `strain2bfunc` pipeline for analyzing strain microbial compositions from the 2bRAD/shotgun metagenomics data based on the 2bRAD copy-number matrix.
 ```
 USAGE
