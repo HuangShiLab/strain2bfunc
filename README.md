@@ -54,7 +54,7 @@ Please refer to more details in our past Github repo: `https://github.com/shihua
 
 #### Predict the strain-level abundance for a set of selective abundant species. 
 
-The main script for implementing those analyses is `bin/strain_pipeline.pl` in this repo. You can check out the usage by printing the help information via `perl bin/strain_pipeline.pl -h`.
+The main script for implementing those analyses is `Rscript Scripts/strain2b/strain_pipeline.R` in this repo. You can check out the usage by printing the help information via `Rscript Scripts/strain2b/strain_pipeline.R -h`.
     
 ```
 DESCRIPTION
@@ -62,7 +62,7 @@ We here provided a streamlined `strain2bfunc` pipeline for analyzing strain micr
 USAGE
 
 USAGE
-Rscript strain_pipeline.R
+Rscript Scripts/strain2b/strain_pipeline.R
 
 PARAMETERS
 -m <int> MODE, choices=c(0, 1), 0 for global strain level profiling, 1 for strain level profiling for identified species [default 0]
