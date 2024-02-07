@@ -35,7 +35,7 @@ Clone the latest version from GitHub (recommended):
 
 ### Construct the reference strain2bfunc database (required)
 
-The script `tools/Download_2bRADTagDB_NCBI.pl` in this repo can be used to:
+The script `tools/Download_2bstrain-DB.sh` in this repo can be used to:
    
    * Download the prebuilt 2bstrain-DB from Figshare based on the GTDB  
    * Download the example datasets for the pipeline tutorial
