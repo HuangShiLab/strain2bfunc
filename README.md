@@ -94,14 +94,10 @@ We developed a C++ tool to compute the KO abundance table based on the strain co
 
 ```
 Compile:
-1) On CentOS:
-gcc cripts/func/calculate-ko-abd.cpp -o cripts/func/calculate-ko-abd
-
-2) On MacOS:
-g++ cripts/func/calculate-ko-abd.cpp -o cripts/func/calculate-ko-abd
+gcc Scripts/func/calculate-ko-abd.cpp -o Scripts/func/calculate-ko-abd
 
 Usage:
-./Scripts/func/calculate-ko-abd [Option] Value
+Scripts/func/calculate-ko-abd [Option] Value
 
 Options:
 [Input options, required]
