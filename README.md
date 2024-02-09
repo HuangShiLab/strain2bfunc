@@ -12,7 +12,7 @@ The strain-resolved analysis is a widespread demand because the co-existence of 
 
 
 ## Installation
---------------------------------
+
 ### System requirements
 #### Dependencies
 All scripts in strain2bfunc are written using R and C++, recommended to run in a conda environment. This program should work properly in the Unix systems, or Mac OSX, as all required packages can be appropriately downloaded and installed.
@@ -42,17 +42,16 @@ The script `tools/Download_2bstrain-DB.sh` in this repo can be used to:
      
 
 ## strain2bfunc pipeline tutorial
---------------------------------
 
 ### Overview
 
 ### Usage
 
-#### Estimate the species abundance using our 2bRAD-M. 
+#### Estimate the species abundance using our 2bRAD-M
 
 Please refer to more details in our past Github repo: `https://github.com/shihuang047/2bRAD-M`. 
 
-#### Predict the strain-level abundance for a set of selective abundant species. 
+#### Predict the strain-level abundance for a set of selective abundant species
 
 The main script for implementing those analyses is `Rscript Scripts/strain2b/strain_pipeline.R` in this repo. You can check out the usage by printing the help information via `Rscript Scripts/strain2b/strain_pipeline.R -h`.
 
@@ -86,7 +85,7 @@ Options:
 		Show this help message and exit
 ```
 
-#### Functional prediction based on strain-level abundance profiles. 
+#### Functional prediction based on strain-level abundance profiles
 
 ##### DESCRIPTION
 
@@ -110,6 +109,15 @@ Options:
 [Other options]
  -h Help
 ```
+
+## Benchmark
+
+### *In silico* simulation data
+
+#### Single-genome simulation
+
+#### Sample simulation
+
 
 ## FAQ
 
