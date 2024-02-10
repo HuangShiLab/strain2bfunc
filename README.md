@@ -89,9 +89,12 @@ Options:
 ##### Examples
 
 * run entire pipeline using defaults:
-Rscript Scripts/strain2b/strain_pipeline.R -l SAMPLE_LIST_FILE -a SPECIES_ABUNDANCE_FILE -m 0 -o 'Global_StrainAnalysis.out'
+  
+```Rscript Scripts/strain2b/strain_pipeline.R -l SAMPLE_LIST_FILE -a SPECIES_ABUNDANCE_FILE -m 0 -o 'Global_StrainAnalysis.out'```
+
 * run entire pipeline for a specific high-abundance species:
-Rscript Scripts/strain2b/strain_pipeline.R -l SAMPLE_LIST_FILE -a SPECIES_ABUNDANCE_FILE -s SPECIES_LIST_FILE -m 1 -o 'SpecSp_StrainAnalysis.out'
+  
+```Rscript Scripts/strain2b/strain_pipeline.R -l SAMPLE_LIST_FILE -a SPECIES_ABUNDANCE_FILE -s SPECIES_LIST_FILE -m 1 -o 'SpecSp_StrainAnalysis.out'```
 
 #### Functional prediction based on strain-level abundance profiles
 
