@@ -90,11 +90,11 @@ Options:
 
 * run entire pipeline using defaults:
   
-```Rscript Scripts/strain2b/strain_pipeline.R -l SAMPLE_LIST_FILE -a SPECIES_ABUNDANCE_FILE -m 0 -o 'Global_StrainAnalysis.out'```
+```Rscript Scripts/strain2b/strain_pipeline.R -l sample_list_file -a species_abundance_file -m 0 -o 'Global_StrainAnalysis.out'```
 
 * run entire pipeline for a specific high-abundance species:
   
-```Rscript Scripts/strain2b/strain_pipeline.R -l SAMPLE_LIST_FILE -a SPECIES_ABUNDANCE_FILE -s SPECIES_LIST_FILE -m 1 -o 'SpecSp_StrainAnalysis.out'```
+```Rscript Scripts/strain2b/strain_pipeline.R -l sample_list_file -a species_abundance_file -s species_list_file -m 1 -o 'SpecSp_StrainAnalysis.out'```
 
 #### Functional prediction based on strain-level abundance profiles
 
@@ -123,7 +123,7 @@ Options:
 
 ##### Examples
 
-```Scripts/func/calculate-ko-abd -i SPECIES_ABUNDANCE_FILE -m ko.abd```
+```Scripts/func/calculate-ko-abd -i species_abundance_file -m ko.abd```
 
 ## Benchmark
 
