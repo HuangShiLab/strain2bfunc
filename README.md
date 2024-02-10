@@ -18,7 +18,7 @@ The strain-resolved analysis is a widespread demand because the co-existence of 
 All scripts in strain2bfunc are written using R and C++, recommended to run in a conda environment. This program should work properly in the Unix systems, or Mac OSX, as all required packages can be appropriately downloaded and installed.
 
 #### Disk space
-Construction of a strain2bfunc standard database (i.e., 2bstrain-DB) requires approximately 10 GB of disk space.
+Construction of a strain2bfunc standard database (i.e., 2bstrain-DB) requires approximately *10* GB of disk space.
 
 #### Memory usage
 Running the standard pipeline requires < 30Gb of RAM, which is also compatible with multithreading. For example, the BcgI-derived (default) database size is 9.32 GB, and you will need more than that in RAM if you want to build the default database. In a test early on, the peak memory can reach up to 29GB.
