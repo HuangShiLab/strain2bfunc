@@ -125,14 +125,6 @@ Options:
 
 ```Scripts/func/calculate-ko-abd -i species_abundance_file -m species_ko_mapping_file -o ko.abd```
 
-## Benchmark
-
-### *In silico* simulation data
-
-#### Single-genome simulation
-
-#### Sample simulation
-
 
 ## FAQ
 
