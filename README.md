@@ -121,6 +121,10 @@ Options:
  -h Help
 ```
 
+##### Examples
+
+```Scripts/func/calculate-ko-abd -i SPECIES_ABUNDANCE_FILE -m ko.abd```
+
 ## Benchmark
 
 ### *In silico* simulation data
