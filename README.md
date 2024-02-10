@@ -50,6 +50,7 @@ The script `tools/Download_2bstrain-DB.sh` in this repo can be used to:
 #### Estimate the species abundance using our 2bRAD-M
 
 Please refer to more details in our past Github repo: `https://github.com/shihuang047/2bRAD-M`. 
+Users may pick the high-abundance species for strain-level analysis. 
 
 #### Predict the strain-level abundance for a set of selective abundant species
 
@@ -67,10 +68,10 @@ Options:
 		Input the samples list file [Required]
 
 	-a SPECIES_ABUNDANCE_FILE, --species_abundance_file=SPECIES_ABUNDANCE_FILE
-		Input the species abundance file [Required when mode is equal to 0]
+		Input the species abundance file [Required when the mode is equal to 0]
 
 	-t THRESHOLD, --threshold=THRESHOLD
-		The threshold of species abundance for strain-level identification, [Required when mode is equal to 0, default 0.001]
+		The threshold of species abundance for strain-level identification, [Required when the mode is equal to 0, default 0.001]
 
 	-s SPECIES_LIST_FILE, --species_list_file=SPECIES_LIST_FILE
 		Input the identified species list [Required when mode is equal to 1]
@@ -89,7 +90,7 @@ Options:
 
 ##### DESCRIPTION
 
-We developed a C++ tool to compute the KO abundance table based on the strain composition abundance table. It should be compiled before execute.
+We developed a C++ tool to compute the KO abundance table based on the resulting strain composition abundance table. It should be compiled before execution.
 
 ```
 Compile:
