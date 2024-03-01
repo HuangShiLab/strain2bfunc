@@ -1,4 +1,10 @@
-source("composition.R")
+Env <-Sys.getenv("Strain2bFunc")
+if(nchar(Env)<1){
+  cat('Please set the environment variable \"Strain2bFunc\" to the directory\n')
+ }
+print(Env)
+
+source(paste0(Env, "/strain2b/composition.R"))
 
 Select_Species_by_Species <- function(Species) {
 	return (Species[, 1])
@@ -19,8 +25,10 @@ Merge_Two_Copynumber_Matrix <- function(cnm1, cnm2) { # merge two copynumber mat
 }
 
 Read_Copynumber_Matrix <- function(species) {
-	cnm_matrix_dir = "/lustre1/g/aos_shihuang/Strain2b/databases/CNM_0.01/"
+	#cnm_matrix_dir <- "/lustre1/g/aos_shihuang/Strain2b/databases/40w_GTDB/CNM/"
+	#cnm_matrix_dir = "/lustre1/g/aos_shihuang/Strain2b/databases/CNM_0.01/"
 	#cnm_matrix_dir = "/lustre1/g/aos_shihuang/Strain2b/databases/CNM_unique/"
+	cnm_matrix_dir = "/lustre1/g/aos_shihuang/Strain2b/databases/CNM_0.001/"
 	cnms_file <- list.files(path = cnm_matrix_dir, pattern = paste(species, ".CNM.xls", sep = ""))
 	if(length(cnms_file) == 0) {
 		result = NULL
@@ -46,7 +54,7 @@ Merge_Copynumber_Matrix <- function(all_species) { # merge the copynumber matrix
 		}
 	}
 	rownames(result) <- result[, 1]
-	result <- result[, -1]
+	#result <- result[, -1]
 	return (result)
 }
 
@@ -76,11 +84,13 @@ Filter_CNM <- function(cnm, tags_count_file, sample_name) { #filter the copynumb
         colnames(new_tags_count) <- colnames(tags_count)
         tags_count <- as.matrix(new_tags_count)
         idx <- which(rownames(cnm) %in% rownames(tags_count))
-	new_cnm <- as.data.frame(cnm[idx, ])
-        rownames(new_cnm) <- rownames(cnm)[idx]
-        colnames(new_cnm) <- colnames(cnm)
-	cnm <- as.matrix(new_cnm)
-        cnm <- unique(cnm, MARGIN=2)
+	#new_cnm <- as.data.frame(cnm[idx, ])
+        #rownames(new_cnm) <- rownames(cnm)[idx]
+        #colnames(new_cnm) <- colnames(cnm)
+	#cnm <- as.matrix(new_cnm)
+        cnm <- cnm[idx, ]  ###
+	cnm <- unique(cnm, MARGIN=2)
+	cnm <- cnm[, -1]
 	print(identical(rownames(tags_count), rownames(cnm)))
 	result <- list(tags_count = tags_count, cnm = cnm)
         return (result)
@@ -88,10 +98,10 @@ Filter_CNM <- function(cnm, tags_count_file, sample_name) { #filter the copynumb
 
 Sort_tags <- function(Matrix) {
 	idx <- order(rownames(Matrix))
-  new_matrix <- as.data.frame(Matrix[idx, ])
-  rownames(new_matrix) <- rownames(Matrix)[idx]
-  colnames(new_matrix) <- colnames(Matrix)
-  new_matrix <- as.matrix(new_matrix)
+  	new_matrix <- as.data.frame(Matrix[idx, ])
+  	rownames(new_matrix) <- rownames(Matrix)[idx]
+  	colnames(new_matrix) <- colnames(Matrix)
+  	new_matrix <- as.matrix(new_matrix)
 	return (new_matrix)
 }
 
@@ -107,7 +117,7 @@ Strain_Level_Profiling <- function(tags_count_matrix, cnm_matrix) {
   	rowname <- rownames(predicted_abundance_matrix)
   	colname <- colnames(predicted_abundance_matrix)
   	result <- predicted_abundance_matrix[idx, ]
- 	result <- result / sum(result)
+  	result <- result / sum(result)
   	result <- as.data.frame(result)
   	rownames(result) <- rowname[idx]
   	colnames(result) <- colname
@@ -128,57 +138,54 @@ One_Sample_Pipeline <- function(sample_info, species_info, output_path, mode, cn
 	  #cnm <- cnm
 	}
  	#print("2")
-	#write.table(cnm, paste0(output_path, "/", sample_name, ".copy_number_matrix.txt"), sep = "\t", row.names = T, col.names = NA, quote = F)
-  	#print("3")
 	output_tag_path <- paste0(output_path, "/", sample_name, ".BcgI.tag")
 	new_sample_fa <- paste0(output_path, "/new_", sample_name, ".fa")
 	Rename_Fasta(sample_name, sample_fa, new_sample_fa)
-  	#print("4")
+  	#print("3")
 	similarity <- 1
 	tags_count_file <- paste0(output_path, "/", sample_name, "_", similarity, "_tags_count.txt")
 	Vsearch(cnm, new_sample_fa, similarity, output_tag_path, tags_count_file)
-  	#print("5")
+  	#print("4")
 	matrix <- Filter_CNM(cnm, tags_count_file, sample_name)
-  	#print("6")
+	#print("5")
 	tags_count <- matrix$tags_count
 	cnm <- matrix$cnm
-	write.table(cnm, paste0(output_path, "/", sample_name, "_cnm.xls"), sep = "\t", row.names = T, col.names = NA, quote = F)
+	#write.table(cnm, paste0(output_path, "/", sample_name, "_cnm.xls"), sep = "\t", row.names = T, col.names = NA, quote = F)
 	predicted_abundance_matrix <- Strain_Level_Profiling(tags_count, cnm)
- 	#print("7")
+ 	#print("6")
 	out_file <- paste0(output_path, "/", sample_name, "_strain_level_profiling.txt")
 	write.table(predicted_abundance_matrix, out_file, sep = "\t", row.names = T, col.names = NA, quote = F)
 	return (out_file)
 }
 
 Merge_Two_Profiling_Matrix <- function(abd1, abd2) {
-  result <- merge(abd1, abd2, by = 1, all = TRUE)
-  result[is.na(result)] <- 0
-  return (result)
+        result <- merge(abd1, abd2, by = 1, all = TRUE)
+        result[is.na(result)] <- 0
+        return (result)
 }
 
 Read_Profiling_Matrix <- function(sample_path) {
-  result = read.table(sample_path, sep = "\t", header = T)
-  return (result)
+        result <- read.table(sample_path, sep = "\t", header = T)
+        return (result)
 }
 
 Merge_Profiling_Matrix <- function(all_samples_info) { # merge the copynumber matrix of all samples
-  all_samples_info <- all_samples_info[which(!is.na(all_samples_info))]
-  if(length(all_samples_info) == 0) {
-    result <- NULL
-  }
-  else if(length(all_samples_info) == 1) {
-    result <- Read_Profiling_Matrix(all_samples_info[1])
-  }
-  else {
-    result <- Read_Profiling_Matrix(all_samples_info[1])
-    for (i in 2:length(all_samples_info)) {
-      abd <-  Read_Profiling_Matrix(all_samples_info[i])
-      result <- Merge_Two_Profiling_Matrix(result, abd)
-    }
-  }
-  rownames(result) <- result[, 1]
-  result <- result[, -1]
-  return (result)
+        if(length(all_samples_info) == 0) {
+                result <- NULL
+        }
+        else if(length(all_samples_info) == 1) {
+                result <- Read_Profiling_Matrix(all_samples_info[1])
+        }
+        else {
+                result <- Read_Profiling_Matrix(all_samples_info[1])
+                for (i in 2:length(all_samples_info)) {
+                        abd <-  Read_Profiling_Matrix(all_samples_info[i])
+                        result <- Merge_Two_Profiling_Matrix(result, abd)
+                }
+        }
+        rownames(result) <- result[, 1]
+        result <- result[, -1]
+        return (result)
 }
 
 Sample_List_Pipeline <- function(sample_list_file, species_file, output_path, mode = 0, threshold = 0.001) {
@@ -214,16 +221,19 @@ Sample_List_Pipeline <- function(sample_list_file, species_file, output_path, mo
 	         those in the first row of the species abundance table file.")
 	  }
 	  profile_list <- apply(sample_list, 1, function(x) tryCatch({One_Sample_Pipeline(x, species_abd, output_path, mode, threshold)}, error=function(err) { NA }))
-	  #profile_list <- apply(sample_list, 1, function(x) One_Sample_Pipeline(x, species_abd, output_path, mode, threshold))
+	  #profile_list <- mclapply(sample_list, 1, function(x) tryCatch({One_Sample_Pipeline(x, species_abd, output_path, mode, threshold)}, error=function(err) { NA }), mc.cores = 4)
+	  #profile_list <- mclapply(sample_list, 1, function(x) One_Sample_Pipeline(x, species_abd, output_path, mode, threshold), mc.cores = 4)
 	} else { #mode == 1
 	  species_list <- read.table(species_file, sep = "\t", header = F, comment.char="")
 	  species <- Select_Species_by_Species(species_list)
 	  cnm <- Merge_Copynumber_Matrix(species)
 	  profile_list <- apply(sample_list, 1, function(x) tryCatch({One_Sample_Pipeline(x, species, output_path, mode, cnm)}, error=function(err) { NA }))
-	  #profile_list <- apply(sample_list, 1, function(x) One_Sample_Pipeline(x, species, output_path, mode, cnm))
+	  #profile_list <- mclapply(sample_list, 1, function(x) tryCatch({One_Sample_Pipeline(x, species, output_path, mode, cnm)}, error=function(err) { NA }), mc.cores = 4)
+	  #profile_list <- mclapply(sample_list, 1, function(x) One_Sample_Pipeline(x, species, output_path, mode, cnm), mc.cores = 4)
 	}
+
 	abd_matrix <- Merge_Profiling_Matrix(profile_list)
-	write.table(abd_matrix, paste0(output_path, "/", "strain_level_abd.txt"), sep = "\t", quote = F, row.names = T, col.names = NA)
+	write.table(abd_matrix, paste0(output_path, "/strain_level_abd.txt"), sep = "\t", quote = F, row.names = T, col.names = NA)
 }
 
 

@@ -1,0 +1,10 @@
+Gut1	OGU_Gut1_5M.fastq.gz
+Gut2	OGU_Gut2_5M.fastq.gz
+Gut3	OGU_Gut3_5M.fastq.gz
+Gut4	OGU_Gut4_5M.fastq.gz
+Gut5	OGU_Gut5_5M.fastq.gz
+Oral1	OGU_Oral1_5M.fastq.gz
+Oral2	OGU_Oral2_5M.fastq.gz
+Oral3	OGU_Oral3_5M.fastq.gz
+Oral4	OGU_Oral4_5M.fastq.gz
+Oral5	OGU_Oral5_5M.fastq.gz
