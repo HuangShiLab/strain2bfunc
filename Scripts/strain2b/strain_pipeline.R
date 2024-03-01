@@ -35,7 +35,7 @@ if(nchar(Env)<1){
   cat('Please set the environment variable \"Strain2bFunc\" to the directory\n')
  }
 
-source(paste0(Env, "/strain2b/utility.R"))
+source(paste0(Env, "/Scripts/strain2b/utility.R"))
 
 if(is.null(opts$sample_list_file)) stop('Please input a sample list file')
 if (opts$mode == 0) {

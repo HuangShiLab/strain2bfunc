@@ -4,7 +4,7 @@ if(nchar(Env)<1){
  }
 print(Env)
 
-source(paste0(Env, "/strain2b/composition.R"))
+source(paste0(Env, "/Scripts/strain2b/composition.R"))
 
 Select_Species_by_Species <- function(Species) {
 	return (Species[, 1])
