@@ -1,0 +1,10 @@
+data/OGU_Oral1_5M.fastq.gz filter=lfs diff=lfs merge=lfs -text
+data/OGU_Gut4_5M.fastq.gz filter=lfs diff=lfs merge=lfs -text
+data/OGU_Gut1_5M.fastq.gz filter=lfs diff=lfs merge=lfs -text
+data/OGU_Oral4_5M.fastq.gz filter=lfs diff=lfs merge=lfs -text
+data/OGU_Gut2_5M.fastq.gz filter=lfs diff=lfs merge=lfs -text
+data/OGU_Oral2_5M.fastq.gz filter=lfs diff=lfs merge=lfs -text
+data/OGU_Oral5_5M.fastq.gz filter=lfs diff=lfs merge=lfs -text
+data/OGU_Gut5_5M.fastq.gz filter=lfs diff=lfs merge=lfs -text
+data/OGU_Oral3_5M.fastq.gz filter=lfs diff=lfs merge=lfs -text
+data/OGU_Gut3_5M.fastq.gz filter=lfs diff=lfs merge=lfs -text
