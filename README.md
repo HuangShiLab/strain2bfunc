@@ -34,7 +34,7 @@ Clone the latest version from GitHub (recommended):
    `cd strain2bfunc`
 
 ### Install
-   `cd strain2bfunc/Scripts`
+   `cd strain2bfunc`
    `source install.sh`
 
 ### Construct the reference strain2bfunc database (required)
