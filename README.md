@@ -33,6 +33,10 @@ Clone the latest version from GitHub (recommended):
    `git clone https://github.com/shihuang047/strain2bfunc/`  
    `cd strain2bfunc`
 
+### Install
+   `cd strain2bfunc/Scripts`
+   `source install.sh`
+
 ### Construct the reference strain2bfunc database (required)
 
 The script `tools/Download_2bstrain-DB.sh` in this repo can be used to:
