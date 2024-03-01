@@ -31,13 +31,10 @@ About 20 minutes are required for loading the 2bstrain-DB. For a typical gut met
 Clone the latest version from GitHub (recommended):  
 
    `git clone https://github.com/shihuang047/strain2bfunc/`  
-   
    `cd strain2bfunc`
 
 ### Install
 
-   `cd strain2bfunc`
-   
    `source install.sh`
 
 ### Construct the reference strain2bfunc database (required)
