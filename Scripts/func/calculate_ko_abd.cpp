@@ -35,8 +35,8 @@ void printhelp(){
 	cout << "calculate-ko-abd [Option] Value" << endl;
 	cout << "Options:" << endl;
 	cout << "[Input options, required]" << endl;
-	cout << "\t-i Input species abundance file" << endl;
-	cout << "\t-m Input map file of species and kos" << endl;
+	cout << "\t-i Input strain abundance file" << endl;
+	cout << "\t-m Input map file of strains and kos" << endl;
 	cout << "[Output options]" << endl;
 	cout << "\t-o Output kos abundance file, default is \"ko.abd\"" << endl;
 	cout << "[Other options]" << endl;
