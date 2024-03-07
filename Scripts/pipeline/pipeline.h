@@ -348,7 +348,8 @@ int Parse_Para(int argc, char * argv[]){
     Bin_path = "";
     R_path = Check_Env() + "/Rscript";
     path = Check_Env();
-    path_2bRADM = Check_2bRADM_Env();
+    path_2bRADM = path + "/Scripts/2bRAD-M";
+    //path_2bRADM = Check_2bRADM_Env();
     
     Ref_db = 'G';
     

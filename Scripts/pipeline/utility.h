@@ -37,6 +37,7 @@ string Check_Env(){
     
     }
 
+/*
 string Check_2bRADM_Env() {
     if (getenv("RADM") == NULL){
                                
@@ -48,6 +49,7 @@ string Check_2bRADM_Env() {
     string path =  getenv("RADM");
     return path;
 }
+*/
 
 int Check_Path(const char * path, int type){
     

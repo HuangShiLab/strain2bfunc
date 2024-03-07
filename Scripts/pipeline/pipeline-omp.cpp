@@ -61,7 +61,8 @@ int main(int argc, char *argv[])
     string species_list_file;
     vector<string> species_list;
     int species_count;
-    
+    string species;
+
     switch (Step) {
             
         //Step 0: 2bRAD-M
@@ -131,10 +132,10 @@ int main(int argc, char *argv[])
                 Echo_Error(error_info.c_str(), Error_file.c_str());
                 return 0;
             }
-            
-	    #pragma omp parallel for
+           	
+	    #pragma omp parallel for private(species, command)
             for(int i = 0; i < species_count; i++) {
-                string species = species_list[i];
+                species = species_list[i];
                 
                 cout << "mkdir -p " << Out_path << "/strain_results/" << species << endl;
                 sprintf(command, "mkdir -p %s/strain_results/%s", Out_path.c_str(), species.c_str());
@@ -150,7 +151,8 @@ int main(int argc, char *argv[])
                 sprintf(command, "Rscript %s/Scripts/strain2b/strain_pipeline.R -l %s -s %s/strain_results/%s_list.txt -o %s/strain_results/%s -m 1", path.c_str(), Taxa_list_file.c_str(), Out_path.c_str(), species.c_str(), Out_path.c_str(), species.c_str());
 		Run_With_Error(command, "strain-level profiling", Error_file.c_str());
                 outscript << command << endl;
-            }
+		
+	    }
             
             //Step 1 finished
             
@@ -168,9 +170,9 @@ int main(int argc, char *argv[])
                     return 0;
                 }
                 
-                #pragma omp parallel for
+            	#pragma omp parallel for private(species, command)
 		for(int i = 0; i < species_count; i++) {
-                    string species = species_list[i];
+                    species = species_list[i];
                     
                     cout << "mkdir -p " << Out_path << "/ko_results/" << species << endl;
                     sprintf(command, "mkdir -p %s/ko_results/%s", Out_path.c_str(), species.c_str());
@@ -181,7 +183,8 @@ int main(int argc, char *argv[])
                     sprintf(command, "%s/Scripts/func/calculate_ko_abd -i %s/strain_results/%s/strain_level_abd.txt -m /lustre1/g/aos_shihuang/databases/GTDB/GTDB_KO/genome2KO.tsv -o %s/ko_results/%s/ko_abd.txt", path.c_str(), Out_path.c_str(), species.c_str(), Out_path.c_str(), species.c_str());
                     Run_With_Error(command, "function profiling", Error_file.c_str());
                     outscript << command << endl;
-                }
+	            
+		}
             }
             //Step 2 finished
             
@@ -196,9 +199,9 @@ int main(int argc, char *argv[])
                 return 0;
             }
             
-	    #pragma omp parallel for
-            for(int i = 0; i < species_count; i++) {
-                string species = species_list[i];
+            #pragma omp parallel for private(species, command)
+	    for(int i = 0; i < species_count; i++) {
+                species = species_list[i];
                 
                 cout << "mkdir -p " << Out_path << "/analysis_results/" << species << endl;
                 sprintf(command, "mkdir -p %s/analysis_results/%s", Out_path.c_str(), species.c_str());
@@ -209,6 +212,7 @@ int main(int argc, char *argv[])
                 sprintf(command, "sh %s/Scripts/analysis/data_analysis.sh %s/strain_results/%s/strain_level_abd.txt %s %s/analysis_results/%s dist.txt %s", path.c_str(), Out_path.c_str(), species.c_str(), Meta_file.c_str(), Out_path.c_str(), species.c_str(), species.c_str());
                 Run_With_Error(command, "function profiling", Error_file.c_str());
                 outscript << command << endl;
+		
             }
             //Step 3 finished
             break;
