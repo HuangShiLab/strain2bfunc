@@ -84,9 +84,9 @@ int main(int argc, char *argv[])
             outscript << endl << "#Microbial Community species-level profiling" << endl;
             
             cout << "mkdir -p " << Out_path << endl;
-	    sprintf(command, "mkdir -p %s", Out_path.c_str());
-	    Run_With_Error(command, "Make directory", tmpError_file.c_str());
-	    outscript << command << endl;
+            sprintf(command, "mkdir -p %s", Out_path.c_str());
+            Run_With_Error(command, "Make directory", tmpError_file.c_str());
+            outscript << command << endl;
 
             cout << "perl " << path_2bRADM << "/bin/2bRADM_Pipline.pl -t 2 -l " << Seq_list_file << " -d /lustre1/g/aos_shihuang/tools/2bRAD-M/tools/2B-RAD-M-ref_db_GTDB/ -o " << Out_path <<  "/Species_results -c1 30 -c2 30 -qc no -gsc 10" << endl;
             sprintf(command, "perl /lustre1/g/aos_shihuang/tools/2bRAD-M/bin/2bRADM_Pipline.pl -t 2 -l %s -d /lustre1/g/aos_shihuang/tools/2bRAD-M/tools/2B-RAD-M-ref_db_GTDB/ -o %s/Species_results -c1 30 -c2 30 -qc no -gsc 10", Seq_list_file.c_str(), Out_path.c_str());
@@ -99,14 +99,6 @@ int main(int argc, char *argv[])
             
             //Step 1: Strain-level profiling
         case 1:
-            Check_Path(Abd_dir.c_str(), 1);
-            Check_Path(Dist_dir.c_str(), 1);
-            Check_Path(Clust_dir.c_str(), 1);
-            Check_Path(Marker_dir.c_str(), 1);
-            Check_Path(Network_dir.c_str(), 1);
-            Check_Path(Alpha_dir.c_str(), 1);
-            Check_Path(Beta_dir.c_str(), 1);
-
             if (Taxa_list_file.size() == 0)
             {
                 string error_info = "Error: Please check the taxa list (-l)";
@@ -117,7 +109,7 @@ int main(int argc, char *argv[])
             
             
             //Pick up species
-	    cout << "Rscript " << path << "/Scripts/strain2b/make_species_list.R -i " << Table_file << " -t " << sp_thres << " -o " << Out_path << "/species_list.txt" << endl;
+            cout << "Rscript " << path << "/Scripts/strain2b/make_species_list.R -i " << Table_file << " -t " << sp_thres << " -o " << Out_path << "/species_list.txt" << endl;
             sprintf(command, "Rscript %s/Scripts/strain2b/make_species_list.R -i %s -t %f -o %s/species_list.txt", path.c_str(), Table_file.c_str(), sp_thres, Out_path.c_str());
             Run_With_Error(command, "make_species_list", Error_file.c_str());
             outscript << command << endl;
