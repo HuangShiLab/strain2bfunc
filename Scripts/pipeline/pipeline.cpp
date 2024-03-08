@@ -1,7 +1,6 @@
-// Updated at July 28, 2021
-// Updated by Yuzhu Chen and Xiaoquan Su
-// Code by Yuzhu Chen, Xiaoquan Su
-// Bioinformatics Group, College of Computer Science and Technology, Qingdao University
+// Updated at March 8, 2024
+// Code by ZHANG Yufeng
+// Faculty of dentistry, HKU
 
 #include "pipeline.h"
 #include "utility.h"
@@ -34,11 +33,9 @@ int main(int argc, char *argv[])
     outscript << "#Strain2bFunc Version: " << Version << endl;
 
     cout << "The reference sequence database is ";
-    cout << endl;
     //cout << Database.Get_Description() << endl; // NEED to update: the versions of DBs used by strain2bfunc
 
     outscript << "#The reference sequence database is ";
-    outscript << endl;
     //outscript << Database.Get_Description() << endl; // NEED to update: the versions of DBs used by strain2bfunc
 
     //check metadata
@@ -59,16 +56,14 @@ int main(int argc, char *argv[])
     }
 
     Input_sam_num = Ids.size();
-    string species_list_file;
     vector<string> species_list;
     int species_count;
-    
+    string species;
+
     switch (Step) {
-            
-        //Step 0: 2bRAD-M
+        //Start from step 0
         case 0:
-            //Check_Path(Singlesample_dir.c_str(), 1);
-            //Check_Path(Singlesamplelist_dir.c_str(), 1);
+            //Step 0: 2bRAD-M
             Check_Path(Temp_dir.c_str(), 1);
             
             if (Load_List(Seq_list_file.c_str(), Seq_files, List_prefix) == 0)
@@ -84,9 +79,9 @@ int main(int argc, char *argv[])
             outscript << endl << "#Microbial Community species-level profiling" << endl;
             
             cout << "mkdir -p " << Out_path << endl;
-	    sprintf(command, "mkdir -p %s", Out_path.c_str());
-	    Run_With_Error(command, "Make directory", tmpError_file.c_str());
-	    outscript << command << endl;
+            sprintf(command, "mkdir -p %s", Out_path.c_str());
+            Run_With_Error(command, "Make directory", tmpError_file.c_str());
+            outscript << command << endl;
 
             cout << "perl " << path_2bRADM << "/bin/2bRADM_Pipline.pl -t 2 -l " << Seq_list_file << " -d /lustre1/g/aos_shihuang/tools/2bRAD-M/tools/2B-RAD-M-ref_db_GTDB/ -o " << Out_path <<  "/Species_results -c1 30 -c2 30 -qc no -gsc 10" << endl;
             sprintf(command, "perl /lustre1/g/aos_shihuang/tools/2bRAD-M/bin/2bRADM_Pipline.pl -t 2 -l %s -d /lustre1/g/aos_shihuang/tools/2bRAD-M/tools/2B-RAD-M-ref_db_GTDB/ -o %s/Species_results -c1 30 -c2 30 -qc no -gsc 10", Seq_list_file.c_str(), Out_path.c_str());
@@ -97,16 +92,10 @@ int main(int argc, char *argv[])
             
             //Step 0 finished
             
-            //Step 1: Strain-level profiling
+        //Start from step 1
         case 1:
-            Check_Path(Abd_dir.c_str(), 1);
-            Check_Path(Dist_dir.c_str(), 1);
-            Check_Path(Clust_dir.c_str(), 1);
-            Check_Path(Marker_dir.c_str(), 1);
-            Check_Path(Network_dir.c_str(), 1);
-            Check_Path(Alpha_dir.c_str(), 1);
-            Check_Path(Beta_dir.c_str(), 1);
-            
+            //Step 1: Select species
+
             if (Taxa_list_file.size() == 0)
             {
                 string error_info = "Error: Please check the taxa list (-l)";
@@ -115,101 +104,205 @@ int main(int argc, char *argv[])
                 return 0;
             }
             
-            
-            //Pick up species
             cout << "Rscript " << path << "/Scripts/strain2b/make_species_list.R -i " << Table_file << " -t " << sp_thres << " -o " << Out_path << "/species_list.txt" << endl;
             sprintf(command, "Rscript %s/Scripts/strain2b/make_species_list.R -i %s -t %f -o %s/species_list.txt", path.c_str(), Table_file.c_str(), sp_thres, Out_path.c_str());
-	    Run_With_Error(command, "make_species_list", Error_file.c_str());
+            Run_With_Error(command, "make_species_list", Error_file.c_str());
             outscript << command << endl;
-            
-            //Strain-level profiling
-            species_list_file = Out_path + "/species_list.txt";
-            species_count = Load_List(species_list_file.c_str(), species_list);
-            
-            if(species_count == 0) {
-                string error_info = "There is no suitable species for strain-level profiling";
-                cerr << error_info << endl;
-                Echo_Error(error_info.c_str(), Error_file.c_str());
-                return 0;
-            }
-            
-            for(int i = 0; i < species_count; i++) {
-                string species = species_list[i];
-                
-                cout << "mkdir -p " << Out_path << "/strain_results/" << species << endl;
-                sprintf(command, "mkdir -p %s/strain_results/%s", Out_path.c_str(), species.c_str());
-                Run_With_Error(command, "strain-level profiling", Error_file.c_str());
-                outscript << command << endl;
-                
-                cout << "echo " << species << " > " << Out_path.c_str() << "/strain_results/" << species << "_list.txt" << endl;
-                sprintf(command, "echo %s > %s/strain_results/%s_list.txt", species.c_str(), Out_path.c_str(), species.c_str());
-                Run_With_Error(command, "strain-level profiling", Error_file.c_str());
-                outscript << command << endl;
-                
-                cout << "Rscript " << path << "/Scripts/strain2b/strain_pipeline.R -l " << Taxa_list_file << " -s " << Out_path << "/strain_results/" << species << "_list.txt -o " << Out_path << "/strain_results/" << species << " -m 1" << endl;
-                sprintf(command, "Rscript %s/Scripts/strain2b/strain_pipeline.R -l %s -s %s/strain_results/%s_list.txt -o %s/strain_results/%s -m 1", path.c_str(), Taxa_list_file.c_str(), Out_path.c_str(), species.c_str(), Out_path.c_str(), species.c_str());
-                Run_With_Error(command, "strain-level profiling", Error_file.c_str());
-                outscript << command << endl;
-            }
-            
+            Species_list_file = Out_path + "species_list.txt";
             //Step 1 finished
+
+        //Start from step 2
+        case 2:
+            //Step 2: Strain-level profiling
+            switch(Mode) {
+                //Multiple-species merged
+                case 1:
+                    //Mkdir
+                    cout << "mkdir -p " << Out_path << "/strain_results" << endl;
+                    sprintf(command, "mkdir -p %s/strain_results", Out_path.c_str());
+                    Run_With_Error(command, "Make directory of strain-level profiling results", Error_file.c_str());
+                    outscript << command << endl;
+                    
+                    
+                    //Strain-level profiling
+                    cout << "Rscript " << path << "/Scripts/strain2b/strain_pipeline.R -l " << Taxa_list_file << " -s " << Species_list_file << " -o " << Out_path << "/strain_results -m 1" << endl;
+                    sprintf(command, "Rscript %s/Scripts/strain2b/strain_pipeline.R -l %s -s %s -o %s/strain_results -m 1", path.c_str(), Taxa_list_file.c_str(), Species_list_file.c_str(), Out_path.c_str());
+                    Run_With_Error(command, "Strain-level profiling", Error_file.c_str());
+                    outscript << command << endl;
+                    
+                    break;
+                    
+                //Multiple-species separated (Mode == 0)
+                default:
+                    species_count = Load_List(Species_list_file.c_str(), species_list);
+                    
+                    if(species_count == 0) {
+                        string error_info = "There is no suitable species for strain-level profiling";
+                        cerr << error_info << endl;
+                        Echo_Error(error_info.c_str(), Error_file.c_str());
+                        return 0;
+                    }
+                    
+                    for(int i = 0; i < species_count; i++) {
+                        species = species_list[i];
+                        
+                        //Mkdir
+                        cout << "mkdir -p " << Out_path << "/strain_results/" << species << endl;
+                        sprintf(command, "mkdir -p %s/strain_results/%s", Out_path.c_str(), species.c_str());
+                        Run_With_Error(command, "Make directory of strain-level profiling results", Error_file.c_str());
+                        outscript << command << endl;
+                        
+                        //Generate species list for each selected species
+                        cout << "echo " << species << " > " << Out_path.c_str() << "/strain_results/" << species << "_list.txt" << endl;
+                        sprintf(command, "echo %s > %s/strain_results/%s_list.txt", species.c_str(), Out_path.c_str(), species.c_str());
+                        Run_With_Error(command, "Generate Species list for strain-level profiling", Error_file.c_str());
+                        outscript << command << endl;
+                        
+                        //Strain-level profiling
+                        cout << "Rscript " << path << "/Scripts/strain2b/strain_pipeline.R -l " << Taxa_list_file << " -s " << Out_path << "/strain_results/" << species << "_list.txt -o " << Out_path << "/strain_results/" << species << " -m 1" << endl;
+                        sprintf(command, "Rscript %s/Scripts/strain2b/strain_pipeline.R -l %s -s %s/strain_results/%s_list.txt -o %s/strain_results/%s -m 1", path.c_str(), Taxa_list_file.c_str(), Out_path.c_str(), species.c_str(), Out_path.c_str(), species.c_str());
+                        Run_With_Error(command, "strain-level profiling", Error_file.c_str());
+                        outscript << command << endl;
+                    }
+                    break;
+            }
+            //Step 2 finished
             
-            //Step 2: Function Prediction
-            if (Is_func)
-            {
+            //Step 3: Function Prediction
+            if (Is_func) {
                 
                 cout << endl << "Function Prediction" << endl;
                 outscript << endl << "#Function Prediction" << endl;
                 
-                if(species_count == 0) {
-                    string error_info = "There is no suitable species for function profiling";
-                    cerr << error_info << endl;
-                    Echo_Error(error_info.c_str(), Error_file.c_str());
-                    return 0;
+                switch(Mode) {
+                    //Multiple-species merged
+                    case 1:
+                        //Mkdir
+                        cout << "mkdir -p " << Out_path << "/ko_results" << endl;
+                        sprintf(command, "mkdir -p %s/ko_results", Out_path.c_str());
+                        Run_With_Error(command, "Make directory of function profiling results", Error_file.c_str());
+                        outscript << command << endl;
+                        
+                        //Function profiling
+                        cout << path << "/Scripts/func/calculate_ko_abd -i " << Out_path << "/strain_results/strain_level_abd.txt -m /lustre1/g/aos_shihuang/databases/GTDB/GTDB_KO/genome2KO.tsv -o " << Out_path << "/ko_results/ko_abd.txt" << endl;
+                        sprintf(command, "%s/Scripts/func/calculate_ko_abd -i %s/strain_results/strain_level_abd.txt -m /lustre1/g/aos_shihuang/databases/GTDB/GTDB_KO/genome2KO.tsv -o %s/ko_results/ko_abd.txt", path.c_str(), Out_path.c_str(), Out_path.c_str());
+                        Run_With_Error(command, "Function profiling", Error_file.c_str());
+                        outscript << command << endl;
+                        
+                        break;
+                        
+                    //Multiple-species separated (Mode == 0)
+                    default:
+                        if(species_count == 0) {
+                            string error_info = "There is no suitable species for function profiling";
+                            cerr << error_info << endl;
+                            Echo_Error(error_info.c_str(), Error_file.c_str());
+                            return 0;
+                        }
+                        
+=                        for(int i = 0; i < species_count; i++) {
+                            species = species_list[i];
+                            
+                            //Mkdir
+                            cout << "mkdir -p " << Out_path << "/ko_results/" << species << endl;
+                            sprintf(command, "mkdir -p %s/ko_results/%s", Out_path.c_str(), species.c_str());
+                            Run_With_Error(command, "Make directory of function profiling results", Error_file.c_str());
+                            outscript << command << endl;
+                            
+                            //Function profiling for each selected species
+                            cout << path << "/Scripts/func/calculate_ko_abd -i " << Out_path << "/strain_results/" << species << "/strain_level_abd.txt -m /lustre1/g/aos_shihuang/databases/GTDB/GTDB_KO/genome2KO.tsv -o " << Out_path << "/ko_results/" << species << "/ko_abd.txt" << endl;
+                            sprintf(command, "%s/Scripts/func/calculate_ko_abd -i %s/strain_results/%s/strain_level_abd.txt -m /lustre1/g/aos_shihuang/databases/GTDB/GTDB_KO/genome2KO.tsv -o %s/ko_results/%s/ko_abd.txt", path.c_str(), Out_path.c_str(), species.c_str(), Out_path.c_str(), species.c_str());
+                            Run_With_Error(command, "Function profiling", Error_file.c_str());
+                            outscript << command << endl;
+                        }
+                        break;
                 }
                 
-                for(int i = 0; i < species_count; i++) {
-                    string species = species_list[i];
-                    
-                    cout << "mkdir -p " << Out_path << "/ko_results/" << species << endl;
-                    sprintf(command, "mkdir -p %s/ko_results/%s", Out_path.c_str(), species.c_str());
-                    Run_With_Error(command, "strain-level profiling", Error_file.c_str());
-                    outscript << command << endl;
-                    
-                    cout << path << "/Scripts/func/calculate_ko_abd -i " << Out_path << "/strain_results/" << species << "/strain_level_abd.txt -m /lustre1/g/aos_shihuang/databases/GTDB/GTDB_KO/genome2KO.tsv -o " << Out_path << "/ko_results/" << species << "/ko_abd.txt" << endl;
-                    sprintf(command, "%s/Scripts/func/calculate_ko_abd -i %s/strain_results/%s/strain_level_abd.txt -m /lustre1/g/aos_shihuang/databases/GTDB/GTDB_KO/genome2KO.tsv -o %s/ko_results/%s/ko_abd.txt", path.c_str(), Out_path.c_str(), species.c_str(), Out_path.c_str(), species.c_str());
-                    Run_With_Error(command, "function profiling", Error_file.c_str());
-                    outscript << command << endl;
-                }
             }
-            //Step 2 finished
+            //Step 3 finished
             
-            // Step3: Data analysis
+            //Step 4: Data analysis
             cout << endl << "Data Analysis" << endl;
             outscript << endl << "#Data Analysis" << endl;
             
-            if(species_count == 0) {
-                string error_info = "There is no suitable species for data analysis";
-                cerr << error_info << endl;
-                Echo_Error(error_info.c_str(), Error_file.c_str());
-                return 0;
+            switch(Mode) {
+                //Multiple-species merged
+                case 1:
+                    //prefix of analysis-results-file name
+                    //prefix_name = "default";
+                    
+                    //Strain data analysis
+                    //Mkdir
+                    cout << "mkdir -p " << Out_path << "/strain_data_analysis_results" << endl;
+                    sprintf(command, "mkdir -p %s/strain_data_analysis_results", Out_path.c_str());
+                    Run_With_Error(command, "Make directory of strain data analysis results", Error_file.c_str());
+                    outscript << command << endl;
+                    
+                    //Data analysis
+                    cout << "sh " << path << "/Scripts/analysis/data_analysis.sh " << Out_path << "/strain_results/strain_level_abd.txt " << Meta_file << " " << Out_path << "/strain_data_analysis_results/ dist.txt " << prefix_name << endl;
+                    sprintf(command, "sh %s/Scripts/analysis/data_analysis.sh %s/strain_results/strain_level_abd.txt %s %s/strain_data_analysis_results dist.txt %s", path.c_str(), Out_path.c_str(), Meta_file.c_str(), Out_path.c_str(), prefix_name.c_str());
+                    Run_With_Error(command, "Strain data analysis", Error_file.c_str());
+                    outscript << command << endl;
+                    
+                    //Function data analysis
+                    if (Is_func) {
+                        //Mkdir
+                        cout << "mkdir -p " << Out_path << "/function_data_analysis_results" << endl;
+                        sprintf(command, "mkdir -p %s/function_data_analysis_results", Out_path.c_str());
+                        Run_With_Error(command, "Make directory of function data analysis results", Error_file.c_str());
+                        outscript << command << endl;
+                        
+                        //Data analysis
+                        cout << "sh " << path << "/Scripts/analysis/data_analysis.sh " << Out_path << "/function_results/ko_abd.txt " << Meta_file << " " << Out_path << "/function_data_analysis_results/ dist.txt " << prefix_name << endl;
+                        sprintf(command, "sh %s/Scripts/analysis/data_analysis.sh %s/function_results/ko_abd.txt %s %s/function_data_analysis_results dist.txt %s", path.c_str(), Out_path.c_str(), Meta_file.c_str(), Out_path.c_str(), prefix_name.c_str());
+                        Run_With_Error(command, "Function data analysis", Error_file.c_str());
+                        outscript << command << endl;
+                    }
+                    break;
+                    
+                //Multiple-species separated (Mode == 0)
+                default:
+                    if(species_count == 0) {
+                        string error_info = "There is no suitable species for data analysis";
+                        cerr << error_info << endl;
+                        Echo_Error(error_info.c_str(), Error_file.c_str());
+                        return 0;
+                    }
+                    
+                    for(int i = 0; i < species_count; i++) {
+                        species = species_list[i];
+                        
+                        //Strain data analysis
+                        //Mkdir
+                        cout << "mkdir -p " << Out_path << "/strain_data_analysis_results/" << species << endl;
+                        sprintf(command, "mkdir -p %s/strain_data_analysis_results/%s", Out_path.c_str(), species.c_str());
+                        Run_With_Error(command, "Make directory of strain data analysis results", Error_file.c_str());
+                        outscript << command << endl;
+                        
+                        //Strain data analysis for each species
+                        cout << "sh " << path << "/Scripts/analysis/data_analysis.sh " << Out_path << "/strain_results/" << species << "/strain_level_abd.txt " << Meta_file << " " << Out_path << "/strain_data_analysis_results/" << species << " dist.txt " << species << endl;
+                        sprintf(command, "sh %s/Scripts/analysis/data_analysis.sh %s/strain_results/%s/strain_level_abd.txt %s %s/strain_data_analysis_results/%s dist.txt %s", path.c_str(), Out_path.c_str(), species.c_str(), Meta_file.c_str(), Out_path.c_str(), species.c_str(), species.c_str());
+                        Run_With_Error(command, "Strain data analysis", Error_file.c_str());
+                        outscript << command << endl;
+                        
+                        //Function data analysis
+                        if (Is_func) {
+                            //Mkdir
+                            cout << "mkdir -p " << Out_path << "/function_data_analysis_results/" << species << endl;
+                            sprintf(command, "mkdir -p %s/function_data_analysis_results/%s", Out_path.c_str(), species.c_str());
+                            Run_With_Error(command, "Make directory of function data analysis results", Error_file.c_str());
+                            outscript << command << endl;
+                            
+                            //Data analysis
+                            cout << "sh " << path << "/Scripts/analysis/data_analysis.sh " << Out_path << "/function_results/" << species << "/ko_abd.txt " << Meta_file << " " << Out_path << "/function_data_analysis_results/" << species << " dist.txt " << species << endl;
+                            sprintf(command, "sh %s/Scripts/analysis/data_analysis.sh %s/function_results/ko_abd.txt %s %s/function_data_analysis_results/%s dist.txt %s", path.c_str(), Out_path.c_str(), species.c_str(), Meta_file.c_str(), Out_path.c_str(), species.c_str(), species.c_str());
+                            Run_With_Error(command, "Function data analysis", Error_file.c_str());
+                            outscript << command << endl;
+                        }
+                    }
+                    break;
             }
-            
-            for(int i = 0; i < species_count; i++) {
-                string species = species_list[i];
-                
-                cout << "mkdir -p " << Out_path << "/analysis_results/" << species << endl;
-                sprintf(command, "mkdir -p %s/analysis_results/%s", Out_path.c_str(), species.c_str());
-                Run_With_Error(command, "strain-level profiling", Error_file.c_str());
-                outscript << command << endl;
-                
-                cout << "sh " << path << "/Scripts/analysis/data_analysis.sh " << Out_path << "/strain_results/" << species << "/strain_level_abd.txt " << Meta_file << " " << Out_path << "/analysis_results/" << species << " dist.txt " << species << endl;
-                sprintf(command, "sh %s/Scripts/analysis/data_analysis.sh %s/strain_results/%s/strain_level_abd.txt %s %s/analysis_results/%s dist.txt %s", path.c_str(), Out_path.c_str(), species.c_str(), Meta_file.c_str(), Out_path.c_str(), species.c_str(), species.c_str());
-                Run_With_Error(command, "function profiling", Error_file.c_str());
-                outscript << command << endl;
-            }
-            //Step 3 finished
-            break;
+            //Step 4 finished
 
         default:
             break;
@@ -251,12 +344,11 @@ int main(int argc, char *argv[])
     }
 
     if (rmdir(Temp_dir.c_str()) < 0){
-    sprintf(command, "rm -rf %s", Temp_dir.c_str());
-    system(command);
-        }
+        sprintf(command, "rm -rf %s", Temp_dir.c_str());
+        system(command);
+    }
 
-    if (outscript)
-    {
+    if (outscript) {
         outscript.close();
         outscript.clear();
     }

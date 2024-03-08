@@ -1,9 +1,7 @@
-// Updated at July 29, 2021
-// Updated by Yuzhu Chen
-// Notes: Get_Count_fastq
-// Updated at Nov 1,2021
-// Updated by Jian Lee
-// Notes:
+// Updated at March 8, 2024
+// Code by ZHANG Yufeng
+// Faculty of dentistry, HKU
+
 #ifndef _UTILITY_H
 #define _UTILITY_H
 
