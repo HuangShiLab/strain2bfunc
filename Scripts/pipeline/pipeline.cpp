@@ -200,7 +200,7 @@ int main(int argc, char *argv[])
                             return 0;
                         }
                         
-=                        for(int i = 0; i < species_count; i++) {
+                        for(int i = 0; i < species_count; i++) {
                             species = species_list[i];
                             
                             //Mkdir
