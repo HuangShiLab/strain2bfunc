@@ -14,16 +14,16 @@ args <- commandArgs(trailingOnly=TRUE)
 
 # make option list and parse command line
 option_list <- list(
-        make_option(c("-l", "--sample_list_file"), type="character", 
+	      make_option(c("-l", "--sample_list_file"), type="character", 
                     help="Input the samples list file [Required]"),
-        make_option(c("-a", "--species_abundance_file"), type="character", 
-                    help="Input the species abundance file [Required when mode is equal to 0]"),
-        make_option(c("-t", "--threshold"), type="numeric", default = 0.001,
-                    help="The threshold of species abundance for strain-level identification, [Required when mode is equal to 0, default %default]"),
-        make_option(c("-s", "--species_list_file"), type="character", 
-                    help="Input the identified species list [Required when mode is equal to 1]"),
-        make_option(c("-m", "--mode"), type="integer", default = 0, 
-                    help="choices=c(0, 1), 0 for global strain level profiling, 1 for strain level profiling for identified species [default %default]"),
+	      make_option(c("-s", "--species_list_file"), type="character", 
+	                  help="Input the identified species list [Required when mode is equal to 1]"),
+	      make_option(c("-m", "--mode"), type="integer", default = 0,
+                    help="choices=c(0, 1), 0 for profiling based on the 2bGDB, 1 for profiling based on a customized copy number matrix [default %default]"),
+	      make_option(c("-d", "--cnm_matrix_dir"), type="character", 
+	                  help="The directory of copy number matrix [Required when mode equals to 0]"),
+	      make_option(c("-f", "--cnm_file"), type="character", 
+	                  help="The path of copy number matrix [Required when mode equals to 1]"),
         make_option(c("-o", "--output_path"), type="character", default='.', 
                     help="Output file [default %default]")
 )
@@ -37,18 +37,18 @@ if(nchar(Env)<1){
 
 source(paste0(Env, "/Scripts/strain2b/utility.R"))
 
-if(is.null(opts$sample_list_file)) stop('Please input a sample list file')
+if (is.null(opts$sample_list_file)) stop('Please input a sample list file')
 if (opts$mode == 0) {
-  if (is.null(opts$species_abundance_file)) {
-    stop("Please specify a species abundance table file!")
+  if (is.null(opts$cnm_matrix_dir)) {
+    stop("Please specify a directory of copy number matrix!")
   } else {
-    Sample_List_Pipeline(opts$sample_list_file, opts$species_abundance_file, opts$output_path, mode = 0, threshold = threshold)
+    Sample_List_Pipeline(opts$sample_list_file, opts$species_list_file, opts$output_path, opts$cnm_matrix_dir, mode = 0)
   }
 } else if (opts$mode == 1) {
-  if (is.null(opts$species_list_file)) {
-    stop("Please specify a species list file!")
+  if (is.null(opts$cnm_file)) {
+    stop("Please specify a copy number matrix!")
   } else {
-    Sample_List_Pipeline(opts$sample_list_file, opts$species_list_file, opts$output_path, mode = 1)
+    Sample_List_Pipeline(opts$sample_list_file, opts$species_list_file, opts$output_path, opts$cnm_file, mode = 1)
   }
 } else {
   stop("Invalid mode option. Please specify 0 or 1.")
