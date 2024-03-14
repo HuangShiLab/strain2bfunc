@@ -288,7 +288,7 @@ int Parse_Para(int argc, char * argv[]){
                   cerr << "\t[1] shotgun metagenomic data in a fastq format(either SE or PE platform is accepted)" << endl;
                   cerr << "\t[2] 2bRAD data from a SE sequencing platform in a fastq format" << endl;
                   cerr << "\t[3] 2bRAD data from a PE sequencing platform in a fastq format" << endl;
-                      exit(0);
+                  exit(0);
           }
                   if(format == 1) Seq_type = 'F'; // If format equals to 1, the sequence type is not in 2bRAD format, but in WMS format.
                   format += 1; // To correspond with the '-t' parameter of 2bRAD-M
