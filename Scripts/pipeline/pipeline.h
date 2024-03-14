@@ -102,7 +102,7 @@ bool Is_paired_seq = false;
 //int Bootstrap = DEF_BOOT;
 
 //Input sequence format
-int format = 1;
+int format = 2;
 
 //step
 int Step = -1;
@@ -120,7 +120,6 @@ vector <string> Ids;
 
 //Sample info
 int Input_sam_num = 0;
-int Filter_sam_num = 0;
 
 string prefix_name = "multi_sp_merged"; //prefix of multiple-species-merged analysis results
 
@@ -137,9 +136,10 @@ int printhelp(){
     cout << "\tStart from step0: Species-level profiling" << endl;
     cout << "\t  -i Sequence files list, 2bRAD or WGS data [Conflicts with -l, -T and -L]" << endl;
     cout << "\t  -f The acceptable formats of an input sequencing data file. The file path should be also listed in the sample list file [Optional for -i]" << endl;
-    cout << "\t    [1] shotgun metagenomic data in a fastq format (either SE or PE platform is accepted)" << endl;
-    cout << "\t    [2] 2bRAD data from a SE sequencing platform in a fastq format" << endl;
-    cout << "\t    [3] 2bRAD data from a PE sequencing platform in a fastq format" << endl;
+    cout << "\t    [1] generic genome data in a fasta format" << endl;
+    cout << "\t    [2] shotgun metagenomic data in a fastq format (either SE or PE platform is accepted)" << endl;
+    cout << "\t    [3] 2bRAD data from a SE sequencing platform in a fastq format" << endl;
+    cout << "\t    [4] 2bRAD data from a PE sequencing platform in a fastq format" << endl;
     cout << "\t  -a the abundance threshold of species for Strain2bFunc analysis, default is 0.01 [Optional for -i and -T]" << endl;
     cout << "\tor" << endl;
     cout << "\tStart from step1: Automatically select species" << endl;
@@ -217,7 +217,6 @@ void Print_Report(const char * outfilename){
     if (Taxa_dist_type == 2) outfile << "Jaccard distance" << endl;
        
     outfile << "Number of Input Sample: " << Input_sam_num << endl;
-    outfile << "Number of Output Sample: " << Filter_sam_num << endl;
 
     outfile.close();
     outfile.clear();
@@ -282,26 +281,16 @@ int Parse_Para(int argc, char * argv[]){
                   else Step = 0;
                   break;
 
-          case 'f': format = atoi(argv[i+1]);
-          if(format < 1 || format > 3) {
-                  cerr << "Error: the value of input sequence format is range from 1 to 3" << endl;
-                  cerr << "\t[1] shotgun metagenomic data in a fastq format(either SE or PE platform is accepted)" << endl;
-                  cerr << "\t[2] 2bRAD data from a SE sequencing platform in a fastq format" << endl;
-                  cerr << "\t[3] 2bRAD data from a PE sequencing platform in a fastq format" << endl;
-                  exit(0);
-          }
+              case 'f': format = atoi(argv[i+1]);
+                  if(format < 1 || format > 4) {
+                          cerr << "Error: the value of input sequence format is range from 1 to 3" << endl;
+                          cerr << "\t[1] generic genome data in a fasta format" << endl;
+                          cerr << "\t[2] shotgun metagenomic data in a fastq format(either SE or PE platform is accepted)" << endl;
+                          cerr << "\t[3] 2bRAD data from a SE sequencing platform in a fastq format" << endl;
+                          cerr << "\t[4] 2bRAD data from a PE sequencing platform in a fastq format" << endl;
+                          exit(0);
+                  }
                   if(format == 1) Seq_type = 'F'; // If format equals to 1, the sequence type is not in 2bRAD format, but in WMS format.
-                  format += 1; // To correspond with the '-t' parameter of 2bRAD-M
-                  /* 
-                   Usage of 2bRAD-M
-                   perl ../2bRAD-M/bin/2bRADM_Pipline.pl
-                       PARAMETERS
-                             -t   <int>    The acceptable types of an input sequencing data file. The file path should be also listed in the sample list file (para -l)
-                                           [1] generic genome data in a fasta format
-                                           [2] shotgun metagenomic data in a fastq format(either SE or PE platform is accepted)
-                                           [3] 2bRAD data from a SE sequencing platform in a fastq format
-                                           [4] 2bRAD data from a PE sequencing platform in a fastq format
-                   */
                   break;
 
               case 'l': Taxa_list_file = argv[i+1];

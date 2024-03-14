@@ -12,5 +12,7 @@ ifneq (,$(findstring Darwin,$(shell uname)))
                 endif
         endif
 endif
-tax:$(OBJ_TAX) pipeline-without-omp.cpp
-	$(CC) -o pipeline pipeline-without-omp.cpp
+OMPFLG=-fopenmp
+EXE_TAX=Strain2bfunc-pipeline
+tax:$(OBJ_TAX) pipeline.cpp
+	$(CC) -o $(EXE_TAX) pipeline.cpp $(OMPFLG)
