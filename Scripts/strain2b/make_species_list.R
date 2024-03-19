@@ -48,4 +48,9 @@ non_zero_rows <- abd_2bRAD[!apply(abd_2bRAD == 0, 1, any), ]
 filtered_abd_2bRAD <- subset(abd_2bRAD, rownames(abd_2bRAD) %in% rownames(non_zero_rows))
 
 filtered_species_list <- rownames(filtered_abd_2bRAD)
+
+filtered_species_list <- gsub("^s__", "", filtered_species_list)
+
+filtered_species_list <- gsub(" ", "_", filtered_species_list)
+
 write.table(filtered_species_list, outfile, sep = "\t", quote = F, row.names = F, col.names = F)

@@ -120,6 +120,7 @@ vector <string> Ids;
 
 //Sample info
 int Input_sam_num = 0;
+int Filter_sam_num = 0;
 
 string prefix_name = "multi_sp_merged"; //prefix of multiple-species-merged analysis results
 
@@ -217,6 +218,7 @@ void Print_Report(const char * outfilename){
     if (Taxa_dist_type == 2) outfile << "Jaccard distance" << endl;
        
     outfile << "Number of Input Sample: " << Input_sam_num << endl;
+    outfile << "Number of Output Sample: " << Filter_sam_num << endl;
 
     outfile.close();
     outfile.clear();

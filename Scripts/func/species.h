@@ -17,7 +17,7 @@ public:
 	MatrixXf Get_Abds();
 	vector<string> Get_Sample_Names();
 	vector<string> Get_Species_Names();
-	friend ostream & operator << (ostream& os, const Species& M);
+	friend std::ostream & operator << (std::ostream& os, const Species& M);
 private:
 	MatrixXf abds;
 	int nrows, ncols;
@@ -77,7 +77,7 @@ vector<string> Species::Get_Species_Names() {
         return species;
 }
 
-ostream & operator << (ostream& os, const Species& M) {
+std::ostream & operator << (std::ostream& os, const Species& M) {
 	for(int i = 0; i < M.nrows; ++i) {
 		for(int j = 0; j < M.ncols; ++j) {
 			os << M.abds(i, j) << "\t";

@@ -10,6 +10,7 @@ The strain-resolved analysis is a widespread demand because the co-existence of 
 * The conventional metagenome method requires high sequencing coverage and is thus cost-prohibitive and resource-intensive.
 * Low-biomass issues make strain-level microbial identification harder<img width="780" alt="image" src="https://github.com/shihuang047/strain2bfunc/assets/44211414/9c517599-872d-49d7-a303-b3cc4cb11745">
 
+
 ## Installation
 
 ### System requirements

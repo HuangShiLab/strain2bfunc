@@ -145,6 +145,7 @@ int main(int argc, char *argv[])
                         return 0;
                     }
                     
+                    omp_set_num_threads(Min(species_count, Coren));
                     #pragma omp parallel for private(species, command)
                     for(int i = 0; i < species_count; i++) {
                         species = species_list[i];
@@ -203,6 +204,7 @@ int main(int argc, char *argv[])
                             return 0;
                         }
                         
+                        omp_set_num_threads(Min(species_count, Coren));
                         #pragma omp parallel for private(species, command)
                         for(int i = 0; i < species_count; i++) {
                             species = species_list[i];
@@ -273,6 +275,7 @@ int main(int argc, char *argv[])
                         return 0;
                     }
                     
+                    omp_set_num_threads(Min(species_count, Coren));
                     #pragma omp parallel for private(species, command)
                     for(int i = 0; i < species_count; i++) {
                         species = species_list[i];

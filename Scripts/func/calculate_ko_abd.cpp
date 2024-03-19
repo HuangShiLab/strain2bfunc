@@ -5,7 +5,8 @@ using namespace std;
 
 void printhelp();
 int Parse_Para(int argc, char * argv[]);
-void write_file(MatrixXf m, vector<string>& ko_names, vector<string>& sample_names, const char* outfilename);
+MatrixXf Count_to_Abd(const MatrixXf & count_mat);
+void write_file(const MatrixXf & m, vector<string>& ko_names, vector<string>& sample_names, const char* outfilename);
 
 string sp_abd_file;
 string sp_ko_map_file;
@@ -19,10 +20,12 @@ int main(int argc, char *argv[]) {
 	vector<string> sp_names = species.Get_Species_Names();
 	vector<string> sample_names = species.Get_Sample_Names();
 
-        Sp_ko_map sp_ko_map(sp_ko_map_file.c_str(), sp_names);
+	Sp_ko_map sp_ko_map(sp_ko_map_file.c_str(), sp_names);
 	vector<string> ko_names = sp_ko_map.Get_KO_Names();
 
-	MatrixXf ko_abds = sp_ko_map * species;
+	MatrixXf ko_count = sp_ko_map * species;
+    
+	MatrixXf ko_abds = Count_to_Abd(ko_count);
 
 	write_file(ko_abds, ko_names, sample_names, ko_abd_file.c_str());
 
@@ -67,7 +70,17 @@ int Parse_Para(int argc, char * argv[]){
 	return 1;
 }
 
-void write_file(MatrixXf m, vector<string>& ko_names, vector<string>& sample_names, const char* outfilename) {
+MatrixXf Count_to_Abd(const MatrixXf & count_mat) {
+    // Calculate the sum of each column
+    VectorXf col_sum = count_mat.colwise().sum();
+
+    // Convert to abundance
+    MatrixXf abundance_mat = count_mat.array().rowwise() / col_sum.transpose().array();
+    
+    return abundance_mat;
+}
+
+void write_file(const MatrixXf & m, vector<string>& ko_names, vector<string>& sample_names, const char* outfilename) {
 	ofstream outfile(outfilename, ofstream::out);
 	if (!outfile){
 		cerr << "Error: Cannot open output file: " << outfilename << endl;

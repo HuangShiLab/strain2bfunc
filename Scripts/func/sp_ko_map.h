@@ -18,7 +18,7 @@ public:
 	vector<string> Get_KO_Names();
 	vector<string> Get_Species_Names();
 	friend MatrixXf operator * (Sp_ko_map& m, Species& s);
-	friend ostream & operator << (ostream& os, const Sp_ko_map& m);
+	friend std::ostream & operator << (std::ostream& os, const Sp_ko_map& m);
 private:
 	MatrixXf maps;
 	int nrows, ncols;
@@ -93,7 +93,7 @@ MatrixXf operator * (Sp_ko_map& m, Species& s){
 	return t;
 }
 
-ostream & operator << (ostream& os, const Sp_ko_map& m) {
+std::ostream & operator << (std::ostream& os, const Sp_ko_map& m) {
 	for(int i = 0; i < m.nrows; ++i) {
 		for(int j = 0; j < m.ncols; ++j) {
 			os << m.maps(i, j) << "\t";

@@ -91,14 +91,19 @@ Vsearch <- function(cnm, new_sample_fa, similarity, output_tag_path, tags_count_
                 " --threads 0") # --threads: number of threads to use, zero for all cores (0)
   
   system(cmd, intern = TRUE)
+  
+  file.remove(new_sample_fa) #Delete intermediate result files
+  file.remove(output_tag_path) #Delete intermediate result files
 }
 
 
-Filter_CNM <- function(cnm, tags_count_file) { 
+Filter_CNM <- function(cnm, tags_count_file) {
 #filter the copynumber matrix according to the vsearch result (delete the tags which are not included in the sample)
 
   tags_count <- read.table(tags_count_file, sep = "\t", header = T, row.names = 1, comment="")
 
+  file.remove(tags_count_file) #Delete intermediate result files
+  
   idx <- rownames(tags_count) %in% rownames(cnm)
   tags_count <- subset(tags_count, idx)
 
