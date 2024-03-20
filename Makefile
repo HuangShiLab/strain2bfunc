@@ -14,7 +14,7 @@ ifneq (,$(findstring Darwin,$(shell uname)))
 endif
 OMPFLG=-fopenmp
 BUILDFLG=-Wno-attributes
-EXE_TAX=bin/Strain2bfunc-pipeline
+EXE_TAX=bin/Strain2bFunc-pipeline
 EXE_FUN=Scripts/func/calculate_ko_abd
 tax:$(OBJ_TAX) Scripts/pipeline/pipeline.cpp
 	$(CC) -o $(EXE_TAX) Scripts/pipeline/pipeline.cpp $(OMPFLG)

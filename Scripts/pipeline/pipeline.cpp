@@ -123,9 +123,9 @@ int main(int argc, char *argv[])
                     //Mkdir
                     cout << "mkdir -p " << Out_path << "/strain_results" << endl;
                     sprintf(command, "mkdir -p %s/strain_results", Out_path.c_str());
-                    outscript << command << endl;
                     Run_With_Error(command, "Make directory of strain-level profiling results", Error_file.c_str());
-                    
+                    outscript << command << endl; //We need to create the output directory before writing the scripts file
+
                     //Strain-level profiling
                     cout << "Rscript " << path << "/Scripts/strain2b/strain_pipeline.R -l " << Taxa_list_file << " -s " << Species_list_file << " -m 0 -d " << database_path << "/copy_number_matrix_0.001 -o " << Out_path << "/strain_results" << endl;
                     sprintf(command, "Rscript %s/Scripts/strain2b/strain_pipeline.R -l %s -s %s -m 0 -d %s/copy_number_matrix_0.001 -o %s/strain_results", path.c_str(), Taxa_list_file.c_str(), Species_list_file.c_str(), database_path.c_str(), Out_path.c_str());
