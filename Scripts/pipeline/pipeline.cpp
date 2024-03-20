@@ -61,6 +61,11 @@ int main(int argc, char *argv[])
     int species_count;
     string species;
 
+    cout << "mkdir -p " << Out_path << endl;
+    sprintf(command, "mkdir -p %s", Out_path.c_str());
+    outscript << command << endl;
+    Run_With_Error(command, "Make directory", tmpError_file.c_str());
+
     switch (Step) {
         //Start from step 0
         case 0:
@@ -79,11 +84,6 @@ int main(int argc, char *argv[])
             cout << endl << "Microbial Community species-level profiling" << endl;
             outscript << endl << "#Microbial Community species-level profiling" << endl;
             
-            cout << "mkdir -p " << Out_path << endl;
-            sprintf(command, "mkdir -p %s", Out_path.c_str());
-            outscript << command << endl;
-            Run_With_Error(command, "Make directory", tmpError_file.c_str());
-
             cout << "perl " << path_2bRADM << "/bin/2bRADM_Pipline.pl -t " << format << " -l " << Seq_list_file << " -d " << database_path << "/2B-RAD-M-ref_db_GTDB -o " << Out_path <<  "/Species_results -qc no -gsc 5" << endl;
             sprintf(command, "perl %s/bin/2bRADM_Pipline.pl -t %d -l %s -d %s/2B-RAD-M-ref_db_GTDB -o %s/Species_results -qc no -gsc 5", path_2bRADM.c_str(), format, Seq_list_file.c_str(), database_path.c_str(), Out_path.c_str());
             outscript << command << endl;
