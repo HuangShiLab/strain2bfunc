@@ -1,0 +1,41 @@
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+  - r
+
+dependencies:
+  - r
+  - perl=5.26.2
+  - perl-parallel-forkmanager=2.02
+  - pear=0.9.6
+  - r-base=4.3.2  # Install R
+  - r-tidyverse  # Tidyverse packages for data manipulation
+  - r-devtools  # Development tools for R packages
+  - r-abind
+  - r-ade4
+  - r-ape
+  - r-combinat
+  - r-fossil
+  - r-ggdendro
+  - r-ggplot2
+  - r-ggpubr
+  - r-gplots
+  - r-igraph
+  - r-lattice
+  - r-Matrix
+  - r-optparse
+  - r-permute
+  - r-pheatmap
+  - r-plyr
+  - r-pROC
+  - r-psych
+  - r-randomForest
+  - r-RColorBrewer
+  - r-reshape
+  - r-reshape2
+  - r-scales
+  - r-seqinr
+  - r-squash
+  - r-stringr
+  - r-vegan

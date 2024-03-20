@@ -82,4 +82,7 @@ echo -e "\n**Environment Variables Configuration Complete**"
 echo -e "\n**Strain2bFunc Installation Complete**"
 echo -e "\n**An example dataset with demo script is available in \"data\"**"
 
-
+echo -e "\n**Download database**"
+cd database
+perl Download_2bRADTagDB_GTDB.pl
+cd ..
