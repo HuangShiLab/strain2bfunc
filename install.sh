@@ -45,7 +45,7 @@ if [ -f "Makefile" ]
        echo -e "\n**Build Complete**"
 fi
 
-chmod +x bin/Strain2bfunc-pipeline
+chmod +x bin/Strain2bFunc-pipeline
 
 ###Configure environment variables###
 
