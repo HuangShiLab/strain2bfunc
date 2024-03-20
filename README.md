@@ -1,4 +1,4 @@
-![image](https://github.com/yfz-96/strain2bfunc/assets/37996969/91580b55-1188-4d01-a77e-ecc7d34ad779)# strain2bfunc
+# strain2bfunc
 
 ## Motivations
 The strain-resolved analysis is a widespread demand because the co-existence of strains with distinct functional capacities in the microbial communities indicates unique functional/metabolic capability
