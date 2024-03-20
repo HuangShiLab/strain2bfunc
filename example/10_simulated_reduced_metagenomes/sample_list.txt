@@ -1,0 +1,10 @@
+Gut1	example/10_simulated_reduced_metagenomes/fastq_files/OGU_Gut1_0.05M.fastq.gz
+Gut2	example/10_simulated_reduced_metagenomes/fastq_files/OGU_Gut2_0.05M.fastq.gz
+Gut3	example/10_simulated_reduced_metagenomes/fastq_files/OGU_Gut3_0.05M.fastq.gz
+Gut4	example/10_simulated_reduced_metagenomes/fastq_files/OGU_Gut4_0.05M.fastq.gz
+Gut5	example/10_simulated_reduced_metagenomes/fastq_files/OGU_Gut5_0.05M.fastq.gz
+Oral1	example/10_simulated_reduced_metagenomes/fastq_files/OGU_Oral1_0.05M.fastq.gz
+Oral2	example/10_simulated_reduced_metagenomes/fastq_files/OGU_Oral2_0.05M.fastq.gz
+Oral3	example/10_simulated_reduced_metagenomes/fastq_files/OGU_Oral3_0.05M.fastq.gz
+Oral4	example/10_simulated_reduced_metagenomes/fastq_files/OGU_Oral4_0.05M.fastq.gz
+Oral5	example/10_simulated_reduced_metagenomes/fastq_files/OGU_Oral5_0.05M.fastq.gz

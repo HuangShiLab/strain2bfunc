@@ -1,0 +1,3 @@
+Kingdom	Phylum	Class	Order	Family	Genus	Species	Theoretical_Tag_Num	Sequenced_Tag_Num	Percent	Sequenced_Reads_Num	Sequenced_Reads_Num/Theoretical_Tag_Num	Sequenced_Reads_Num/Sequenced_Tag_Num	Sequenced_Tag_Num(depth>1)	G_Score
+Bacteria	Firmicutes	Bacilli	Staphylococcales	Staphylococcaceae	Staphylococcus	Staphylococcus_aureus	424.426884045916	523	123.22499343%	906	2.13464329	1.73231358	224	688.35891801
+Bacteria	Firmicutes	Bacilli	Staphylococcales	Staphylococcaceae	Staphylococcus	Staphylococcus_epidermidis	308.542431192661	468	151.68092058%	857	2.77757583	1.83119658	211	633.30561343

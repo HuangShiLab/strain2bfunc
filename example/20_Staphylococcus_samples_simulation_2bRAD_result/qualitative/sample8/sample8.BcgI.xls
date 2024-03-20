@@ -1,0 +1,7 @@
+Kingdom	Phylum	Class	Order	Family	Genus	Species	Theoretical_Tag_Num	Sequenced_Tag_Num	Percent	Sequenced_Reads_Num	Sequenced_Reads_Num/Theoretical_Tag_Num	Sequenced_Reads_Num/Sequenced_Tag_Num	Sequenced_Tag_Num(depth>1)	G_Score
+Bacteria	Firmicutes	Bacilli	Staphylococcales	Staphylococcaceae	Staphylococcus	Staphylococcus_saccharolyticus	280.111111111111	1	0.35700119%	1	0.00357001	1.00000000	0	1.00000000
+Bacteria	Firmicutes	Bacilli	Staphylococcales	Staphylococcaceae	Staphylococcus	Staphylococcus_aureus	84.4372816503078	227	268.83859305%	334	3.95559868	1.47136564	68	275.35068549
+Bacteria	Firmicutes_A	Clostridia	Peptostreptococcales	Peptostreptococcaceae	Clostridioides	Clostridioides_difficile	109.837929366231	1	0.91043231%	1	0.00910432	1.00000000	0	1.00000000
+Bacteria	Firmicutes_A	Clostridia	Tissierellales	Peptoniphilaceae	Peptoniphilus_E	Peptoniphilus_E_obesi	118	1	0.84745763%	1	0.00847458	1.00000000	0	1.00000000
+Bacteria	Firmicutes	Bacilli	Staphylococcales	Staphylococcaceae	Staphylococcus	Staphylococcus_epidermidis	142.606651376147	270	189.33198234%	457	3.20461911	1.69259259	112	351.26912759
+Bacteria	Firmicutes	Bacilli	Staphylococcales	Staphylococcaceae	Staphylococcus	Staphylococcus_argenteus	348.746575342466	1	0.28674117%	1	0.00286741	1.00000000	0	1.00000000
