@@ -54,11 +54,15 @@ Once you have Miniconda installed, create a conda environment with the yml file 
 conda env create -n strain2bfunc --file strain2bfunc.yml
 ```
 
-Activate the 2bRAD-M conda environment by running the following command:
+Activate the strain2bfunc conda environment by running the following command:
 
 ```
 conda activate strain2bfunc
+```
 
+Seamlessly install Strain2bFunc pipeline by simply executing a single command:
+
+```
 source install.sh
 ```
 
@@ -67,6 +71,13 @@ source install.sh
 ### Overview
 
 ### Usage
+
+#### The pipeline needs to be executed in the strain2bfunc conda environment
+Activate the strain2bfunc conda environment by running the following command:
+
+```
+conda activate strain2bfunc
+```
 
 #### Perform the pipeline using one command
 Tools can be directly used as Linux command line with parameters. To see all available parameters, please run the command with parameter ‘-h’, e.g.
