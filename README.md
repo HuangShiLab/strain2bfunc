@@ -54,7 +54,7 @@ Once you have Miniconda installed, create a conda environment with the yml file 
 conda env create -n strain2bfunc --file strain2bfunc.yml
 ```
 
-Activate the strain2bfunc conda environment by running the following command:
+Activate the "strain2bfunc" conda environment by running the following command:
 
 ```
 conda activate strain2bfunc
@@ -66,14 +66,14 @@ Seamlessly install Strain2bFunc pipeline by simply executing a single command:
 source install.sh
 ```
 
-## strain2bfunc pipeline tutorial
+## Strain2bFunc pipeline tutorial
 
 ### Overview
 
 ### Usage
 
-#### The pipeline needs to be executed in the strain2bfunc conda environment
-Activate the strain2bfunc conda environment by running the following command:
+#### The pipeline needs to be executed in the "strain2bfunc" conda environment
+Activate the "strain2bfunc" conda environment by running the following command:
 
 ```
 conda activate strain2bfunc
