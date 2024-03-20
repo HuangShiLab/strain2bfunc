@@ -46,7 +46,9 @@ metadata.filename<-opts$meta_data
 outpath<-opts$out_dir
 outpath<-paste(outpath,"/",sep="")
 
-dir.create(outpath)
+if (!file.exists(outpath)) {
+  dir.create(outpath)
+}
 
 outprefix<-opts$prefix
 outperfix<-paste(outprefix,".",sep="")

@@ -64,7 +64,9 @@ chaos <- apply(data_matrix, 1, chao1)
 #shannon & simpson
 indexes <- t(abind(diversity(data_matrix,index="shannon"),diversity(data_matrix,index="simpson"),chaos,along=0)) 
 
-dir.create(outpath)
+if (!file.exists(outpath)) {
+  dir.create(outpath)
+}
 setwd(outpath)
 
 outtxtfile <- paste(opts$prefix, ".Alpha_diversity_Index.txt", sep="")

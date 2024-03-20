@@ -48,7 +48,8 @@ if(is.null(opts$meta_data)) stop('Please input a meta data file')
 if(is.null(opts$dist_file)) stop('Please input a distance matrix table')
 
 # create output directory
-dir.create(outpath1<-paste(opts$out_dir,"/",sep=""),showWarnings=FALSE, recursive=TRUE)
+
+dir.create(outpath1<-paste0(opts$out_dir, "/"),showWarnings=FALSE, recursive=TRUE)
 
 # read arguments
 dist_matrix_name<-opts$dist_file                       
@@ -124,7 +125,7 @@ sink(paste(outpath1,prefix,".Beta_diversity_summ.xls",sep=""));cat("\t");write.t
 #--------------------------------
 if(length(all_group_f)>=1){
 	for(g in all_group_f){
-		dir.create(outpath2<-paste(outpath1,prefix,".",g,"/",sep=""))
+		dir.create(outpath2<-paste0(outpath1,prefix,".",g,"/"), showWarnings=FALSE, recursive=TRUE)
 		dm<-dist_matrix
 		group<-meta_data[,g]
 		group_name=g
@@ -201,7 +202,7 @@ if(length(all_group_f)>=1){
 #--------------------------------
 if(length(all_group_n)>=1){
 	for(group in all_group_n){
-		dir.create(outpath2<-paste(outpath1,prefix,".",group,"/",sep=""))
+		dir.create(outpath2<-paste0(outpath1,prefix,".",group,"/"), showWarnings=FALSE, recursive=TRUE)
 		
 		dist_num<-data.matrix(dist(meta_data[,group]))
 		dm_n_value<-dist_num[lower.tri(dist_num, diag = FALSE)]

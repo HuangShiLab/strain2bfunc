@@ -48,7 +48,10 @@ p.adj.cutoff <- opts$p_cutoff
 r.cutoff <- opts$r_cutoff
 
 #---------------------------------------------------------------------
-dir.create(outpath)
+if (!file.exists(outpath)) {
+  dir.create(outpath)
+}
+
 g<-read.table(filename,header=T,row.names=1,sep="\t"); g<-g[order(rownames(g)),]
 gmat<-data.matrix(g)
 gmat<-t(gmat)

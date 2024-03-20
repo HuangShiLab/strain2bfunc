@@ -43,8 +43,9 @@ matrixfile <- opts$table_file
 mapfile <- opts$meta_data
 outpath <- opts$out_dir
 
-dir.create(outpath)
-
+if (!file.exists(outpath)) {
+  dir.create(outpath)
+}
 #------------------------------------------------------------------------------------
 data_matrix <- read.table(matrixfile,header = T, row.names = 1,sep="\t")
 data_matrix <- t(data_matrix)

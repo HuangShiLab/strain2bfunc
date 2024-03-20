@@ -39,7 +39,9 @@ matrixfile <- t(matrixfile)
 mapfile <- opts$meta_data
 ave_t <- opts$threshold
 outpath <- opts$out_dir
-dir.create(outpath)
+if (!file.exists(outpath)) {
+  dir.create(outpath)
+}
 #------------------------------------------------------------------------------------
 disbar <- read.table(matrixfile,header = T, row.names = 1,sep="\t")
 #-----------Edit
