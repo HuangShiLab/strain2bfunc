@@ -25,28 +25,27 @@ my @d=('genome_to_ko');
 #my @b=('BcgI.species','CjePI.species');#需要下载的库文件
 
 my %hash_path=(
-	'abfh_classify'=>['https://figshare.com/ndownloader/files/31653170/abfh_classify_with_speciename.txt.gz',],
+	'abfh_classify'=>['https://figshare.com/ndownloader/files/45171355/abfh_classify_with_speciename.txt.gz',],
 
-	'BcgI.species' =>['https://figshare.com/ndownloader/files/31653911/BcgI.species.fa.gz0',
-	                  'https://figshare.com/ndownloader/files/31659299/BcgI.species.fa.gz1',
-	                  'https://figshare.com/ndownloader/files/31653614/BcgI.species.fa.gz2',],
+	'BcgI.species' =>['https://figshare.com/ndownloader/files/45172711/BcgI.species.fa.gz0',
+	                  'https://figshare.com/ndownloader/files/45172714/BcgI.species.fa.gz1',
+	                  'https://figshare.com/ndownloader/files/45172705/BcgI.species.fa.gz2',],
 	'copy_number_matrix' =>['https://figshare.com/ndownloader/files/44974513/copy_number_matrix.tar.gz'],
 	'genome_to_ko' => ['https://figshare.com/ndownloader/files/44974669/genome_to_ko.tsv.gz']
 	);
 
 my %hash_md5=(
-	'abfh_classify'=>['c2faa9ae97b704b3d0705709cf22ecb4',],
-
-	'BcgI.species' =>['a1b70d0de71093a0bb9bedbadab641b0',
-	                  '383fd8c85a23aee4a48d48aa41845f17',
-	                  'd19a5ce115fac8708fb0919f619ddf19',],
+	'abfh_classify'=>['6f501521429b7f0fd6ec3a33ffb5b7c8',],
+	'BcgI.species' =>['a3cb5394c97d858f17ed4c7a2e256ae5',
+	                  'bf167c9e539a072c29fd570d8478c90b',
+	                  '956b9b89caf56f65cf12e0cf80ea9be3',],
 	'copy_number_matrix' =>['2a77fc70bfe5924cd16441ddddcceabc'],
 	'genome_to_ko' =>['cacf3e96c2ed046ff97ae29f5babe993']
 	);
 
 #合并后文件md5
 my %complete_md5=(
-	'BcgI.species' =>'eea6b5ec34b00a749d45199a91fd3e34'
+	'BcgI.species' =>'dacf09b22e7900462fa1f7f27316bee1'
 	);
 
 #download abfh_classify

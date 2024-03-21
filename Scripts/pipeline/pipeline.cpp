@@ -61,6 +61,8 @@ int main(int argc, char *argv[])
     int species_count;
     string species;
 
+    Check_Path(Temp_dir.c_str(), 1);
+
     cout << "mkdir -p " << Out_path << endl;
     sprintf(command, "mkdir -p %s", Out_path.c_str());
     outscript << command << endl;
@@ -70,7 +72,6 @@ int main(int argc, char *argv[])
         //Start from step 0
         case 0:
             //Step 0: 2bRAD-M
-            Check_Path(Temp_dir.c_str(), 1);
             
             if (Load_List(Seq_list_file.c_str(), Seq_files, List_prefix) == 0)
             {
