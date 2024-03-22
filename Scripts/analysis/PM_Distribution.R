@@ -35,7 +35,6 @@ opts <- parse_args(OptionParser(option_list=option_list), args=args)
 if(is.null(opts$abund_file)) stop('Please input a feature table (*.Abd)')
 # load data
 matrixfile <- opts$abund_file
-matrixfile <- t(matrixfile)
 mapfile <- opts$meta_data
 ave_t <- opts$threshold
 outpath <- opts$out_dir
@@ -47,13 +46,21 @@ disbar <- read.table(matrixfile,header = T, row.names = 1,sep="\t")
 #-----------Edit
 disbarm <- t(disbar)
 #---------------
-disbar <-disbar[order(rownames(disbar)),]
+disbarm <-disbarm[order(rownames(disbarm)), , drop = FALSE]
 
-disbar <- t(disbar)
+# To determine whether the user has provided metadata that meets the requirements. NO: 0; YES: 1.
+case <- 0 # Metadata not provided by the user or the provided metadata does not meet the requirements.
+if(is.null(opts$meta_data)==F) { # The user has provided metadata
+  data_map <- read.table(mapfile,header = T, row.names= 1,sep="\t",as.is=FALSE)
+  data_map <- data_map[order(rownames(data_map)), , drop = FALSE]
+  if(identical(rownames(disbarm), rownames(data_map))) {
+    case <- 1 # The user has provided metadata that meets the requirements.
+  }
+}
 
 disbar <- disbar[names(sort(rowSums(disbar),decreasing = T)),]
 disbar <- floor(disbar*1000000)/1000000
- Unclassified_other <- disbar[which(apply(disbar,1,mean) <= ave_t),]
+Unclassified_other <- disbar[which(apply(disbar,1,mean) <= ave_t),]
 
 invisible(if (sum( Unclassified_other) ==0 ) ( Unclassified_big <- disbar))
 invisible(if (sum( Unclassified_other) !=0 ) ( Unclassified_big <- disbar[-(which(apply(disbar,1,mean) <= ave_t)),]))
@@ -78,30 +85,40 @@ if (mean(colSums(disbar))<0.9999) {                         #Complete to 100%
 colours <- c(brewer.pal(4,"Set3")[1],brewer.pal(12,"Set3")[12],brewer.pal(12,"Set3")[3:6],brewer.pal(12,"Set3")[10:11],brewer.pal(8,"Set2")[2:8],brewer.pal(6,"Pastel2"),brewer.pal(8,"Pastel1"),brewer.pal(5,"Paired")[2:5],brewer.pal(3,"Accent"),sample(rainbow(length(colnames(t(disbar)))),length(colnames(t(disbar)))))
 
 meltdata <- melt(abs(data.matrix(t(disbar))),varnames=c("Samples","Cutline"),value.name="Relative_Abundance")
-
 #-----------------------------------------------------------------------------------------
-if(is.null(opts$meta_data)) {
+if(case == 0) { # Metadata not provided by the user or the provided metadata does not meet the requirements.
   pp<-ggplot(meltdata,aes(x=Samples,y=Relative_Abundance,fill=Cutline))+
-    geom_bar(stat='identity')+ ylab("Relative Abundance")+ xlab("Samples")+
-    scale_x_discrete(limits=c(colnames(disbarm)))+
+    geom_bar(stat='identity')+ 
+    #geom_col() +
+    ylab("Relative Abundance")+ 
+    xlab("Samples")+
+    #scale_x_discrete(limits=c(colnames(disbarm)))+
     scale_y_continuous(breaks=c(0,0.25,0.5,0.75,1),labels=c("0%","25%","50%","75%","100%"))+
     guides(fill = guide_legend(ncol = (ceiling(nrow(disbar)/35))))+
     scale_fill_manual (values=colours) +
-    theme(legend.position="right",axis.text.x=element_text(size=12,colour="black",angle=60,hjust=1,vjust=0.9),
-          axis.text.y=element_text(size=12,colour="black"), axis.title.x=element_text(size=16,margin=margin(20,0,0,0)),
-          axis.title.y=element_text(size=16,margin=margin(0,20,0,0)),panel.grid.major=element_line(colour=NA),legend.text = element_text(size = 10,colour = "black"),legend.title = element_text(size = 12,face="bold"),
-		  legend.key.size = unit(0.7,'cm'),legend.key = element_rect(colour = "white", size=2),
-		  plot.margin = unit(rep(1.5,4),'lines'),panel.background = element_blank(),axis.ticks.length = unit(0.25,'cm'))
-  suppressWarnings(ggsave(paste(outpath, "/", opts$prefix, ".distribution.pdf",sep=""),plot=pp,width=ceiling(18+widforpdf/8),height=10, limitsize=FALSE))
+    theme(legend.position="right",
+	  axis.text.x=element_text(size=12,colour="black",angle=60,hjust=1,vjust=0.9),
+          axis.text.y=element_text(size=12,colour="black"),
+	  axis.title.x=element_text(size=16,margin=margin(20,0,0,0)),
+          axis.title.y=element_text(size=16,margin=margin(0,20,0,0)),
+	  panel.grid.major=element_line(colour=NA),
+	  legend.text = element_text(size = 10,colour = "black"),
+	  legend.title = element_text(size = 12,face="bold"),
+	  legend.key.size = unit(0.7,'cm'),
+	  legend.key = element_rect(colour = "white", size=2),
+	  plot.margin = unit(rep(1.5,4),'lines'),
+	  panel.background = element_blank(),
+	  axis.ticks.length = unit(0.25,'cm')
+    )
+    suppressWarnings(ggsave(paste(outpath, "/", opts$prefix, ".distribution.pdf",sep=""),plot=pp,width=ceiling(18+widforpdf/8),height=10, limitsize=FALSE))
 }
-if(is.null(opts$meta_data)==F) {
-	data_map <- read.table(mapfile,header = T, row.names= 1,sep="\t",as.is=FALSE)
-	data_map <- data_map[order(rownames(data_map)),]
-
+if(case == 1) { # The user has provided metadata that meets the requirements.
 	# Print OTU results
 	pp<-ggplot(meltdata,aes(x=Samples,y=Relative_Abundance,fill=Cutline))+
-		geom_bar(stat='identity')+ ylab("Relative Abundance")+ xlab("Samples")+
-		scale_x_discrete(limits=c(colnames(disbarm)))+
+		geom_bar(stat='identity')+ 
+	  ylab("Relative Abundance")+ 
+	  xlab("Samples")+
+		#scale_x_discrete(limits=c(colnames(disbarm)))+
 		scale_y_continuous(breaks=c(0,0.25,0.5,0.75,1),labels=c("0%","25%","50%","75%","100%"))+
 		guides(fill = guide_legend(ncol = (ceiling(nrow(disbar)/35))))+
 		scale_fill_manual (values=colours) +

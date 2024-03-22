@@ -165,8 +165,16 @@ cat("
 #g<-read.table(paste(filename,".txt",sep=""),header=T,row.names=1)
 g<-read.table(filename,header=T,row.names=1)
 g<-t(g)
+g<-g[order(rownames(g)), , drop = FALSE]
+
 #allmetadata<-read.table(paste(metadata.filename,".txt",sep=""),header=T,sep="\t",row.names=1)
 allmetadata<-read.table(metadata.filename,header=T,sep="\t",row.names=1,as.is=FALSE)
+allmetadata<-allmetadata[order(rownames(allmetadata)), , drop = FALSE]
+
+if(! identical(rownames(g), rownames(allmetadata))) {
+  stop("Error: Abundance table and meta data should have the same sample count and sample name")  
+}
+
 cat(paste("    The number of all input variables : ", ncol(g) ,sep=""), "\n")
 #-------------------------------filtering taxa with X% zero
 Zero.p<-0.8

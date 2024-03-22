@@ -46,7 +46,14 @@ outpath <- opts$out_dir
 #------------------------------------------------------------------------------------
 data_matrix <- read.table(matrixfile,header = T, row.names = 1,sep="\t")
 data_matrix <- t(data_matrix)
-data_map <- read.table(mapfile,header = T, sep="\t",as.is=FALSE)
+data_matrix <- data_matrix[order(rownames(data_matrix)), , drop = FALSE]
+
+data_map <- read.table(mapfile,header = T, sep="\t", as.is = F)
+data_map <- data_map[order(as.character(data_map[, 1])), , drop = FALSE]
+
+if(! identical(rownames(data_matrix), as.character(data_map[, 1]))) {
+  stop("Error: Abundance table and meta data should have the same sample count and sample name")  
+}
 
 if (min(colSums(data_matrix))==0) {
 	data_matrix <- data_matrix[,-which(apply(data_matrix,2,sum)==0)]              #trim 0 cols

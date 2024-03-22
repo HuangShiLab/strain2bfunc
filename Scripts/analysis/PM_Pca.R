@@ -47,9 +47,16 @@ axesfile<-paste(opts$outfile, ".pc", sep="")
 ## load data
 # import meta file
 meta_orig <- read.table(file=opts$meta_data, header=TRUE, row.names=1, as.is=FALSE)
+meta_orig <- meta_orig[order(rownames(meta_orig)), , drop = FALSE]
 # import abundance file
 abund_orig <- read.table(file=opts$abund_file, header=TRUE, row.names=1)
 abund_orig <- t(abund_orig)
+abund_orig <- abund_orig[order(rownames(abund_orig)), , drop = FALSE]
+
+if(!identical(rownames(meta_orig), rownames(abund_orig))) {
+  Stop("Please ensure the consistency between the row names of the distance matrix and that of the abundance table.")
+}
+
 ## main calc & draw function definition
 PM_pca <- function(da, md) {
   rn <- rownames(da)
@@ -64,6 +71,11 @@ PM_pca <- function(da, md) {
   da.b.pca <- dudi.pco(da.dist, scan = FALSE, nf = 3)
   #print(da.b.pca)
   #print(da.b.pca$li)
+  
+  if(ncol(da.b.pca$li) < 3) {
+    stop("The dimensionality of the PCA plot is less than 3, making it impossible to visualize.")
+  }
+  
   colnames(da.b.pca$li)<-c("PC1","PC2","PC3")
   data<-as.data.frame(da.b.pca$li)
   loadings <- signif(da.b.pca$eig/sum(da.b.pca$eig)*100, digits=3)

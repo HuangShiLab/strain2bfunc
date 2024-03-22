@@ -55,8 +55,15 @@ if (!file.exists(outpath)) {
 g<-read.table(filename,header=T,row.names=1,sep="\t"); g<-g[order(rownames(g)),]
 gmat<-data.matrix(g)
 gmat<-t(gmat)
+gmat<-gmat[order(rownames(gmat)), , drop = FALSE]
 #---------------------------------------------------------------------
 allmetadata<-read.table(metadata.filename,header=T,sep="\t",row.names=1,as.is=FALSE); allmetadata<-allmetadata[order(rownames(allmetadata)),]
+allmetadata<-allmetadata[order(rownames(allmetadata)), , drop = FALSE]
+
+if(! identical(rownames(gmat), rownames(allmetadata))) {
+  stop("Error: Abundance table and meta data should have the same sample count and sample name")  
+}
+
 q_metadata<-data.frame(allmetadata[sapply(allmetadata,class)!="factor"][order(rownames(allmetadata)),])
 f_metadata<-data.frame(allmetadata[sapply(allmetadata,class)=="factor"][order(rownames(allmetadata)),])
 names(q_metadata)<-q_metadata.name<-names(which(sapply(allmetadata,class)!="factor"))
