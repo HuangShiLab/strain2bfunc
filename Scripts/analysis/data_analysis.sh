@@ -4,6 +4,19 @@ out_dir=$3
 dist_file=$4
 prefix=$5
 
+# Check if the file exists
+if [ ! -f "$feature_table" ]; then
+    echo "File $feature_table does not exist."
+    exit 1
+fi
+
+if [ ! -f "$metadata" ]; then
+    echo "File $metadata does not exist."
+    exit 1
+fi
+
+# Continue with the rest of the script
+
 #Abundance distribution visualization
 mkdir -p ${out_dir}/Abundance_distribution
 echo "Rscript ${Strain2bFunc}/Scripts/analysis/PM_Distribution.R -m ${metadata} -i ${feature_table} -o ${out_dir}/Abundance_distribution -p ${prefix}"
