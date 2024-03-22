@@ -51,13 +51,13 @@ brew install gcc
 ```
 
 #### Disk space
-Construction of a strain2bfunc standard database (i.e., 2bGDB) requires approximately *28* GB of disk space.
+Construction of a strain2bfunc standard database (i.e., 2bGDB) requires approximately 28 GB of disk space.
 
 #### Memory usage
-Running the standard pipeline requires < 30Gb of RAM, which is also compatible with multithreading. For example, the BcgI-derived (default) database size is 9.32 GB, and you will need more than that in RAM if you want to build the default database. In a test early on, the peak memory can reach up to 29GB.
+Running the standard pipeline requires < 30Gb of RAM, which is also compatible with multithreading. For example, the BcgI-derived (default) database size is 9.32 GB, and you will need more than that in RAM if you want to build the default database. In a test early on, the peak memory can reach up to 29 GB.
 
 #### Speed
-About 30 minutes are required for loading the 2bGDB. For a typical gut metagenome, ~40 minutes are required for strain-level profiling.
+About 30 minutes are required for loading the 2bGDB. For a typical gut metagenome, ~ 40 minutes are required for strain-level profiling.
 
 ### Download the pipeline
 
