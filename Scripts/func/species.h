@@ -37,7 +37,7 @@ Species::Species(const char * infilename) {
 	stringstream strin(buffer);
 	
 	string sample_name;
-	strin >> sample_name;
+	//strin >> sample_name;
 	while(strin >> sample_name) 
 		samples.push_back(sample_name);
 	ncols = (int)samples.size();
