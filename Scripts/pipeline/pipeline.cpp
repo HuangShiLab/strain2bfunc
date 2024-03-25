@@ -303,8 +303,8 @@ int main(int argc, char *argv[])
                             Run_With_Error(command, "Make directory of function data analysis results", Error_file.c_str());
 
                             //Data analysis
-                            cout << "sh " << path << "/Scripts/analysis/data_analysis.sh " << Out_path << "/function_results/" << species << "/ko_abd.txt " << Meta_file << " " << Out_path << "/function_data_analysis_results/" << species << " dist.txt " << species << endl;
-                            sprintf(command, "sh %s/Scripts/analysis/data_analysis.sh %s/function_results/%s/ko_abd.txt %s %s/function_data_analysis_results/%s dist.txt %s", path.c_str(), Out_path.c_str(), species.c_str(), Meta_file.c_str(), Out_path.c_str(), species.c_str(), species.c_str());
+                            cout << "sh " << path << "/Scripts/analysis/data_analysis.sh " << Out_path << "/ko_results/" << species << "/ko_abd.txt " << Meta_file << " " << Out_path << "/function_data_analysis_results/" << species << " dist.txt " << species << endl;
+                            sprintf(command, "sh %s/Scripts/analysis/data_analysis.sh %s/ko_results/%s/ko_abd.txt %s %s/function_data_analysis_results/%s dist.txt %s", path.c_str(), Out_path.c_str(), species.c_str(), Meta_file.c_str(), Out_path.c_str(), species.c_str(), species.c_str());
                             outscript << command << endl;
                             Run_With_Error(command, "Function data analysis", Error_file.c_str());
                         }

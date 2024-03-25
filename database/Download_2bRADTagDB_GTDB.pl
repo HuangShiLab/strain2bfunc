@@ -1,5 +1,5 @@
 #!/usr/bin/perl
-#Author:zhangrongchao, zhangrongchaoxx@163.com
+#Author:ZHANG Yufeng, yfz96@connect.hku.hk
 use strict;
 use warnings;
 use File::Basename qw(dirname basename);

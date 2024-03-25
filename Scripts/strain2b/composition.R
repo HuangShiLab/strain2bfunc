@@ -61,47 +61,34 @@ rmscols <- function(read_count, copy_number_matrix, trim = 0, reltol = 1e-6, ver
 ### Local functions
 constrLS <- function(y, X, w, reltol = 1e-6, verbose = FALSE){
   p <- ncol(X)
-print(1)
+  # print(1)
 
   # Initial estimate
   if(verbose) cat("Initial estimate...\n")
-print(2)
+  # print(2)
 
   W <- Diagonal(x = w)
   X <- as.matrix(X) # X must be matrix, can NOT be data.frame
-print(3)
-	t <- crossprod(W, X)
-	print(class(t))
-	print(dim(t))
-print(3.1)
-	t <- crossprod(X, crossprod(W, X))
-	        print(class(t))
-	print(dim(t))
-print(3.2)
-	t <- crossprod(X, y)
-        print(class(t))
-	print(dim(t))
-print(3.3)
+  # print(3)
 
   theta0 <- Matrix::solve(crossprod(X, crossprod(W, X)), crossprod(X, y))
-print(3.4)
 
   theta0 <- pmax(1e-10, theta0)
   names(theta0) <- colnames(X)
-print(4)
+  # print(4)
 
   # Constrained estimate
   ctl <- list(factr = reltol/.Machine$double.eps)
-print(5)
+  # print(5)
 
   if(verbose){
     cat("Constrained optimization...\n")
     ctl <- list(trace = 1, REPORT = 1, factr = reltol/.Machine$double.eps, maxit = 10000)
   }
-print(6)
+  # print(6)
 
   lst <- optim(theta0, fn = objectFun, gr = grr, y, X, w, method = "L-BFGS-B", lower = rep(0, p), control = ctl)
-print(7)
+  # print(7)
 
   return(lst$par)
 }

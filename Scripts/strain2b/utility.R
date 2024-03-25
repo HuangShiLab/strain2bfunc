@@ -211,7 +211,7 @@ Read_Profiling_Matrix <- function(profile_path) {
 }
 
 
-Merge_Profiling_Matrix <- function(all_profiles_path) { 
+Merge_Profiling_Matrix <- function(all_profiles_path, sample_name_list) { 
 # merge the strain-level abundance matrix of all samples
 
   na_count <- sum(!complete.cases(all_profiles_path$out_file))
@@ -226,7 +226,9 @@ Merge_Profiling_Matrix <- function(all_profiles_path) {
   else {
     # Read all rows where out_file is not NA
     valid_profiles <- all_profiles_path[complete.cases(all_profiles_path$out_file), ]
-
+    print("....")
+    print(valid_profiles)
+    print("....")
     # Read files corresponding to rows where out_file is not NA, and merge them together
     result <- data.frame()
     for (i in 1:nrow(valid_profiles)) {
@@ -241,11 +243,11 @@ Merge_Profiling_Matrix <- function(all_profiles_path) {
 
 
     # Check for sample_names that need to be added to the data frame
-    missing_samples <- setdiff(all_profiles_path$sample_name, colnames(result))
-
+    missing_samples <- setdiff(valid_profiles$sample_name, sample_name_list)
+    print(missing_samples)
     # Add missing sample_names and set their values to 0
     for (sample in missing_samples) {
-      result[sample] <- 0
+      result[, sample] <- 0
     }
   }
   
@@ -265,7 +267,7 @@ Sample_List_Pipeline <- function(sample_list_file, species_list_file, output_pat
 
   sample_list <- read.table(sample_list_file, sep = "\t", header = F)
 
-  lapply(sample_list, Rename_sample)
+  lapply(sample_list[, 1], Rename_sample)
 
   if (mode == 0){ # mode == 0, profiling based on the 2bGDB
     
@@ -278,12 +280,16 @@ Sample_List_Pipeline <- function(sample_list_file, species_list_file, output_pat
     cnm <- read.table(cnm_file, sep = "\t", header = T)
     
   }
-  
+
   profile_list <- apply(sample_list, 1, function(x) tryCatch({One_Sample_Pipeline(x, species_list, output_path, mode, cnm_matrix_dir, cnm)}, error=function(err) { NA }))
 
   profile_list <- do.call(rbind, profile_list)
+ 
+  print(profile_list)
+  write.table(profile_list, paste0(output_path, "/tmp_profile_list.txt"), sep = "\t", quote = F, row.names = T, col.names = NA) 
 
-  abd_matrix <- Merge_Profiling_Matrix(profile_list)
+  sample_name_list <- sample_list[, 1]
+  abd_matrix <- Merge_Profiling_Matrix(profile_list, sample_name_list)
   
   write.table(abd_matrix, paste0(output_path, "/strain_level_abd.txt"), sep = "\t", quote = F, row.names = T, col.names = NA)
 }
