@@ -88,7 +88,7 @@ Vsearch <- function(cnm, new_sample_fa, similarity, output_tag_path, tags_count_
   
   cmd <- paste0("vsearch --usearch_global ", new_sample_fa, " --db ", output_tag_path, 
                 " --id ", similarity, " --iddef 4 --strand both -otutabout " , tags_count_file, 
-                " --threads 0") # --threads: number of threads to use, zero for all cores (0)
+                " --threads 2") # --threads: number of threads to use, zero for all cores (0)
   
   system(cmd, intern = TRUE)
   
@@ -226,9 +226,9 @@ Merge_Profiling_Matrix <- function(all_profiles_path, sample_name_list) {
   else {
     # Read all rows where out_file is not NA
     valid_profiles <- all_profiles_path[complete.cases(all_profiles_path$out_file), ]
-    print("....")
-    print(valid_profiles)
-    print("....")
+    # print("....")
+    # print(valid_profiles)
+    # print("....")
     # Read files corresponding to rows where out_file is not NA, and merge them together
     result <- data.frame()
     for (i in 1:nrow(valid_profiles)) {
@@ -244,7 +244,7 @@ Merge_Profiling_Matrix <- function(all_profiles_path, sample_name_list) {
 
     # Check for sample_names that need to be added to the data frame
     missing_samples <- setdiff(valid_profiles$sample_name, sample_name_list)
-    print(missing_samples)
+    # print(missing_samples)
     # Add missing sample_names and set their values to 0
     for (sample in missing_samples) {
       result[, sample] <- 0
