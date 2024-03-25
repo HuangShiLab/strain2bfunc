@@ -243,7 +243,7 @@ Merge_Profiling_Matrix <- function(all_profiles_path, sample_name_list) {
 
 
     # Check for sample_names that need to be added to the data frame
-    missing_samples <- setdiff(valid_profiles$sample_name, sample_name_list)
+    missing_samples <- setdiff(sample_name_list, colnames(result))
     # print(missing_samples)
     # Add missing sample_names and set their values to 0
     for (sample in missing_samples) {
@@ -285,7 +285,7 @@ Sample_List_Pipeline <- function(sample_list_file, species_list_file, output_pat
 
   profile_list <- do.call(rbind, profile_list)
  
-  print(profile_list)
+  # print(profile_list)
   write.table(profile_list, paste0(output_path, "/tmp_profile_list.txt"), sep = "\t", quote = F, row.names = T, col.names = NA) 
 
   sample_name_list <- sample_list[, 1]

@@ -57,7 +57,7 @@ gmat<-data.matrix(g)
 gmat<-t(gmat)
 gmat<-gmat[order(rownames(gmat)), , drop = FALSE]
 #---------------------------------------------------------------------
-allmetadata<-read.table(metadata.filename,header=T,sep="\t",row.names=1,as.is=FALSE); allmetadata<-allmetadata[order(rownames(allmetadata)),]
+allmetadata<-read.table(metadata.filename,header=T,sep="\t",row.names=1,as.is=FALSE)
 allmetadata<-allmetadata[order(rownames(allmetadata)), , drop = FALSE]
 
 if(! identical(rownames(gmat), rownames(allmetadata))) {
