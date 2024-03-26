@@ -211,8 +211,12 @@ Options:
 
 ##### Examples
 
-* Run entire pipeline using defaults:
+* The example dataset including 10 simulated reduced metagenomes (5 from gut and 5 from oral) can be found in the “example” folder. Run the entire pipeline using defaults:
   
+```
+sh example/10_simulated_reduced_metagenomes.sh
+```
+or
 ```
 Strain2bFunc-pipeline -i example/10_simulated_reduced_metagenomes/sample_list.txt -f 2 -a 0.0001 -m example/10_simulated_reduced_metagenomes/meta.txt -o example/10_simulated_reduced_metagenomes_results
 ```
