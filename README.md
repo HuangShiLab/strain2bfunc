@@ -81,10 +81,10 @@ Strain2bFunc is a streamlined pipeline constructed by C++ to automatically run e
 * **Step 4: Data analysis**
   
 	Input data:<br>
-	> Meta data file
+	> Metadata file
 
 	Data format:<br>
- 	> The meta data file includes the information about the sample: when it was collected, where it was collected from, what kind of sample it is, what were the properties of the environment or experimental condition from which the sample was taken, and so on. Each row represents a sample, each column represents a feature of the samples. The sample names in the meta data should be consistent with those in the sample list.
+ 	> The metadata file includes the information about the sample: when it was collected, where it was collected from, what kind of sample it is, what the properties of the environment or experimental condition from which the sample was taken, and so on. Each row represents a sample, each column represents a feature of the samples. The sample names in the metadata should be consistent with those in the sample list.
 
 ## Installation
 
