@@ -107,7 +107,7 @@ About 30 minutes are required for loading the 2bGDB. For a typical gut metagenom
 
 ### Download the pipeline
 
-Clone the latest version from GitHub (recommended):  
+Clone the latest version from GitHub:  
 
 ```
 git clone https://github.com/yfz-96/strain2bfunc/  
