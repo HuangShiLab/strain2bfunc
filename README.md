@@ -205,7 +205,7 @@ Options:
 	  -o Output path, default is "default_out"
 
 	[Other options]
-	  -t Number of thread, default is auto
+	  -t Number of threads, default is auto
 	  -h help
 ```
 
