@@ -173,7 +173,7 @@ int printhelp(){
     cout << endl;
     
     cout << "\t[Other options]" << endl;
-    cout << "\t  -t Number of thread, default is auto" << endl;
+    cout << "\t  -t Number of threads, default is auto" << endl;
     cout << "\t  -h help" << endl;
     
     exit(0);
