@@ -1,7 +1,0 @@
-#BcgI combine
-#Kingdom	Phylum	Class	Order	Family	Genus	Species	Theoretical_Tag_Num	Sequenced_Tag_Num	Percent	Sequenced_Reads_Num	Sequenced_Reads_Num/Theoretical_Tag_Num	Sequenced_Reads_Num/Sequenced_Tag_Num	Sequenced_Tag_Num(depth>1)	G_Score
-Bacteria	Firmicutes	Bacilli	Staphylococcales	Staphylococcaceae	Staphylococcus	Staphylococcus_epidermidis	142.606651376147	205	143.75206067%	325	2.27899608	1.58536585	78	258.11818998
-Bacteria	Firmicutes	Bacilli	Staphylococcales	Staphylococcaceae	Staphylococcus	Staphylococcus_microti	852	1	0.11737089%	1	0.00117371	1.00000000	0	1.00000000
-Bacteria	Proteobacteria	Gammaproteobacteria	Enterobacterales	Enterobacteriaceae	Salmonella	Salmonella_enterica	499.72941074373	1	0.20010829%	1	0.00200108	1.00000000	0	1.00000000
-Bacteria	Firmicutes	Bacilli	Bacillales_B	DSM-18226	Neobacillus	Neobacillus_drentensis	1045.5	1	0.09564802%	1	0.00095648	1.00000000	0	1.00000000
-Bacteria	Firmicutes	Bacilli	Staphylococcales	Staphylococcaceae	Staphylococcus	Staphylococcus_aureus	84.4372816503078	218	258.17979421%	319	3.77795203	1.46330275	63	263.70817204

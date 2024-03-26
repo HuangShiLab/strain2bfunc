@@ -1,7 +1,0 @@
-#BcgI combine
-#Kingdom	Phylum	Class	Order	Family	Genus	Species	Theoretical_Tag_Num	Sequenced_Tag_Num	Percent	Sequenced_Reads_Num	Sequenced_Reads_Num/Theoretical_Tag_Num	Sequenced_Reads_Num/Sequenced_Tag_Num	Sequenced_Tag_Num(depth>1)	G_Score
-Bacteria	Firmicutes	Bacilli	Staphylococcales	Staphylococcaceae	Staphylococcus	Staphylococcus_aureus	84.4372816503078	224	265.28566010%	303	3.58846228	1.35267857	49	260.52255181
-Bacteria	Firmicutes	Bacilli	Staphylococcales	Staphylococcaceae	Staphylococcus	Staphylococcus_argenteus	348.746575342466	2	0.57348233%	2	0.00573482	1.00000000	0	2.00000000
-Bacteria	Firmicutes	Bacilli	Staphylococcales	Staphylococcaceae	Staphylococcus	Staphylococcus_simiae	314.333333333333	1	0.31813362%	1	0.00318134	1.00000000	0	1.00000000
-Bacteria	Firmicutes	Bacilli	Lactobacillales	Listeriaceae	Listeria	Listeria_monocytogenes	276.744537815126	1	0.36134408%	1	0.00361344	1.00000000	0	1.00000000
-Bacteria	Firmicutes	Bacilli	Staphylococcales	Staphylococcaceae	Staphylococcus	Staphylococcus_epidermidis	142.606651376147	259	181.61845713%	446	3.12748386	1.72200772	112	339.87350588
