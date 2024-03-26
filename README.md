@@ -221,7 +221,7 @@ Strain2bFunc-pipeline -i example/10_simulated_reduced_metagenomes/sample_list.tx
 
 Then the pipeline will automatically generate an output directory named “10_simulated_reduced_metagenomes_results” in the “example” directory. In this directory, there will be five subdirectories and four text files.
 
-** Subdirectories: **
+**Subdirectories**
 
 > 1. Species_results: the species-level profiling results using 2bRAD-M
 > 2. strain_results: the strain-level profiling results of each species, including N subdirectories (N = the number of species).
