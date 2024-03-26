@@ -223,15 +223,11 @@ Then the pipeline will automatically generate an output directory named “10_si
 
 ** Subdirectories: **
 
-> Species_results: the species-level profiling results using 2bRAD-M
-
-> strain_results: the strain-level profiling results of each species, including N subdirectories (N = the number of species).
-
-> strain_data_analysis_results: the abundance distribution plot, alpha diversity analysis,  beta diversity analysis,  distance calculation, clustering based on the distance matrix,  markers selection based on Random Forests model results.
-
-> ko_results: the predictive ko relative abundance table
-
-> function_data_analysis_results: the abundance distribution plot, alpha diversity analysis,  beta diversity analysis,  distance calculation, clustering based on the distance matrix,  markers selection based on Random Forests model results.
+> 1. Species_results: the species-level profiling results using 2bRAD-M
+> 2. strain_results: the strain-level profiling results of each species, including N subdirectories (N = the number of species).
+> 3. strain_data_analysis_results: the abundance distribution plot, alpha diversity analysis,  beta diversity analysis,  distance calculation, clustering based on the distance matrix,  markers selection based on Random Forests model results.
+> 4. ko_results: the predictive ko relative abundance table
+> 5. function_data_analysis_results: the abundance distribution plot, alpha diversity analysis,  beta diversity analysis,  distance calculation, clustering based on the distance matrix,  markers selection based on Random Forests model results.
 
 ## FAQ
 
