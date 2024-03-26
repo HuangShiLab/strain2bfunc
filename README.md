@@ -211,11 +211,27 @@ Options:
 
 ##### Examples
 
-* run entire pipeline using defaults:
+* Run entire pipeline using defaults:
   
 ```
 Strain2bFunc-pipeline -i example/10_simulated_reduced_metagenomes/sample_list.txt -f 2 -a 0.0001 -m example/10_simulated_reduced_metagenomes/meta.txt -o example/10_simulated_reduced_metagenomes_results
 ```
+
+* Results
+
+Then the pipeline will automatically generate an output directory named “10_simulated_reduced_metagenomes_results” in the “example” directory. In this directory, there will be five subdirectories and four text files.
+
+** Subdirectories: **
+
+> Species_results: the species-level profiling results using 2bRAD-M
+
+> strain_results: the strain-level profiling results of each species, including N subdirectories (N = the number of species).
+
+> strain_data_analysis_results: the abundance distribution plot, alpha diversity analysis,  beta diversity analysis,  distance calculation, clustering based on the distance matrix,  markers selection based on Random Forests model results.
+
+> ko_results: the predictive ko relative abundance table
+
+> function_data_analysis_results: the abundance distribution plot, alpha diversity analysis,  beta diversity analysis,  distance calculation, clustering based on the distance matrix,  markers selection based on Random Forests model results.
 
 ## FAQ
 
