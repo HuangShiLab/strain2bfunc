@@ -90,7 +90,7 @@ Strain2bFunc is a streamlined pipeline constructed by C++ to automatically run e
 
 ### System requirements
 #### Dependencies
-All scripts in strain2bfunc are written using Perl, R, C++ and Shell. This program should work properly in the Linux systems (e.g., CentOS, Ubuntu, and Win10 WSL), or Mac OSX, as all required packages can be appropriately downloaded and installed. OpenMP library is the C/C++ parallel computing library. Most Linux releases have OpenMP already been installed in the system. In Mac OS X, to install the compiler that supports OpenMP, we recommend using the Homebrew package manager:
+All scripts in strain2bfunc are written using Perl, R, C++ and Shell. This program should work properly in the Linux systems (e.g., CentOS, Ubuntu, and Win10 WSL), or MacOS, as all required packages can be appropriately downloaded and installed. OpenMP library is the C/C++ parallel computing library. Most Linux releases have OpenMP already been installed in the system. In MacOS, to install the compiler that supports OpenMP, we recommend using the Homebrew package manager:
 
 ```
 brew install gcc
@@ -160,7 +160,7 @@ conda activate strain2bfunc
 ```
 
 #### Perform the pipeline using one command
-Tools can be directly used as Linux command line with parameters. To see all available parameters, please run the command with parameter ‘-h’, e.g.
+Tools can be directly used as Linux/MacOS command line with parameters. To see all available parameters, please run the command with parameter ‘-h’, e.g.
 ```
 Strain2bFunc-pipeline -h
 ```
@@ -219,7 +219,7 @@ Strain2bFunc-pipeline -i example/10_simulated_reduced_metagenomes/sample_list.tx
 
 ## FAQ
 
-Q1. When you install gcc in Mac OS using "brew install gcc", you may meet the warning information: <br>
+Q1. When you install gcc in MacOS using "brew install gcc", you may meet the warning information: <br>
 ```
 Warning: gcc 10.2.0_4 is already installed and up-to-date.
 To reinstall 10.2.0_4, run:
@@ -230,7 +230,7 @@ A1. Execute this command as indicated in the warning information: <br>
 brew reinstall gcc
 ```
 
-Q2. When you install gcc in Mac OS using "brew install gcc" or "brew reinstall gcc", you may meet the error information: <br>
+Q2. When you install gcc in MacOS using "brew install gcc" or "brew reinstall gcc", you may meet the error information: <br>
 ```
 Error: Cannot install in Homebrew on ARM processor in Intel default prefix (/usr/local)!
 Please create a new installation in /opt/homebrew using one of the
