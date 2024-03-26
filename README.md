@@ -219,6 +219,38 @@ Strain2bFunc-pipeline -i example/10_simulated_reduced_metagenomes/sample_list.tx
 
 ## FAQ
 
+Q1. When you install gcc in MACOS using "brew install gcc", you may meet the warning information: <br>
+```
+Warning: gcc 10.2.0_4 is already installed and up-to-date.
+To reinstall 10.2.0_4, run:
+  brew reinstall gcc
+```
+A1. Execute this command as indicated in the warning information: <br>
+```
+brew reinstall gcc
+```
+
+Q2. When you install gcc in MACOS using "brew install gcc" or "brew reinstall gcc", you may meet the error information: <br>
+```
+Error: Cannot install in Homebrew on ARM processor in Intel default prefix (/usr/local)!
+Please create a new installation in /opt/homebrew using one of the
+"Alternative Installs" from:
+  https://docs.brew.sh/Installation
+You can migrate your previously installed formula list with:
+  brew bundle dump
+```
+A2. You can refer to the link, [https://docs.brew.sh/Installation](https://docs.brew.sh/Installation), and execute the following command to (re)install Homebrew.
+```
+git clone https://github.com/Homebrew/brew homebrew
+eval "$(homebrew/bin/brew shellenv)"
+brew update --force --quiet
+chmod -R go-w "$(brew --prefix)/share/zsh"
+```
+Then install gcc using:
+```
+brew install gcc
+```
+
 ## Citation
 
 * Sun, Z., Huang, S., Zhu, P. et al. Species-resolved sequencing of low-biomass or degraded microbiomes using 2bRAD-M. Genome Biol 23, 36 (2022). https://doi.org/10.1186/s13059-021-02576-9
