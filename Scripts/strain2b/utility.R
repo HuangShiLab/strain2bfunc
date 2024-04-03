@@ -286,7 +286,7 @@ Sample_List_Pipeline <- function(sample_list_file, species_list_file, output_pat
   profile_list <- do.call(rbind, profile_list)
  
   # print(profile_list)
-  write.table(profile_list, paste0(output_path, "/tmp_profile_list.txt"), sep = "\t", quote = F, row.names = T, col.names = NA) 
+  # write.table(profile_list, paste0(output_path, "/tmp_profile_list.txt"), sep = "\t", quote = F, row.names = T, col.names = NA) 
 
   sample_name_list <- sample_list[, 1]
   abd_matrix <- Merge_Profiling_Matrix(profile_list, sample_name_list)
