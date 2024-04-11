@@ -41,7 +41,7 @@ if(is.null(opts$abund_file)) stop('Please input a feature table (*.Abd)')
 # import abundance file
 abund_orig <- read.table(file=opts$abund_file, sep="\t", header=TRUE, row.names=1)
 dist_type <- opts$dist_type
-abund_orig <- read.table(file="merged_strain_level_abd.txt", sep="\t", header=TRUE, row.names=1)
+
 if(dist_type == "taxUMAP") {
   if(is.null(opts$taxonomy_file)) stop('Please input the taxonomy annotation file to calculate taxUMAP distance')
   
