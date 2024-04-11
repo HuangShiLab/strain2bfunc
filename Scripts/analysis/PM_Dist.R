@@ -11,7 +11,7 @@
 #################################################################
 
 ## install necessary libraries
-p <- c("optparse","vegan","ade4","ggplot2","grid","RColorBrewer")
+p <- c("optparse","vegan","ade4","ggplot2","grid","RColorBrewer", "readr", "reshape2", "dpylr")
 usePackage <- function(p) {
   if (!is.element(p, installed.packages()[,1]))
     install.packages(p, dep=TRUE, repos="http://cran.us.r-project.org/")
@@ -39,14 +39,42 @@ opts <- parse_args(OptionParser(option_list=option_list), args=args)
 if(is.null(opts$abund_file)) stop('Please input a feature table (*.Abd)')
 
 # import abundance file
-abund_orig <- read.table(file=opts$abund_file, header=TRUE, row.names=1)
-abund_orig <- t(abund_orig)
+abund_orig <- read.table(file=opts$abund_file, sep="\t", header=TRUE, row.names=1)
 dist_type <- opts$dist_type
-
+abund_orig <- read.table(file="merged_strain_level_abd.txt", sep="\t", header=TRUE, row.names=1)
 if(dist_type == "taxUMAP") {
   if(is.null(opts$taxonomy_file)) stop('Please input the taxonomy annotation file to calculate taxUMAP distance')
   
+  strain_dist <- as.matrix(vegdist(t(abund_orig), method = "euclidean"))
+  
+  taxonomy <- read_delim(opts$taxonomy_file, delim = "\t", col_names = TRUE, comment = "", show_col_types = FALSE)
+  taxonomy <- as.data.frame(taxonomy)
+  
+  match_indices <- match(rownames(abund_orig), taxonomy$strain)
+  abund_taxonomy <- taxonomy[match_indices, c("kingdom", "phylum", "class", "order", "family", "genus", "specie", "strain")]
+  abund_orig <- cbind(abund_taxonomy, abund_orig)
+  
+  melt_abund <- melt(abund_orig)
+  
+  family_abd <- melt_abund %>%
+                group_by(variable, family) %>%
+                summarise(family_abd = sum(value))
+  family_abd <- dcast(family_abd, variable ~ family)
+  rownames(family_abd) <- family_abd$variable
+  family_abd <- family_abd[, -1, drop = FALSE]
+  family_dist <- as.matrix(vegdist(family_abd, method = "euclidean"))
+  
+  phylum_abd <- melt_abund %>%
+    group_by(variable, phylum) %>%
+    summarise(phylum_abd = sum(value))
+  phylum_abd <- dcast(phylum_abd, variable ~ phylum)
+  rownames(phylum_abd) <- phylum_abd$variable
+  phylum_abd <- phylum_abd[, -1, drop = FALSE]
+  phylum_dist <- as.matrix(vegdist(phylum_abd, method = "euclidean"))
+
+  dist <- (strain_dist + family_dist + phylum_dist) / 3
 } else {
+  abund_orig <- t(abund_orig)
   dist <- vegdist(abund_orig, method = dist_type)
   dist <- as.matrix(dist)
 }
