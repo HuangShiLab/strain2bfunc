@@ -49,11 +49,11 @@ dst_orig <- read.table(file=opts$dist_file, header=TRUE, row.names=1)
 dst_orig <- dst_orig[order(rownames(dst_orig)), order(colnames(dst_orig)), drop = FALSE]
 
 if(!identical(rownames(dst_orig), colnames(dst_orig))) {
-  Stop("Please ensure the consistency between the row names and column names of the distance matrix.")
+  stop("Please ensure the consistency between the row names and column names of the distance matrix.")
 }
 
 if(!identical(rownames(dst_orig), rownames(meta_orig))) {
-  Stop("Please ensure the consistency between the row names of the distance matrix and that of the meta data.")
+  stop("Please ensure the consistency between the row names of the distance matrix and that of the meta data.")
 }
 
 ## main calc & draw function definition

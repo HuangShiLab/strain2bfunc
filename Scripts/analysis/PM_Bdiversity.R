@@ -69,12 +69,12 @@ meta_data <- read.table(meta_name,header=T,sep="\t",row.names=1,as.is=FALSE)
 
 dist_matrix <- dist_matrix[order(rownames(dist_matrix)), order(colnames(dist_matrix)), drop = FALSE]
 if(!identical(rownames(dist_matrix), colnames(dist_matrix))) {
-  Stop("Please ensure the consistency between the row names and column names of the distance matrix.")
+  stop("Please ensure the consistency between the row names and column names of the distance matrix.")
 }
 
 meta_data <- meta_data[order(rownames(meta_data)), , drop = FALSE]
 if(!identical(rownames(dist_matrix), rownames(meta_data))) {
-  Stop("Please ensure the consistency between the row names of the distance matrix and that of the meta data.")
+  stop("Please ensure the consistency between the row names of the distance matrix and that of the meta data.")
 }
 
 #write anosim adonis process into xxx.Beta_diversity_log.txt

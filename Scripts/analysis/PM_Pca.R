@@ -54,7 +54,7 @@ abund_orig <- t(abund_orig)
 abund_orig <- abund_orig[order(rownames(abund_orig)), , drop = FALSE]
 
 if(!identical(rownames(meta_orig), rownames(abund_orig))) {
-  Stop("Please ensure the consistency between the row names of the distance matrix and that of the abundance table.")
+  stop("Please ensure the consistency between the row names of the distance matrix and that of the abundance table.")
 }
 
 ## main calc & draw function definition
