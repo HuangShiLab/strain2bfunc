@@ -11,7 +11,7 @@
 #################################################################
 
 ## install necessary libraries
-p <- c("optparse","vegan","ade4","ggplot2","grid","RColorBrewer", "readr", "reshape2", "dpylr")
+p <- c("optparse","vegan","ade4","ggplot2","grid","RColorBrewer", "readr", "reshape2", "dplyr")
 usePackage <- function(p) {
   if (!is.element(p, installed.packages()[,1]))
     install.packages(p, dep=TRUE, repos="http://cran.us.r-project.org/")
