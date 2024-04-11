@@ -276,6 +276,26 @@ int main(int argc, char *argv[])
                         return 0;
                     }
                     
+                    // Merge the results of different species, and then analysis
+                    // Mkdir
+                    cout << "mkdir -p " << Out_path << "/strain_data_analysis_results/Merged_results" << endl;
+                    sprintf(command, "mkdir -p %s/strain_data_analysis_results/Merged_results", Out_path.c_str());
+                    outscript << command << endl;
+                    Run_With_Error(command, "Make directory of merged strain data analysis results", Error_file.c_str());
+                    
+                    //Merge data
+                    cout << "Rscript " << path << "/Scripts/analysis/PM_Merge.R -s " << Species_list_file << " -p " << Outpath << "/strain_results/  -o " << Out_path << "/strain_data_analysis_results/Merged_results/merged_strain_level_abd.txt" << endl;
+                    sprintf(command, "Rscript %s/Scripts/analysis/PM_Merge.R -s %s -p %s/strain_results/ -o %s/strain_data_analysis_results/Merged_results/merged_strain_level_abd.txt", path.c_str(), Species_list_file.c_str(), Outpath.c_str(), database_path.c_str(), Out_path.c_str());
+                    outscript << command << endl;
+                    Run_With_Error(command, "Merged stain-level profiles of different species", Error_file.c_str());
+                    
+                    // Data analysis
+                    cout << "sh " << path << "/Scripts/analysis/data_analysis.sh " << Out_path << "/strain_data_analysis_results/Merged_results/merged_strain_level_abd.txt " << Meta_file << " " << Out_path << "/strain_data_analysis_results/Merged_results/ dist.txt " << prefix_name << endl;
+                    sprintf(command, "sh %s/Scripts/analysis/data_analysis.sh %s/strain_results/Merged_results/merged_strain_level_abd.txt %s %s/strain_data_analysis_results/Merged_results/ dist.txt %s", path.c_str(), Out_path.c_str(), Meta_file.c_str(), Out_path.c_str(), prefix_name.c_str());
+                    outscript << command << endl;
+                    Run_With_Error(command, "Strain data analysis", Error_file.c_str());
+                    
+                    //Multiple-species separated analysis
                     omp_set_num_threads(Min(species_count, Coren));
                     #pragma omp parallel for private(species, command)
                     for(int i = 0; i < species_count; i++) {
