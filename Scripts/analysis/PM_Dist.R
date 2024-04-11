@@ -29,7 +29,8 @@ args <- commandArgs(trailingOnly=TRUE)
 # make option list and parse command line
 option_list <- list(
   make_option(c("-i", "--abund_file"), type="character", help="Input feature table with relative abundance (*.Abd) [Required]"),
-  make_option(c("-d", "--dist_type"), type="character", default="bray", help="Input the distance algorithm, e.g., \"bray\" for Bray-Curtis distance, \"euclidean\" for Euclidean distance, \"jaccard\" for Jaccard distance, etc.\" [default %default]"),
+  make_option(c("-d", "--dist_type"), type="character", default="bray", help="Input the distance algorithm, e.g., \"bray\" for Bray-Curtis distance, \"taxUMAP\" for TaxUMAP distance, \"euclidean\" for Euclidean distance, \"jaccard\" for Jaccard distance, etc.\" [default %default]"),
+  make_option(c("-t", "--taxonomy_file"), type="character", help="Input the taxonomy annotation file [Required when dist_type is equal to \"taxUMAP\"]"),
   make_option(c("-o", "--outfile"), type="character", default='dist.txt', help="Output distance matrix [default %default]")
 )
 opts <- parse_args(OptionParser(option_list=option_list), args=args)
@@ -42,8 +43,13 @@ abund_orig <- read.table(file=opts$abund_file, header=TRUE, row.names=1)
 abund_orig <- t(abund_orig)
 dist_type <- opts$dist_type
 
-dist <- vegdist(abund_orig, method = dist_type)
-dist <- as.matrix(dist)
+if(dist_type == "taxUMAP") {
+  if(is.null(opts$taxonomy_file)) stop('Please input the taxonomy annotation file to calculate taxUMAP distance')
+  
+} else {
+  dist <- vegdist(abund_orig, method = dist_type)
+  dist <- as.matrix(dist)
+}
 
 write.table(dist, opts$outfile, sep = "\t", quote = F, row.names = T, col.names = NA)
 
