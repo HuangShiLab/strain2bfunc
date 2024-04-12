@@ -2,11 +2,9 @@
 #################################################################
 # Function: Multivariate statistical analysis based on distance matrix
 # Call: Rscript PM_Bdiversity.R -m map_file -d dist_file -o output
-# R packages used: reshape,ggplot2,pheatmap,pROC,combinat,plyr,vegan,optparse,parallel
-# Authors: Yuzhu Chen, Mingqian Zhang
-# Updated at Aug. 20, 2021
-# Updated by Yuzhu Chen, Mingqian Zhang
-# Bioinformatics Group, College of Computer Science & Technology, Qingdao University
+# Updated at Apr. 12, 2024
+# Updated by ZHANG Yufeng <yfz96@connect.hku.hk>, HUANG Shi <shihuang@hku.hk>
+# Faculty of Dentistry, HKU
 #################################################################
 
 options(warn=-1)

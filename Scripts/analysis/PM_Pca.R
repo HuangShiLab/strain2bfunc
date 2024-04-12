@@ -2,12 +2,9 @@
 #################################################################
 # Function: PCA
 # Call: Rscript PM_pca.R -m meta_data -i abund_file [-l T/F -o outfile -a axesfile]
-# R packages used: optparse vegan ggplot2 grid
-# update 2: 2020-10-18, 
-# Authors: Yuzhu Chen, Yufeng Zhang, Zheng Sun, Yanhai Gong,Wang Honglei, Xiaoquan Su
-# Updated at Aug. 20, 2021
-# Updated by Yuzhu Chen
-# Bioinformatics Group, College of Computer Science & Technology, Qingdao University
+# Updated at Apr. 12, 2024
+# Updated by ZHANG Yufeng <yfz96@connect.hku.hk>, HUANG Shi <shihuang@hku.hk>
+# Faculty of Dentistry, HKU
 #################################################################
 
 ## install necessary libraries

@@ -2,12 +2,9 @@
 #################################################################
 # Function: Abundance distribution analysis
 # Call: Rscript PM_Distribution.R -i abund_file -o outfile
-# R packages used: optparse, reshape2, ggplot2,RColorBrewer, grDevices
-# Authors: Yuzhu Chen, Zheng Sun, Xiaoquan Su, Honglei Wang 
-# Updated at Aug. 20, 2021
-# Updated by Yuzhu Chen
-# Bioinformatics Group, College of Computer Science & Technology, Qingdao University
-# data_matrix -> Unclassified
+# Updated at Apr. 12, 2024
+# Updated by ZHANG Yufeng <yfz96@connect.hku.hk>, HUANG Shi <shihuang@hku.hk>
+# Faculty of Dentistry, HKU
 #################################################################
 # install necessary libraries
 p <- c("optparse","reshape2","ggplot2","RColorBrewer")

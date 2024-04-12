@@ -2,11 +2,9 @@
 #################################################################
 # Function: Random Forest analysis based on sequence count or sequence abd
 # Call: Rscript PM_Marker_RFscore.R -i taxa.abd -m metadata -o outfile
-# R packages used: randomForest ggplot2
-# Authors: Yuzhu Chen, Zheng Sun, Xiaoquan Su
-# Updated at Dec. 10, 2021
-# Updated by Yuzhu Chen
-# Bioinformatics Group, College of Computer Science & Technology, Qingdao University
+# Updated at Apr. 12, 2024
+# Updated by ZHANG Yufeng <yfz96@connect.hku.hk>, HUANG Shi <shihuang@hku.hk>
+# Faculty of Dentistry, HKU
 #################################################################
 # install necessary libraries
 p <- c("randomForest","ggplot2","optparse","RColorBrewer")

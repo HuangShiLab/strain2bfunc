@@ -2,11 +2,9 @@
 #################################################################
 # Function: Hcluster
 # Call: Rscript PM_hcluster.R -d dist_file [-o outfile -k groupNum]
-# R packages used: optparse
-# Authors: Yuzhu Chen, Yanhai Gong, Xiaoquan Su
-# Updated at July 29, 2021
-# Updated by Yuzhu Chen
-# Bioinformatics Group, College of Computer Science & Technology, Qingdao University
+# Updated at Apr. 12, 2024
+# Updated by ZHANG Yufeng <yfz96@connect.hku.hk>, HUANG Shi <shihuang@hku.hk>
+# Faculty of Dentistry, HKU
 #################################################################
 
 ## install necessary libraries

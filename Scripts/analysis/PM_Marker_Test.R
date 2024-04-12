@@ -2,11 +2,9 @@
 #################################################################
 # Function: Biomarker Test
 # Call: Rscript PM_Marker_Test -m map_file -i abund_file -o out_path -p prefix
-# R packages used: optparse
-# Authors: Yuzhu Chen, Shi Huang, Xiaoquan Su, Gongchao Jing
-# Updated at Aug. 20, 2021
-# Updated by Yuzhu Chen
-# Bioinformatics Group, College of Computer Science & Technology, Qingdao University
+# Updated at Apr. 12, 2024
+# Updated by ZHANG Yufeng <yfz96@connect.hku.hk>, HUANG Shi <shihuang@hku.hk>
+# Faculty of Dentistry, HKU
 #################################################################
 
 ## install necessary libraries

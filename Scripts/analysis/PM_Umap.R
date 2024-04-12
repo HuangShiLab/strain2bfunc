@@ -2,9 +2,9 @@
 #################################################################
 # Function: UMAP
 # Call: Rscript PM_Umap.R -m meta_data -d dist_file [-l T/F -o outfile -a axesfile]
-# R packages used: optparse vegan ggplot2 grid
-# Authors: Yufeng Zhang
-# Updated at Aug. 20, 2021
+# Updated at Apr. 12, 2024
+# Updated by ZHANG Yufeng <yfz96@connect.hku.hk>, HUANG Shi <shihuang@hku.hk>
+# Faculty of Dentistry, HKU
 #################################################################
 
 ## install necessary libraries

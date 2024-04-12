@@ -2,11 +2,9 @@
 #################################################################
 # Function: Correlation analysis between taxa and each of numerical metadata
 # Call: Rscript PM_Marker_Corr.R -i abund_file -m mapfile(metadata) -o outfile
-# R packages used: psych and optparse
-# Authors: Yuzhu Chen, Shi Huang, Zheng Sun, Xiaoquan Su
-# Updated at Aug. 20, 2021
-# Updated by Yuzhu Chen
-# Bioinformatics Group, College of Computer Science & Technology, Qingdao University
+# Updated at Apr. 12, 2024
+# Updated by ZHANG Yufeng <yfz96@connect.hku.hk>, HUANG Shi <shihuang@hku.hk>
+# Faculty of Dentistry, HKU
 #################################################################
 #-----------install necessary libraries--------------------------------
 p <- c("optparse","psych")

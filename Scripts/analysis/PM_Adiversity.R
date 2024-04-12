@@ -2,10 +2,9 @@
 #################################################################
 # Function:  Multivariate statistical analysis based on sequence count or sequence abd
 # Call: Rscript PM_ADiversity.R -i taxa.abd -m metadata -o outfile
-# R packages used: optparse,vegan fossil abind
-# Authors: Yuzhu Chen, Zheng Sun, Xiaoquan Su
-# Updated at Aug. 20, 2021
-# Bioinformatics Group, College of Computer Science & Technology, Qingdao University
+# Updated at Apr. 12, 2024
+# Updated by ZHANG Yufeng <yfz96@connect.hku.hk>, HUANG Shi <shihuang@hku.hk>
+# Faculty of Dentistry, HKU
 #################################################################
 
 # install necessary libraries
