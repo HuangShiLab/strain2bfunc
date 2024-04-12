@@ -66,7 +66,7 @@ PM_umap <- function(da, md) {
   
   sampleNumber <- length(rn)
 
-  dst <- as.dist(da)
+  # dst <- as.dist(da)
   dst <- as.matrix(da)
   umap <- umap(dst, n_components = 3)
   umap <- umap$layout
