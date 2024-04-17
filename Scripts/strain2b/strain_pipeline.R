@@ -42,13 +42,13 @@ if (opts$mode == 0) {
   if (is.null(opts$cnm_matrix_dir)) {
     stop("Please specify a directory of copy number matrix!")
   } else {
-    Sample_List_Pipeline(opts$sample_list_file, opts$species_list_file, opts$output_path, opts$cnm_matrix_dir, mode = opts$mode)
+    Sample_List_Pipeline(opts$sample_list_file, opts$species_list_file, opts$output_path, cnm_matrix_dir = opts$cnm_matrix_dir, mode = opts$mode)
   }
 } else if (opts$mode == 1) {
   if (is.null(opts$cnm_file)) {
     stop("Please specify a copy number matrix!")
   } else {
-    Sample_List_Pipeline(opts$sample_list_file, opts$species_list_file, opts$output_path, opts$cnm_file, mode = opts$mode)
+    Sample_List_Pipeline(opts$sample_list_file, opts$species_list_file, opts$output_path, cnm_file = opts$cnm_file, mode = opts$mode)
   }
 } else {
   stop("Invalid mode option. Please specify 0 or 1.")
