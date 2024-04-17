@@ -63,6 +63,8 @@ for(i in 1:length(strain_file_path)) {
   }
 }
 
+results <- as.data.frame(apply(results, 2, function(x) x/sum(x)))
+
 write.table(results, opts$outfile, sep = "\t", quote = F, row.names = T, col.names = NA)
 
 

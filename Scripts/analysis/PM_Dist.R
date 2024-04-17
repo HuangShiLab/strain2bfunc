@@ -42,7 +42,7 @@ dist_type <- opts$dist_type
 if(dist_type == "taxUMAP") {
   if(is.null(opts$taxonomy_file)) stop('Please input the taxonomy annotation file to calculate taxUMAP distance')
   
-  strain_dist <- as.matrix(vegdist(t(abund_orig), method = "euclidean"))
+  strain_dist <- as.matrix(vegdist(t(abund_orig), method = "bray"))
   
   taxonomy <- read_delim(opts$taxonomy_file, delim = "\t", col_names = TRUE, comment = "", show_col_types = FALSE)
   taxonomy <- as.data.frame(taxonomy)
@@ -59,7 +59,7 @@ if(dist_type == "taxUMAP") {
   family_abd <- dcast(family_abd, variable ~ family)
   rownames(family_abd) <- family_abd$variable
   family_abd <- family_abd[, -1, drop = FALSE]
-  family_dist <- as.matrix(vegdist(family_abd, method = "euclidean"))
+  family_dist <- as.matrix(vegdist(family_abd, method = "bray"))
   
   phylum_abd <- melt_abund %>%
     group_by(variable, phylum) %>%
@@ -67,9 +67,9 @@ if(dist_type == "taxUMAP") {
   phylum_abd <- dcast(phylum_abd, variable ~ phylum)
   rownames(phylum_abd) <- phylum_abd$variable
   phylum_abd <- phylum_abd[, -1, drop = FALSE]
-  phylum_dist <- as.matrix(vegdist(phylum_abd, method = "euclidean"))
+  phylum_dist <- as.matrix(vegdist(phylum_abd, method = "bray"))
 
-  dist <- (strain_dist + family_dist + phylum_dist) / 3
+  dist <- strain_dist + family_dist + phylum_dist
 } else {
   abund_orig <- t(abund_orig)
   dist <- vegdist(abund_orig, method = dist_type)
