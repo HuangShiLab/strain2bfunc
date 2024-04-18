@@ -57,10 +57,11 @@ Merge_Copynumber_Matrix <- function(all_species, cnm_matrix_dir) { # merge the c
 
 Rename_sample <- function(sample_name) {
 # Since sequence names for vsearch need to include file names, 
-# but the file names cannot contain ".", 
-# the "." in file names need to be replaced with "_"
+# but the file names cannot contain "." and "-", 
+# the "." and "-" in file names need to be replaced with "_"
   sample_name <- gsub("\\.", "_", sample_name)
-  
+  sample_name <- gsub("-", "_", sample_name)
+ 
   return (sample_name)
 }
 
