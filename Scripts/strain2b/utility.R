@@ -277,7 +277,7 @@ Sample_List_Pipeline <- function(sample_list_file, species_list_file, output_pat
   
   } else { # Profiling based on a customized copy number matrix
     
-    cnm <- read.table(cnm_file, sep = "\t", header = T)
+    cnm <- read.table(cnm_file, sep = "\t", header = T, row.names = 1)
     
   }
 
