@@ -181,18 +181,18 @@ check_corr_in_cnm <- function(copy_number_matrix, threshold = 0.2) {
   if(sum(csd == 0) == 0) {
     new_copy_number_matrix <- deduplicate_cnm(new_copy_number_matrix, threshold)
   } 
-  #If there is one column with zero variance, then retain the column,
+  # #If there is one column with zero variance, then retain the column,
+  # #and then deduplicate the columns correlated with any others from the retained copy number matrix
+  # else if(sum(csd == 0) == 1) {
+  #   csd_0 <- which(csd == 0)
+  #   col_csd_0 <- new_copy_number_matrix[, csd_0, drop = F]
+  #   new_copy_number_matrix <- new_copy_number_matrix[, -csd_0, drop = F]
+  #   new_copy_number_matrix <- deduplicate_cnm(new_copy_number_matrix, threshold)
+  #   new_copy_number_matrix <- data.frame(col_csd_0, new_copy_number_matrix)
+  # } 
+  #If there are one or more columns with zero variance, then retain one of the columns, 
   #and then deduplicate the columns correlated with any others from the retained copy number matrix
-  else if(sum(csd == 0) == 1) {
-    csd_0 <- which(csd == 0)
-    col_csd_0 <- new_copy_number_matrix[, csd_0, drop = F]
-    new_copy_number_matrix <- new_copy_number_matrix[, -csd_0, drop = F]
-    new_copy_number_matrix <- deduplicate_cnm(new_copy_number_matrix, threshold)
-    new_copy_number_matrix <- data.frame(col_csd_0, new_copy_number_matrix)
-  } 
-  #If there are more than one columns with zero variance, then retain one of the columns, 
-  #and then deduplicate the columns correlated with any others from the retained copy number matrix
-  else { #sum(csd == 0) > 1
+  else { #sum(csd == 0) >= 1
     csd_0 <- which(csd == 0)
     col_csd_0 <- new_copy_number_matrix[, csd_0[1], drop = F]
     new_copy_number_matrix <- new_copy_number_matrix[, -csd_0, drop = F]
