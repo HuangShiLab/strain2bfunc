@@ -45,7 +45,7 @@ string database_path;
 
 //Files
 //string Id_file;
-string Meta_file;
+string Meta_file = "";
 string Seq_list_file;
 //string Group_file;
 string Taxa_list_file;
@@ -161,7 +161,7 @@ int printhelp(){
     
 
     cout << "\t[Statistic input and parameters]" << endl;
-    cout << "\t  -m Meta data file [Required]" << endl;
+    cout << "\t  -m Meta data file. If this parameter is not provided, the pipeline will only perform strain-level profiling and functional prediction, without executing the downstream data analysis." << endl;
     cout << "\t  -w Taxonomical distance type, 0: Bray-Curtis, 1: Euclidean, 2: Jaccard, default is 0" << endl;
     cout << "\t  -C (upper) Cluster number, default is 2" << endl;
     cout << "\t  -G (upper) Network analysis edge threshold, default is 0.5" << endl;

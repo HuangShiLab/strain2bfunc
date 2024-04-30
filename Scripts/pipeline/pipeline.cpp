@@ -40,7 +40,7 @@ int main(int argc, char *argv[])
     //outscript << Database.Get_Description() << endl; // NEED to update: the versions of DBs used by strain2bfunc
 
     //check metadata
-    if (Load_ID(Meta_file.c_str(), Ids, 1) == 0)
+    if (Meta_file != "" && Load_ID(Meta_file.c_str(), Ids, 1) == 0)
     {
         string error_info = "Error: Please check the Meta data file (-m): at least contains 1 columns of Sample ID";
         cerr << error_info << endl;
@@ -86,7 +86,7 @@ int main(int argc, char *argv[])
             outscript << endl << "#Microbial Community species-level profiling" << endl;
             
             cout << "perl " << path_2bRADM << "/bin/2bRADM_Pipline.pl -t " << format << " -l " << Seq_list_file << " -d " << database_path << "/2B-RAD-M-ref_db_GTDB -o " << Out_path <<  "/Species_results -qc no -gsc 5" << endl;
-            sprintf(command, "perl %s/bin/2bRADM_Pipline.pl -t %d -l %s -d %s/2B-RAD-M-ref_db_GTDB -o %s/Species_results -qc no -gsc 5", path_2bRADM.c_str(), format, Seq_list_file.c_str(), database_path.c_str(), Out_path.c_str());
+            sprintf(command, "time (perl %s/bin/2bRADM_Pipline.pl -t %d -l %s -d %s/2B-RAD-M-ref_db_GTDB -o %s/Species_results -qc no -gsc 5)", path_2bRADM.c_str(), format, Seq_list_file.c_str(), database_path.c_str(), Out_path.c_str());
             outscript << command << endl;
             Run_With_Error(command, "2bRAD-M", tmpError_file.c_str());
             
@@ -108,7 +108,7 @@ int main(int argc, char *argv[])
             }
             
             cout << "Rscript " << path << "/Scripts/strain2b/make_species_list.R -i " << Table_file << " -t " << sp_thres << " -o " << Out_path << "/species_list.txt" << endl;
-            sprintf(command, "Rscript %s/Scripts/strain2b/make_species_list.R -i %s -t %f -o %s/species_list.txt", path.c_str(), Table_file.c_str(), sp_thres, Out_path.c_str());
+            sprintf(command, "time (Rscript %s/Scripts/strain2b/make_species_list.R -i %s -t %f -o %s/species_list.txt)", path.c_str(), Table_file.c_str(), sp_thres, Out_path.c_str());
             outscript << command << endl;
             Run_With_Error(command, "make_species_list", Error_file.c_str());
             
@@ -129,7 +129,7 @@ int main(int argc, char *argv[])
 
                     //Strain-level profiling
                     cout << "Rscript " << path << "/Scripts/strain2b/strain_pipeline.R -l " << Taxa_list_file << " -s " << Species_list_file << " -m 0 -d " << database_path << "/copy_number_matrix_0.001 -o " << Out_path << "/strain_results" << endl;
-                    sprintf(command, "Rscript %s/Scripts/strain2b/strain_pipeline.R -l %s -s %s -m 0 -d %s/copy_number_matrix_0.001 -o %s/strain_results", path.c_str(), Taxa_list_file.c_str(), Species_list_file.c_str(), database_path.c_str(), Out_path.c_str());
+                    sprintf(command, "time (Rscript %s/Scripts/strain2b/strain_pipeline.R -l %s -s %s -m 0 -d %s/copy_number_matrix_0.001 -o %s/strain_results)", path.c_str(), Taxa_list_file.c_str(), Species_list_file.c_str(), database_path.c_str(), Out_path.c_str());
                     outscript << command << endl;
                     Run_With_Error(command, "Strain-level profiling", Error_file.c_str());
                     
@@ -165,7 +165,7 @@ int main(int argc, char *argv[])
                         
                         //Strain-level profiling
                         cout << "Rscript " << path << "/Scripts/strain2b/strain_pipeline.R -l " << Taxa_list_file << " -s " << Out_path << "/strain_results/" << species << "_list.txt -m 0 -d " << database_path << "/copy_number_matrix_0.001 -o " << Out_path << "/strain_results/" << species << endl;
-                        sprintf(command, "Rscript %s/Scripts/strain2b/strain_pipeline.R -l %s -s %s/strain_results/%s_list.txt -m 0 -d %s/copy_number_matrix_0.001 -o %s/strain_results/%s", path.c_str(), Taxa_list_file.c_str(), Out_path.c_str(), species.c_str(), database_path.c_str(), Out_path.c_str(), species.c_str());
+                        sprintf(command, "time (Rscript %s/Scripts/strain2b/strain_pipeline.R -l %s -s %s/strain_results/%s_list.txt -m 0 -d %s/copy_number_matrix_0.001 -o %s/strain_results/%s)", path.c_str(), Taxa_list_file.c_str(), Out_path.c_str(), species.c_str(), database_path.c_str(), Out_path.c_str(), species.c_str());
                         outscript << command << endl;
                         Run_With_Error(command, "strain-level profiling", Error_file.c_str());
                     }
@@ -190,7 +190,7 @@ int main(int argc, char *argv[])
                         
                         //Function profiling
                         cout << path << "/Scripts/func/calculate_ko_abd -i " << Out_path << "/strain_results/strain_level_abd.txt -m " << database_path << "/genome_to_ko.tsv -o " << Out_path << "/ko_results/ko_abd.txt" << endl;
-                        sprintf(command, "%s/Scripts/func/calculate_ko_abd -i %s/strain_results/strain_level_abd.txt -m %s/genome_to_ko.tsv -o %s/ko_results/ko_abd.txt", path.c_str(), Out_path.c_str(), database_path.c_str(), Out_path.c_str());
+                        sprintf(command, "time (%s/Scripts/func/calculate_ko_abd -i %s/strain_results/strain_level_abd.txt -m %s/genome_to_ko.tsv -o %s/ko_results/ko_abd.txt)", path.c_str(), Out_path.c_str(), database_path.c_str(), Out_path.c_str());
                         outscript << command << endl;
                         Run_With_Error(command, "Function profiling", Error_file.c_str());
                         
@@ -218,7 +218,7 @@ int main(int argc, char *argv[])
                             
                             //Function profiling for each selected species
                             cout << path << "/Scripts/func/calculate_ko_abd -i " << Out_path << "/strain_results/" << species << "/strain_level_abd.txt -m " << database_path << "/genome_to_ko.tsv -o " << Out_path << "/ko_results/" << species << "/ko_abd.txt" << endl;
-                            sprintf(command, "%s/Scripts/func/calculate_ko_abd -i %s/strain_results/%s/strain_level_abd.txt -m %s/genome_to_ko.tsv -o %s/ko_results/%s/ko_abd.txt", path.c_str(), Out_path.c_str(), species.c_str(), database_path.c_str(), Out_path.c_str(), species.c_str());
+                            sprintf(command, "time (%s/Scripts/func/calculate_ko_abd -i %s/strain_results/%s/strain_level_abd.txt -m %s/genome_to_ko.tsv -o %s/ko_results/%s/ko_abd.txt)", path.c_str(), Out_path.c_str(), species.c_str(), database_path.c_str(), Out_path.c_str(), species.c_str());
                             outscript << command << endl;
                             Run_With_Error(command, "Function profiling", Error_file.c_str());
                         }
@@ -229,6 +229,12 @@ int main(int argc, char *argv[])
             //Step 3 finished
             
             //Step 4: Data analysis
+            if(Meta_file == "") {
+                cout << endl << "No metadata file is provided. The downstream data analysis steps are skipped." << endl;
+                outscript << endl << "No metadata file is provided. The downstream data analysis steps are skipped." << endl;
+                break;
+            }
+            
             cout << endl << "Data Analysis" << endl;
             outscript << endl << "#Data Analysis" << endl;
             
@@ -247,7 +253,7 @@ int main(int argc, char *argv[])
                     
                     //Data analysis
                     cout << "sh " << path << "/Scripts/analysis/data_analysis.sh " << Out_path << "/strain_results/strain_level_abd.txt " << Meta_file << " " << Out_path << "/strain_data_analysis_results/ dist.txt " << prefix_name << endl;
-                    sprintf(command, "sh %s/Scripts/analysis/data_analysis.sh %s/strain_results/strain_level_abd.txt %s %s/strain_data_analysis_results dist.txt %s", path.c_str(), Out_path.c_str(), Meta_file.c_str(), Out_path.c_str(), prefix_name.c_str());
+                    sprintf(command, "time (sh %s/Scripts/analysis/data_analysis.sh %s/strain_results/strain_level_abd.txt %s %s/strain_data_analysis_results dist.txt %s)", path.c_str(), Out_path.c_str(), Meta_file.c_str(), Out_path.c_str(), prefix_name.c_str());
                     outscript << command << endl;
                     Run_With_Error(command, "Strain data analysis", Error_file.c_str());
                     
@@ -261,7 +267,7 @@ int main(int argc, char *argv[])
 
                         //Data analysis
                         cout << "sh " << path << "/Scripts/analysis/data_analysis.sh " << Out_path << "/ko_results/ko_abd.txt " << Meta_file << " " << Out_path << "/function_data_analysis_results/ dist.txt " << prefix_name << endl;
-                        sprintf(command, "sh %s/Scripts/analysis/data_analysis.sh %s/ko_results/ko_abd.txt %s %s/function_data_analysis_results dist.txt %s", path.c_str(), Out_path.c_str(), Meta_file.c_str(), Out_path.c_str(), prefix_name.c_str());
+                        sprintf(command, "time (sh %s/Scripts/analysis/data_analysis.sh %s/ko_results/ko_abd.txt %s %s/function_data_analysis_results dist.txt %s)", path.c_str(), Out_path.c_str(), Meta_file.c_str(), Out_path.c_str(), prefix_name.c_str());
                         outscript << command << endl;
                         Run_With_Error(command, "Function data analysis", Error_file.c_str());
                     }
@@ -285,13 +291,13 @@ int main(int argc, char *argv[])
                     
                     //Merge data
                     cout << "Rscript " << path << "/Scripts/analysis/PM_Merge.R -s " << Species_list_file << " -p " << Out_path << "/strain_results/  -o " << Out_path << "/strain_data_analysis_results/Merged_results/merged_strain_level_abd.txt" << endl;
-                    sprintf(command, "Rscript %s/Scripts/analysis/PM_Merge.R -s %s -p %s/strain_results/ -o %s/strain_data_analysis_results/Merged_results/merged_strain_level_abd.txt", path.c_str(), Species_list_file.c_str(), Out_path.c_str(), database_path.c_str(), Out_path.c_str());
+                    sprintf(command, "time (Rscript %s/Scripts/analysis/PM_Merge.R -s %s -p %s/strain_results/ -o %s/strain_data_analysis_results/Merged_results/merged_strain_level_abd.txt)", path.c_str(), Species_list_file.c_str(), Out_path.c_str(), database_path.c_str(), Out_path.c_str());
                     outscript << command << endl;
                     Run_With_Error(command, "Merged stain-level profiles of different species", Error_file.c_str());
                     
                     // Data analysis
                     cout << "sh " << path << "/Scripts/analysis/data_analysis.sh " << Out_path << "/strain_data_analysis_results/Merged_results/merged_strain_level_abd.txt " << Meta_file << " " << Out_path << "/strain_data_analysis_results/Merged_results/ dist.txt " << prefix_name << endl;
-                    sprintf(command, "sh %s/Scripts/analysis/data_analysis.sh %s/strain_results/Merged_results/merged_strain_level_abd.txt %s %s/strain_data_analysis_results/Merged_results/ dist.txt %s", path.c_str(), Out_path.c_str(), Meta_file.c_str(), Out_path.c_str(), prefix_name.c_str());
+                    sprintf(command, "time (sh %s/Scripts/analysis/data_analysis.sh %s/strain_results/Merged_results/merged_strain_level_abd.txt %s %s/strain_data_analysis_results/Merged_results/ dist.txt %s)", path.c_str(), Out_path.c_str(), Meta_file.c_str(), Out_path.c_str(), prefix_name.c_str());
                     outscript << command << endl;
                     Run_With_Error(command, "Strain data analysis", Error_file.c_str());
                     
@@ -310,7 +316,7 @@ int main(int argc, char *argv[])
 
                         //Strain data analysis for each species
                         cout << "sh " << path << "/Scripts/analysis/data_analysis.sh " << Out_path << "/strain_results/" << species << "/strain_level_abd.txt " << Meta_file << " " << Out_path << "/strain_data_analysis_results/" << species << " dist.txt " << species << endl;
-                        sprintf(command, "sh %s/Scripts/analysis/data_analysis.sh %s/strain_results/%s/strain_level_abd.txt %s %s/strain_data_analysis_results/%s dist.txt %s", path.c_str(), Out_path.c_str(), species.c_str(), Meta_file.c_str(), Out_path.c_str(), species.c_str(), species.c_str());
+                        sprintf(command, "time (sh %s/Scripts/analysis/data_analysis.sh %s/strain_results/%s/strain_level_abd.txt %s %s/strain_data_analysis_results/%s dist.txt %s)", path.c_str(), Out_path.c_str(), species.c_str(), Meta_file.c_str(), Out_path.c_str(), species.c_str(), species.c_str());
                         outscript << command << endl;
                         Run_With_Error(command, "Strain data analysis", Error_file.c_str());
 
@@ -324,7 +330,7 @@ int main(int argc, char *argv[])
 
                             //Data analysis
                             cout << "sh " << path << "/Scripts/analysis/data_analysis.sh " << Out_path << "/ko_results/" << species << "/ko_abd.txt " << Meta_file << " " << Out_path << "/function_data_analysis_results/" << species << " dist.txt " << species << endl;
-                            sprintf(command, "sh %s/Scripts/analysis/data_analysis.sh %s/ko_results/%s/ko_abd.txt %s %s/function_data_analysis_results/%s dist.txt %s", path.c_str(), Out_path.c_str(), species.c_str(), Meta_file.c_str(), Out_path.c_str(), species.c_str(), species.c_str());
+                            sprintf(command, "time (sh %s/Scripts/analysis/data_analysis.sh %s/ko_results/%s/ko_abd.txt %s %s/function_data_analysis_results/%s dist.txt %s)", path.c_str(), Out_path.c_str(), species.c_str(), Meta_file.c_str(), Out_path.c_str(), species.c_str(), species.c_str());
                             outscript << command << endl;
                             Run_With_Error(command, "Function data analysis", Error_file.c_str());
                         }
