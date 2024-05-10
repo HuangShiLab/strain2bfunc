@@ -5,7 +5,7 @@ using namespace std;
 
 void printhelp();
 int Parse_Para(int argc, char * argv[]);
-MatrixXf Count_to_Abd(const MatrixXf & count_mat);
+MatrixXf Count_to_Abd(const MatrixXf & count_mat, vector<string> & ko_names);
 void write_file(const MatrixXf & m, vector<string>& ko_names, vector<string>& sample_names, const char* outfilename);
 
 string sp_abd_file;
@@ -13,19 +13,21 @@ string sp_ko_map_file;
 string ko_abd_file = "ko.abd";
 
 int main(int argc, char *argv[]) {
-
+    
 	Parse_Para(argc, argv);
 
 	Species species(sp_abd_file.c_str());
+
 	vector<string> sp_names = species.Get_Species_Names();
 	vector<string> sample_names = species.Get_Sample_Names();
 
 	Sp_ko_map sp_ko_map(sp_ko_map_file.c_str(), sp_names);
+
 	vector<string> ko_names = sp_ko_map.Get_KO_Names();
 
 	MatrixXf ko_count = sp_ko_map * species;
-    
-	MatrixXf ko_abds = Count_to_Abd(ko_count);
+
+	MatrixXf ko_abds = Count_to_Abd(ko_count, ko_names);
 
 	write_file(ko_abds, ko_names, sample_names, ko_abd_file.c_str());
 
@@ -70,7 +72,7 @@ int Parse_Para(int argc, char * argv[]){
 	return 1;
 }
 
-MatrixXf Count_to_Abd(const MatrixXf & count_mat) {
+MatrixXf Count_to_Abd(const MatrixXf & count_mat, vector<string> & ko_names) {
     // Calculate the sum of each column
     VectorXf col_sum = count_mat.colwise().sum();
 
@@ -91,16 +93,20 @@ MatrixXf Count_to_Abd(const MatrixXf & count_mat) {
     
     // Find rows with non-zero sums
     Array<bool, Dynamic, 1> nonzero_rows = (row_sums.array() != 0);
-
+    vector<string> new_ko_names;
+    
     // Filter out rows with non-zero sums
     MatrixXf filtered_matrix(nonzero_rows.count(), abundance_mat.cols());
     int filtered_row_idx = 0;
     for (int i = 0; i < filtered_matrix.rows(); ++i) {
         if (nonzero_rows(i)) {
             filtered_matrix.row(filtered_row_idx++) = abundance_mat.row(i);
+            new_ko_names.push_back(ko_names[i]);
         }
     }
 
+    ko_names = new_ko_names;
+    
     return filtered_matrix;
 }
 
@@ -110,10 +116,12 @@ void write_file(const MatrixXf & m, vector<string>& ko_names, vector<string>& sa
 		cerr << "Error: Cannot open output file: " << outfilename << endl;
 		return;
 	}
-	
+    
 	int ncols = (int) sample_names.size();
 	int nrows = (int) ko_names.size();
+
 	outfile << "KO";
+
 	for(int i = 0; i < ncols; ++i) {
 		outfile << "\t" << sample_names[i];
 	}
