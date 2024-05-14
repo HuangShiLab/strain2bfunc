@@ -122,6 +122,20 @@ corrDist <- function(X){
 #' @author 
 #'
 #' @importFrom Matrix crossprod colMeans
+corrDist <- function(X) {
+  csd <- apply(X, 2, sd)
+  if(sum(csd == 0) > 0){
+    stop("Columns", which(csd == 0), "have no variance! Cannot compute correlation distances")
+  }
+  CSD <- csd %*% t(csd)
+  cm <- colMeans(X)
+  CM <- cm %*% t(cm)
+  n <- nrow(X)
+  XX <- crossprod(X)
+  D <- 1 - (as.matrix(XX) - n * CM) / ((n - 1) * CSD)
+  return(D)
+}
+
 #' @example
 #' cnm <- matrix(c(1, 1, 2, 2, 1,
 #'                 1, 1, 2, 2, 1,
@@ -129,21 +143,23 @@ corrDist <- function(X){
 #'                 2, 2, 4, 4, 2),
 #'               nrow = 4, byrow = T)
 #' colnames(cnm) <- paste0("g_", 1:5)
-#' new_cnm <- deduplicate_cnm(cnm, threshold = 0.2)
+#' new_cnm <- deduplicate_cnm(cnm, threshold = 0.001)
 
-deduplicate_cnm <- function(copy_number_matrix, threshold = 0.2) {
+deduplicate_cnm <- function(copy_number_matrix, threshold = 0.001) {
   csd <- apply(copy_number_matrix, 2, sd)
   if(sum(csd == 0) > 0){
     stop("Columns", which(csd == 0), "have no variance! Cannot compute correlation distances")
   }
   cor_dist <- corrDist(copy_number_matrix)
-  index <- which(cor_dist < threshold, arr.ind = TRUE)
+  index <- which(abs(cor_dist) < threshold, arr.ind = TRUE)
   index <- index[index[, 1] != index[, 2], ]
   new_index <- index
   new_index[, 1] <- apply(index, 1, function(x) {min(x)})
   new_index[, 2] <- apply(index, 1, function(x) {max(x)})
   delete_index <- unique(new_index[, 1])
-  copy_number_matrix <- copy_number_matrix[, -delete_index]
+  if(length(delete_index) > 0) {
+    copy_number_matrix <- copy_number_matrix[, -delete_index]
+  }
   return(copy_number_matrix)  
 }
 
@@ -165,10 +181,10 @@ deduplicate_cnm <- function(copy_number_matrix, threshold = 0.2) {
 #'                 0, 1, 2, 2, 2, 4, 4, 2),
 #'               nrow = 4, byrow = T)
 #' colnames(cnm) <- paste0("g_", 1:8)
-#' new_cnm <- check_corr_in_cnm(cnm, threshold = 0.2)
+#' new_cnm <- check_corr_in_cnm(cnm, threshold = 0.001)
 #' 
 
-check_corr_in_cnm <- function(copy_number_matrix, threshold = 0.2) {
+check_corr_in_cnm <- function(copy_number_matrix, threshold = 0.001) {
   copy_number_matrix <- as.matrix(copy_number_matrix)
   csum <- colSums(copy_number_matrix)
   
@@ -228,7 +244,7 @@ Filter_CNM <- function(cnm, tags_count_file) {
 
   cnm <- cnm[, which(colSums(cnm) > 0), drop = F]
   
-  cnm <- check_corr_in_cnm(cnm)
+  cnm <- check_corr_in_cnm(cnm, threshold = 0.001)
 
   tags_count <- tags_count[order(rownames(tags_count)), , drop = FALSE]
   cnm <- cnm[order(rownames(cnm)), , drop = FALSE]
