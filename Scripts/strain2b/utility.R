@@ -59,21 +59,27 @@ Rename_sample <- function(sample_name) {
 # Since sequence names for vsearch need to include file names, 
 # but the file names cannot contain ".", 
 # the "." in file names need to be replaced with "_"
-  sample_name <- gsub("\\.", "_", sample_name)
-  sample_name <- gsub("-", "_", sample_name)
+  new_sample_name <- gsub("\\.", "_", sample_name)
+  new_sample_name <- gsub("-", "_", new_sample_name)
 
-  return (sample_name)
+  sample_name_mapping <- data.frame(origin = sample_name, new = new_sample_name)
+  
+  return (sample_name_mapping)
 }
 
 
 Rename_Fasta <- function(sample_name, sample_fa, new_sample_fa) {
   fasta <- read.fasta(sample_fa, forceDNAtolower = F)	
   
-  sample_name <- Rename_sample(sample_name)
+  sample_name_mapping <- Rename_sample(sample_name)
   
-  names(fasta) <- paste(sample_name, 1:length(fasta), sep = ".")
+  new_sample_name <- sample_name_mapping$new
+  
+  names(fasta) <- paste(new_sample_name, 1:length(fasta), sep = ".")
   
   write.fasta(sequences = fasta, names = names(fasta), file.out = new_sample_fa)
+  
+  return (sample_name_mapping)
 }
 
 
@@ -317,7 +323,7 @@ One_Sample_Pipeline <- function(sample_info, species_info, output_path, mode, cn
   }
   
   new_sample_fa <- paste0(output_path, "/new_", sample_name, ".fa")
-  Rename_Fasta(sample_name, sample_fa, new_sample_fa)
+  sample_name_mapping <- Rename_Fasta(sample_name, sample_fa, new_sample_fa)
 
   similarity <- 1
   output_tag_path <- paste0(output_path, "/", sample_name, ".BcgI.tag")
@@ -332,6 +338,10 @@ One_Sample_Pipeline <- function(sample_info, species_info, output_path, mode, cn
   write.table(cnm, paste0(output_path, "/filtered_", sample_name, "_copy_number_matrix.txt"), sep = "\t", quote = F, row.names = T, col.names = NA)
 
   strain_abd_matrix <- Strain_Level_Profiling(tags_count, cnm)
+  
+  # Swap back to the original sample name
+  match_indices <- match(colnames(strain_abd_matrix), sample_name_mapping$new)
+  colnames(strain_abd_matrix) <- sample_name_mapping[match_indices, "origin"]
 
   out_file <- paste0(output_path, "/", sample_name, "_strain_level_abundance.txt")
   write.table(strain_abd_matrix, out_file, sep = "\t", row.names = T, col.names = NA, quote = F)
@@ -341,7 +351,7 @@ One_Sample_Pipeline <- function(sample_info, species_info, output_path, mode, cn
 
 
 Read_Profiling_Matrix <- function(profile_path) {
-  result <- read.table(profile, sep = "\t", header = T)
+  result <- read.table(profile_path, sep = "\t", header = T, check.names = F)
   return (result)
 }
 
@@ -367,7 +377,8 @@ Merge_Profiling_Matrix <- function(all_profiles_path, sample_name_list) {
     # Read files corresponding to rows where out_file is not NA, and merge them together
     result <- data.frame()
     for (i in 1:nrow(valid_profiles)) {
-      profile_data <- read.table(valid_profiles$out_file[i], header = TRUE, row.names = NULL)
+      profile_data <- Read_Profiling_Matrix(valid_profiles$out_file[i])
+      colnames(profile_data)[1] <- "Genomes"
       if (nrow(result) == 0) {
         result <- profile_data
       } else {
@@ -375,7 +386,6 @@ Merge_Profiling_Matrix <- function(all_profiles_path, sample_name_list) {
         result[is.na(result)] <- 0
       }
     }
-
 
     # Check for sample_names that need to be added to the data frame
     missing_samples <- setdiff(sample_name_list, colnames(result))
