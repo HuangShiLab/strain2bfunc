@@ -268,7 +268,7 @@ Filter_CNM <- function(cnm, tags_count) {
 #filter the copynumber matrix according to the vsearch result (delete the tags which are not included in the sample)
 
   rg_completeness_coverage <- RG_completeness_coverage(cnm, tags_count)
-  print(completeness_coverage)
+  print(rg_completeness_coverage)
   
   idx <- rownames(tags_count) %in% rownames(cnm)
   tags_count <- subset(tags_count, idx)
