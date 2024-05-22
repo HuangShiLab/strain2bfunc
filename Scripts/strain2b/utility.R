@@ -230,12 +230,45 @@ check_corr_in_cnm <- function(copy_number_matrix, threshold = 0.001) {
   return (new_copy_number_matrix)
 }
 
-Filter_CNM <- function(cnm, tags_count_file) {
+Single_RG_completeness_coverage <- function(x, tags_count) {
+  # x is the copy number vector of one genome (one column of the copy number matrix)
+  # there is only one column (one sample) in the tags count matrix
+  
+  x <- x[x != 0]
+  idx <- rownames(tags_count) %in% names(x)
+  tc <- subset(tags_count, idx) # tags_count
+  
+  sample_unique_tag_count <- sum(tc[ , 1] != 0)
+  genome_unique_tag_count <- sum(x != 0)
+  if(genome_unique_tag_count != 0) {
+    RG_completeness <- sample_unique_tag_count / genome_unique_tag_count
+  } else {
+    RG_completeness <- 0
+  }
+  
+  sample_tag_copy_number <- sum(tc[, 1])
+  genome_tag_copy_number <- sum(x)
+  if(genome_tag_copy_number != 0) {
+    RG_coverage <- sample_tag_copy_number / genome_tag_copy_number
+  } else {
+    RG_coverage <- 0
+  }
+  
+  result <- c(RG_completeness = RG_completeness, 
+              RG_coverage = RG_coverage)
+  return (result)
+}
+
+RG_completeness_coverage <- function(cnm, tags_count) { #there is only one column (one sample) in the tags count matrix
+  result <- apply(cnm, MARGIN = 2, FUN = function(x) Single_RG_completeness_coverage(x, tags_count))
+  return (result)
+}
+
+Filter_CNM <- function(cnm, tags_count) {
 #filter the copynumber matrix according to the vsearch result (delete the tags which are not included in the sample)
 
-  tags_count <- read.table(tags_count_file, sep = "\t", header = T, row.names = 1, comment="")
-
-  #file.remove(tags_count_file) #Delete intermediate result files
+  rg_completeness_coverage <- RG_completeness_coverage(cnm, tags_count)
+  print(completeness_coverage)
   
   idx <- rownames(tags_count) %in% rownames(cnm)
   tags_count <- subset(tags_count, idx)
@@ -330,7 +363,10 @@ One_Sample_Pipeline <- function(sample_info, species_info, output_path, mode, cn
   tags_count_file <- paste0(output_path, "/", sample_name, "_", similarity, "_tags_count.txt")
   Vsearch(cnm, new_sample_fa, similarity, output_tag_path, tags_count_file)
  
-  matrix <- Filter_CNM(cnm, tags_count_file)
+  tags_count <- read.table(tags_count_file, sep = "\t", header = T, row.names = 1, comment="")
+  #file.remove(tags_count_file) #Delete intermediate result files
+  
+  matrix <- Filter_CNM(cnm, tags_count)
 
   tags_count <- matrix$tags_count
   cnm <- matrix$cnm
