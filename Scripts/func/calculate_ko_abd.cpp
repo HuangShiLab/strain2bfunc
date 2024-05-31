@@ -86,27 +86,33 @@ MatrixXf Count_to_Abd(const MatrixXf & count_mat, vector<string> & ko_names) {
 
     // Convert to abundance
     MatrixXf abundance_mat = count_mat.array().rowwise() / col_sum.transpose().array();
-    
+
     // Delete KO entries that are absent in all samples (i.e., rows with a sum of zero).
     // Calculate row sums
     VectorXf row_sums = abundance_mat.rowwise().sum();
     
     // Find rows with non-zero sums
     Array<bool, Dynamic, 1> nonzero_rows = (row_sums.array() != 0);
+    int nonzero_rows_count = 0;
+    for(int i = 0; i < nonzero_rows.size(); i++) {
+	    if(nonzero_rows(i)) nonzero_rows_count++;
+    }
+    
     vector<string> new_ko_names;
     
     // Filter out rows with non-zero sums
-    MatrixXf filtered_matrix(nonzero_rows.count(), abundance_mat.cols());
+    MatrixXf filtered_matrix(nonzero_rows_count, abundance_mat.cols());
     int filtered_row_idx = 0;
-    for (int i = 0; i < filtered_matrix.rows(); ++i) {
+    for (int i = 0; i < nonzero_rows.size(); i++) {
         if (nonzero_rows(i)) {
-            filtered_matrix.row(filtered_row_idx++) = abundance_mat.row(i);
+            filtered_matrix.row(filtered_row_idx) = abundance_mat.row(i);
             new_ko_names.push_back(ko_names[i]);
+	    filtered_row_idx += 1;
         }
     }
 
     ko_names = new_ko_names;
-    
+
     return filtered_matrix;
 }
 
