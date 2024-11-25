@@ -1,4 +1,4 @@
-p <- c("optparse", "seqinr", "Matrix", "parallel")
+p <- c("optparse", "seqinr", "Matrix", "parallel", "glmnet")
 
 usePackage <- function(p){
         if (!is.element(p, installed.packages()[,1]))
@@ -85,25 +85,74 @@ constrLS <- function(y, X, w, reltol = 1e-6, verbose = FALSE){
     cat("Constrained optimization...\n")
     ctl <- list(trace = 1, REPORT = 1, factr = reltol/.Machine$double.eps, maxit = 10000)
   }
+  
   # print(6)
 
-  lst <- optim(theta0, fn = objectFun, gr = grr, y, X, w, method = "L-BFGS-B", lower = rep(0, p), control = ctl)
+  set.seed(123)
+  # 定义 alpha 值的网格
+  alpha_values <- seq(0, 1, by = 0.1)
+
+  # 初始化存储结果的变量
+  best_alpha <- 0
+  best_lambda <- 0
+  best_cv_fit <- NULL
+  min_cv_error <- Inf
+
+  # 进行交叉验证以找到最佳的 alpha 和 lambda 值，并设置非负约束
+  for (alpha in alpha_values) {
+    cv_fit <- cv.glmnet(X, y, alpha = alpha, lower.limits = 0, intercept = FALSE)
+    cv_error <- min(cv_fit$cvm)
+
+    if (cv_error < min_cv_error) {
+      min_cv_error <- cv_error
+      best_alpha <- alpha
+      best_lambda <- cv_fit$lambda.min
+      best_cv_fit <- cv_fit
+    }
+  }
+
+  # 输出最佳的 alpha 和 lambda 值
+  cat("Best alpha value: ", best_alpha, "\n")
+  cat("Best lambda value: ", best_lambda, "\n")
+
+  alpha <- best_alpha
+  lambda <- best_lambda
+  lst <- optim(theta0, fn = objectFun, gr = NULL, y, X, w, alpha, lambda, method = "L-BFGS-B", lower = rep(0, p), control = ctl)
+
+  #lst <- optim(theta0, fn = objectFun, gr = grr, y, X, w, method = "L-BFGS-B", lower = rep(0, p), control = ctl)
+  
   # print(7)
 
   return(lst$par)
 }
 
-grr <- function(b, y, X, w) { ## Gradient of objectFun
+objectFun <- function(b, y, X, w, alpha, lambda){
 
-  r <- t(-2 * w^2 * X) %*% (y - X %*% b) + 0.00002*b
-
-  return (r)
+  # Compute the residual sum of squares (RSS)
+  rss <- sum((w * (y - X %*% b))^2)
+  # Compute the L1 norm (lasso penalty)
+  l1_penalty <- sum(abs(b)) 
+  # Compute the L2 norm (ridge penalty)
+  l2_penalty <- sum(b^2)
+  
+  # Combine the RSS and penalties
+  loss <- rss + lambda * (alpha * l1_penalty + (1 - alpha) / 2 * l2_penalty)
+  
+  return (loss)
 }
 
-objectFun <- function(b, y, X, w){
 
-  r <- w * (y - (X %*% b))
+#grr <- function(b, y, X, w) { ## Gradient of objectFun
 
-  return(sum(r^2) + 0.00001*sum(b^2))
-}
+#  r <- t(-2 * w^2 * X) %*% (y - X %*% b) + 0.00002*b
+
+#  return (r)
+#}
+
+#objectFun <- function(b, y, X, w){
+
+#  r <- w * (y - (X %*% b))
+
+#  return(sum(r^2) + 0.00001*sum(b^2))
+#}
 

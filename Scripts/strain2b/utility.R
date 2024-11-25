@@ -96,7 +96,8 @@ Vsearch <- function(cnm, new_sample_fa, similarity, output_tag_path, tags_count_
   cmd <- paste0("vsearch --usearch_global ", new_sample_fa, " --db ", output_tag_path, 
                 " --id ", similarity, " --iddef 4 --strand both -otutabout " , tags_count_file, 
                 " --threads 2") # --threads: number of threads to use, zero for all cores (0)
-  
+  #cmd <- paste0("vsearch --search_exact ", new_sample_fa, " --db ", output_tag_path, " --otutabout ", tags_count_file)
+
   system(cmd, intern = TRUE)
   
   #file.remove(new_sample_fa) #Delete intermediate result files
@@ -264,6 +265,23 @@ RG_completeness_coverage <- function(cnm, tags_count) { #there is only one colum
   return (result)
 }
 
+Iterative_Matrix_Multiplication <- function(tags_count_matrix, cnm_matrix) {
+  tags_count_matrix <- as.matrix(tags_count_matrix)
+  cnm_matrix <- as.matrix(cnm_matrix)
+  tags_num <- apply(cnm_matrix, 2, function(x) sum(x > 0))
+  min_tags_num <- min(tags_num)
+  possible_strains <- numeric(0)
+  while(sum(tags_count_matrix > 0) > min_tags_num * 0.8 && 
+        length(possible_strains) != ncol(cnm_matrix)) {
+    print(sum(tags_count_matrix > 0))
+    y <- t(cnm_matrix) %*% tags_count_matrix
+    most_possible_strain <- min(which(y == max(y)))
+    possible_strains <- append(possible_strains, most_possible_strain)
+    tags_count_matrix[which(cnm_matrix[, most_possible_strain] != 0), 1] = 0
+  }
+  return (colnames(cnm_matrix)[possible_strains])
+}
+
 Filter_CNM <- function(cnm, tags_count) {
 #filter the copynumber matrix according to the vsearch result (delete the tags which are not included in the sample)
 
@@ -285,6 +303,15 @@ Filter_CNM <- function(cnm, tags_count) {
   
   cnm <- check_corr_in_cnm(cnm, threshold = 0.001)
 
+  tags_count <- tags_count[order(rownames(tags_count)), , drop = FALSE]
+  cnm <- cnm[order(rownames(cnm)), , drop = FALSE]
+  # When drop = FALSE, the result will maintain its original dimension.
+
+  possible_strains <- Iterative_Matrix_Multiplication(tags_count, cnm)
+  cnm <- cnm[, possible_strains]
+  
+  cnm <- cnm[, which(colSums(cnm) > 0), drop = F]
+  
   tags_count <- tags_count[order(rownames(tags_count)), , drop = FALSE]
   cnm <- cnm[order(rownames(cnm)), , drop = FALSE]
   # When drop = FALSE, the result will maintain its original dimension.
