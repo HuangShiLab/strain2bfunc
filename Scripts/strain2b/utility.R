@@ -2,18 +2,16 @@ Env <-Sys.getenv("Strain2bFunc")
 if(nchar(Env)<1){
   cat('Please set the environment variable \"Strain2bFunc\" to the directory\n')
 }
-#print(Env)
-
+#print(Env) 
 source(paste0(Env, "/Scripts/strain2b/composition.R"))
 
-
-Read_Copynumber_Matrix <- function(species, cnm_matrix_dir) {
+Read_Copynumber_Matrix <- function(species, cnm_dir) {
   
   if(length(species) == 0) {
     result = NULL
   }
   else {
-    cnm_file <- paste0(cnm_matrix_dir, "/", species, ".CNM.xls")
+    cnm_file <- paste0(cnm_dir, "/", species, ".CNM.xls")
     
     if (!file.exists(cnm_file)) {
       stop(paste0("The copy number matrix of ", species, " does not exist. Please make sure the file exists and try again."))
@@ -26,19 +24,19 @@ Read_Copynumber_Matrix <- function(species, cnm_matrix_dir) {
 }
 
 
-Merge_Copynumber_Matrix <- function(all_species, cnm_matrix_dir) { # merge the copynumber matrix of all species
+Merge_Copynumber_Matrix <- function(all_species, cnm_dir) { # merge the copynumber matrix of all species
   
   if(length(all_species) == 0) {
     result <- NULL
   }
   else if(length(all_species) == 1) {
-    result <- Read_Copynumber_Matrix(all_species[1], cnm_matrix_dir)
+    result <- Read_Copynumber_Matrix(all_species[1], cnm_dir)
   }
   else {
     result <- data.frame()
     
     for (i in 1:length(all_species)) {
-      cnm <- Read_Copynumber_Matrix(all_species[i], cnm_matrix_dir)
+      cnm <- Read_Copynumber_Matrix(all_species[i], cnm_dir)
       
       if (nrow(result) == 0) {
         result <- cnm
@@ -265,21 +263,25 @@ RG_completeness_coverage <- function(cnm, tags_count) { #there is only one colum
   return (result)
 }
 
-Iterative_Matrix_Multiplication <- function(tags_count_matrix, cnm_matrix) {
-  tags_count_matrix <- as.matrix(tags_count_matrix)
-  cnm_matrix <- as.matrix(cnm_matrix)
-  tags_num <- apply(cnm_matrix, 2, function(x) sum(x > 0))
+Iterative_Matrix_Multiplication <- function(tags_count, cnm) {
+  tags_count <- as.matrix(tags_count)
+  cnm <- as.matrix(cnm)
+  tags_num <- apply(cnm, 2, function(x) sum(x > 0))
   min_tags_num <- min(tags_num)
   possible_strains <- numeric(0)
-  while(sum(tags_count_matrix > 0) > min_tags_num * 0.8 && 
-        length(possible_strains) != ncol(cnm_matrix)) {
-    print(sum(tags_count_matrix > 0))
-    y <- t(cnm_matrix) %*% tags_count_matrix
-    most_possible_strain <- min(which(y == max(y)))
-    possible_strains <- append(possible_strains, most_possible_strain)
-    tags_count_matrix[which(cnm_matrix[, most_possible_strain] != 0), 1] = 0
+  while(sum(tags_count > 0) > min_tags_num * 0.1 &&        
+        length(possible_strains) != ncol(cnm)) {
+    y <- t(cnm) %*% tags_count
+    if(max(y) != 0) {
+      most_possible_strain <- min(which(y == max(y)))
+      possible_strains <- append(possible_strains, most_possible_strain)
+      tags_count[which(cnm[, most_possible_strain] != 0), 1] = 0
+    } else{
+      break;
+    }
   }
-  return (colnames(cnm_matrix)[possible_strains])
+  cat("Most likely strain(s):", colnames(cnm)[possible_strains], "\n")
+  return (colnames(cnm)[possible_strains])
 }
 
 Filter_CNM <- function(cnm, tags_count) {
@@ -300,7 +302,7 @@ Filter_CNM <- function(cnm, tags_count) {
   # cnm <- cnm[, -1] # The first column of the copy number matrix is the tag names
 
   cnm <- cnm[, which(colSums(cnm) > 0), drop = F]
-  
+
   cnm <- check_corr_in_cnm(cnm, threshold = 0.001)
 
   tags_count <- tags_count[order(rownames(tags_count)), , drop = FALSE]
@@ -308,38 +310,44 @@ Filter_CNM <- function(cnm, tags_count) {
   # When drop = FALSE, the result will maintain its original dimension.
 
   possible_strains <- Iterative_Matrix_Multiplication(tags_count, cnm)
-  cnm <- cnm[, possible_strains]
-  
+  cnm <- cnm[, possible_strains, drop = F]
+
   cnm <- cnm[, which(colSums(cnm) > 0), drop = F]
-  
+
   tags_count <- tags_count[order(rownames(tags_count)), , drop = FALSE]
   cnm <- cnm[order(rownames(cnm)), , drop = FALSE]
   # When drop = FALSE, the result will maintain its original dimension.
-
+  
   result <- list(tags_count = tags_count, cnm = cnm)
 
   return (result)
 }
 
 
-Strain_Level_Profiling <- function(tags_count_matrix, cnm_matrix) {
+Strain_Level_Profiling <- function(tags_count, cnm) {
   
-  if(!identical(rownames(tags_count_matrix), rownames(cnm_matrix))) {
+  if(!identical(rownames(tags_count), rownames(cnm))) {
     stop("The tags of reads count matrix and that of copy number matrix is not identical")
   }
 
-  predicted_abundance_matrix <- rmscols(tags_count_matrix, cnm_matrix)
-
-  idx <- rowSums(predicted_abundance_matrix) > 0
-  predicted_abundance_matrix <- subset(predicted_abundance_matrix, idx)
-
-  predicted_abundance_matrix <- predicted_abundance_matrix / colSums(predicted_abundance_matrix)
-
+  if(ncol(cnm) == 1) {
+    predicted_abundance_matrix <- matrix(1, nrow = 1, ncol = ncol(tags_count),
+                                         dimnames = list(colnames(cnm), colnames(tags_count)))
+    predicted_abundance_matrix <- data.frame(predicted_abundance_matrix, check.names = F)
+  } else {
+    predicted_abundance_matrix <- rmscols(tags_count, cnm)
+    
+    idx <- rowSums(predicted_abundance_matrix) > 0
+    predicted_abundance_matrix <- subset(predicted_abundance_matrix, idx)
+    
+    predicted_abundance_matrix <- predicted_abundance_matrix / colSums(predicted_abundance_matrix) 
+  }
+  
   return (predicted_abundance_matrix)
 }
 
 
-Check_file_exists <- function(sample_list_file, species_list_file, cnm_matrix_dir = NULL, cnm_file = NULL, mode = 0) {
+Check_file_exists <- function(sample_list_file, species_list_file, cnm_dir = NULL, cnm_file = NULL, mode = 0) {
   
   if (!file.exists(sample_list_file)) {
     stop("The sequence-files-list file does not exist. Please make sure the file exists and try again.")
@@ -355,7 +363,7 @@ Check_file_exists <- function(sample_list_file, species_list_file, cnm_matrix_di
   
   if(mode == 0) { # mode == 0, profiling based on the 2bGDB
     
-     if(!file.exists(cnm_matrix_dir)) {
+     if(!file.exists(cnm_dir)) {
        stop("The copy number matrix directory does not exist. Please make sure the directory exists and try again.")
      }
 
@@ -370,14 +378,14 @@ Check_file_exists <- function(sample_list_file, species_list_file, cnm_matrix_di
 }
 
 
-One_Sample_Pipeline <- function(sample_info, species_info, output_path, mode, cnm_matrix_dir, cnm) {
+One_Sample_Pipeline <- function(sample_info, species_info, output_path, mode, cnm_dir, cnm) {
   # mode == 0: profiling based on the 2bGDB; else: profiling based on the customized copy number matrix
 
   sample_name <- sample_info[1]
   sample_fa <- sample_info[2]
 
   if(mode == 0) {
-    cnm <- Merge_Copynumber_Matrix(species_info, cnm_matrix_dir)
+    cnm <- Merge_Copynumber_Matrix(species_info, cnm_dir)
   } else { 
     cnm <- cnm
   }
@@ -465,13 +473,13 @@ Merge_Profiling_Matrix <- function(all_profiles_path, sample_name_list) {
 }
 
 
-Sample_List_Pipeline <- function(sample_list_file, species_list_file, output_path, cnm_matrix_dir = NULL, cnm_file = NULL, mode = 0) {
+Sample_List_Pipeline <- function(sample_list_file, species_list_file, output_path, cnm_dir = NULL, cnm_file = NULL, mode = 0) {
   
   if(!file.exists(output_path)) {
     dir.create(output_path)
   }
 
-  Check_file_exists(sample_list_file, species_list_file, cnm_matrix_dir, cnm_file, mode);
+  Check_file_exists(sample_list_file, species_list_file, cnm_dir, cnm_file, mode);
 
   sample_list <- read.table(sample_list_file, sep = "\t", header = F)
 
@@ -481,7 +489,7 @@ Sample_List_Pipeline <- function(sample_list_file, species_list_file, output_pat
     
     species_list <- read.table(species_list_file, sep = "\t", header = F, comment.char="")
     species_list <- species_list[, 1]
-    cnm <- Merge_Copynumber_Matrix(species_list, cnm_matrix_dir)
+    cnm <- Merge_Copynumber_Matrix(species_list, cnm_dir)
   
   } else { # Profiling based on a customized copy number matrix
     
@@ -489,7 +497,7 @@ Sample_List_Pipeline <- function(sample_list_file, species_list_file, output_pat
     
   }
 
-  profile_list <- apply(sample_list, 1, function(x) tryCatch({One_Sample_Pipeline(x, species_list, output_path, mode, cnm_matrix_dir, cnm)}, error=function(err) { NA }))
+  profile_list <- apply(sample_list, 1, function(x) tryCatch({One_Sample_Pipeline(x, species_list, output_path, mode, cnm_dir, cnm)}, error=function(err) { NA }))
   
   # print(profile_list)
 

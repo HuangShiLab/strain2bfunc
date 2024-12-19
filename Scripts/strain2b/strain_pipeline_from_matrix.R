@@ -27,10 +27,8 @@ opts <- parse_args(OptionParser(option_list=option_list), args=args)
 Env <-Sys.getenv("Strain2bFunc")
 if(nchar(Env)<1){
   cat('Please set the environment variable \"Strain2bFunc\" to the directory\n')
- }
-
+}
 source(paste0(Env, "/Scripts/strain2b/utility.R"))
-
 
 if (is.null(opts$cnm_file)) {
   stop("Please specify a copy number matrix!")
@@ -41,6 +39,11 @@ if (is.null(opts$rcm_file)) {
 
 cnm <- read.table(opts$cnm_file, sep = "\t", header = T, row.names = 1)
 tags_count <- read.table(opts$rcm_file, sep = "\t", header = T, row.names = 1, check.names = F, comment.char = "")
+
+# cnm_file <- "../test_data/2bRAD_tag_matrix.xls"
+# rcm_file <- "../test_data/read_count_matrix.txt"
+# cnm <- read.table(cnm_file, sep = "\t", header = T, row.names = 1)
+# tags_count <- read.table(rcm_file, sep = "\t", header = T, row.names = 1, check.names = F, comment.char = "")
 
 matrix <- Filter_CNM(cnm, tags_count)
 
